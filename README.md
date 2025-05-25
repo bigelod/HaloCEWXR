@@ -201,4 +201,4 @@ Thank you! See compiling source directions below and submit a Pull Request on Gi
 4. Navigate to "Project -> Properties" and then "Configuration Properties -> Build Events -> Post-Build Event" and replace E:\Halo with the directory you have halo installed to
 5. Navigate to "Project -> Properties" and then "Configuration Properties -> Debugging" and replace E:\Halo\Halo.exe with the path to your halo executable
 
-You should now be able to build successfully, this will generate a d3d9.dll file, using the "makerelease" bat file we can create a zip containing the d3d9.dll and the VR folder. You will need to add openvr_api.dll yourself, either by adding to the release folder so the bat file can pickup copy and zip it, or by adding it directly into your halo CE installation directory.
+You should now be able to build successfully and automatically launch halo. Should the game fail to launch: using the "makerelease" bat file after building will allow you to create a zip containing the d3d9.dll and the VR folder, which can be extracted directly into halo's working directory to install the mod.

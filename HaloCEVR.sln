@@ -10,15 +10,20 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
+		Emulated-VR|x86 = Emulated-VR|x86
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{4EE74470-E365-48E4-9920-237AA8B6F6D0}.Debug|x86.ActiveCfg = Debug|Win32
 		{4EE74470-E365-48E4-9920-237AA8B6F6D0}.Debug|x86.Build.0 = Debug|Win32
+		{4EE74470-E365-48E4-9920-237AA8B6F6D0}.Emulated-VR|x86.ActiveCfg = Emulated-VR|Win32
+		{4EE74470-E365-48E4-9920-237AA8B6F6D0}.Emulated-VR|x86.Build.0 = Emulated-VR|Win32
 		{4EE74470-E365-48E4-9920-237AA8B6F6D0}.Release|x86.ActiveCfg = Release|Win32
 		{4EE74470-E365-48E4-9920-237AA8B6F6D0}.Release|x86.Build.0 = Release|Win32
 		{F142A341-5EE0-442D-A15F-98AE9B48DBAE}.Debug|x86.ActiveCfg = Debug|Win32
 		{F142A341-5EE0-442D-A15F-98AE9B48DBAE}.Debug|x86.Build.0 = Debug|Win32
+		{F142A341-5EE0-442D-A15F-98AE9B48DBAE}.Emulated-VR|x86.ActiveCfg = Emulated-VR|Win32
+		{F142A341-5EE0-442D-A15F-98AE9B48DBAE}.Emulated-VR|x86.Build.0 = Emulated-VR|Win32
 		{F142A341-5EE0-442D-A15F-98AE9B48DBAE}.Release|x86.ActiveCfg = Release|Win32
 		{F142A341-5EE0-442D-A15F-98AE9B48DBAE}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection

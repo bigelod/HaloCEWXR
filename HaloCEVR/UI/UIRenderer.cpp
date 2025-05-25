@@ -173,7 +173,7 @@ void UIRenderer::Render()
 		}
 	}
 
-#if EMULATE_VR
+#ifdef EMULATE_VR
 	DrawRect(mouseX - 2, mouseY - 2, 4.0f, 4.0f, D3DCOLOR_ARGB(200, 255, 255, 0));
 #endif
 

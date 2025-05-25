@@ -1,4 +1,3 @@
-#define EMULATE_VR 0
 #include "Game.h"
 #include "Logger.h"
 #include "Hooking/Hooks.h"
@@ -10,7 +9,7 @@
 #include "Helpers/Objects.h"
 #include "Helpers/Maths.h"
 
-#if EMULATE_VR
+#ifdef EMULATE_VR
 #include "VR/VREmulator.h"
 #else
 #include "VR/OpenVR.h"
@@ -42,7 +41,7 @@ void Game::Init()
 
 	bIsCustom = std::strcmp("halor", Helpers::GetGameTypeString()) != 0;
 
-#if EMULATE_VR
+#ifdef EMULATE_VR
 	vr = new VREmulator();
 #else
 	vr = new OpenVR();
@@ -816,7 +815,7 @@ void Game::UpdateCamera(float& yaw, float& pitch)
 {
 	VR_PROFILE_SCOPE(Game_UpdateCamera);
 	// Don't bother simulating inputs if we aren't actually in vr
-#if EMULATE_VR
+#ifdef EMULATE_VR
 	return;
 #endif
 
@@ -834,13 +833,13 @@ void Game::SetMousePosition(int& x, int& y)
 {
 	VR_PROFILE_SCOPE(Game_SetMousePosition);
 	// Don't bother simulating inputs if we aren't actually in vr
-#if !EMULATE_VR
+#ifndef EMULATE_VR
 	inputHandler.SetMousePosition(x, y);
 #endif
 	if (Helpers::IsMouseVisible())
 	{
 		uiRenderer->MoveCursor(static_cast<float>(x), static_cast<float>(y));
-#if !EMULATE_VR
+#ifndef EMULATE_VR
 		// Stop menu hover events happening while ui is up
 		if (settingsMenu->bVisible)
 		{
@@ -858,14 +857,14 @@ void Game::UpdateMouseInfo(MouseInfo* mouseInfo)
 	static char realLeftClickValue = 0;
 
 	// Don't bother simulating inputs if we aren't actually in vr
-#if !EMULATE_VR
+#ifndef EMULATE_VR
 	inputHandler.UpdateMouseInfo(mouseInfo);
 #endif
 	if (Helpers::IsMouseVisible() && mouseInfo->buttonState[0] == 1)
 	{
 		uiRenderer->Click();
 
-#if !EMULATE_VR
+#ifndef EMULATE_VR
 		// Don't allow any mouse inputs to pass through to the real UI while ours is up
 		if (settingsMenu->bVisible)
 		{

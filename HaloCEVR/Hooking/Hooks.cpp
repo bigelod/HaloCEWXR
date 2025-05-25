@@ -1014,12 +1014,7 @@ void Hooks::SetCameraMatrices(struct Viewport* viewport, struct CameraFrustum* f
 		mov eax, viewport
 		mov ecx, frustum
 		mov esi, crm
-	}
-	
-	oSetCameraMatrices();
-
-	_asm
-	{
+		call oSetCameraMatrices
 		pop esi
 		pop ecx
 		pop eax

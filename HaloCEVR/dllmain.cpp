@@ -6,7 +6,6 @@
 #include "Game.h"
 #include "DirectXWrappers/IDirect3D9ExWrapper.h"
 
-#pragma comment(lib, "libMinHook.x86.lib")
 #pragma comment(lib, "d3d9.lib")
 
 typedef IDirect3D9* (WINAPI *LPD3D_Direct3DCreate9)(UINT nSDKVersion);

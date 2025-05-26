@@ -196,9 +196,8 @@ Thank you! See compiling source directions below and submit a Pull Request on Gi
 
 ## Compiling Source
 1. Clone this repository (`git clone --recurse-submodules https://github.com/LivingFray/HaloCEVR.git`)
-2. Open HaloCEVR.sln in Visual Studio 2022
-3. Set the project configuration to "Debug" or "Release" on "x86"
-4. Navigate to "Project -> Properties" and then "Configuration Properties -> Build Events -> Post-Build Event" and replace E:\Halo with the directory you have halo installed to
-5. Navigate to "Project -> Properties" and then "Configuration Properties -> Debugging" and replace E:\Halo\Halo.exe with the path to your halo executable
-
-You should now be able to build successfully and automatically launch halo. Should the game fail to launch: using the "makerelease" bat file after building will allow you to create a zip containing the d3d9.dll and the VR folder, which can be extracted directly into halo's working directory to install the mod.
+2. Run initinstall.bat and enter the Directory and executable name for your halo install (this must be done while visual studio is closed)
+3. Open HaloCEVR.sln in Visual Studio 2022
+4. Set the project configuration to "Debug", "Release" or "Emulated-VR" on "x86" (Emulated will create a desktop window showing the VR perspective rather than launching OpenVR, which is very helpful for quick debugging)
+5. Click "Local Windows Debugger". If done correctly halo should automatically launch with the mod installed and visual studio's debugger attached.
+6. If this is the first time running the mod you may need to run makerelease.bat after building to generate HaloCEVR.zip. Unzip the contents of this file into halo's directory to install the additional required assets

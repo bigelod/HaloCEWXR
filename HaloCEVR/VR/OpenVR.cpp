@@ -12,8 +12,8 @@
 #include "../Helpers/Camera.h"
 #include "../Helpers/Cutscene.h"
 
-#pragma comment(lib, "openvr_api.lib")
-#pragma comment(lib, "d3d11.lib")
+//#pragma comment(lib, "openvr_api.lib")
+//#pragma comment(lib, "d3d11.lib")
 
 void OpenVR::Init()
 {

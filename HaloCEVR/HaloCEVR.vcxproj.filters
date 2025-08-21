@@ -51,9 +51,6 @@
     <ClCompile Include="Helpers\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="VR\OpenVR.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Maths\Matrices.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -132,6 +129,12 @@
     <ClCompile Include="Helpers\Version.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="VR\WinXrApi.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VR\WinXrApiUDP.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Hooking\FunctionTypedefs.h">
@@ -180,9 +183,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VR\IVR.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="VR\OpenVR.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Maths\Matrices.h">
@@ -264,6 +264,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Helpers\Version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VR\WinXrApi.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VR\WinXrApiUDP.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

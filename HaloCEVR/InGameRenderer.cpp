@@ -466,6 +466,30 @@ void InGameRenderer::DrawRenderTargets(IDirect3DDevice9* pDevice)
 		pDevice->SetTexture(0, renderTargets[i].texture);
 
 		pDevice->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, 4, 2, indices, D3DFMT_INDEX16, vertices, sizeof(VertexDataTex));
+
+		//WinlatorXR Change
+		pDevice->SetRenderState(D3DRS_LIGHTING, false);
+		pDevice->SetRenderState(D3DRS_ZENABLE, false);
+
+		pDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+		pDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
+
+		pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+
+		pDevice->SetRenderState(D3DRS_SRGBWRITEENABLE, TRUE);
+
+		pDevice->SetTexture(0, renderTargets[i].texture);
+		pDevice->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
+
+		VertexData2D oxrVerts[4] = {
+			{ 0.0f,   0.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,255, 0, 0) }, // Top-left
+			{ 10.0f,  0.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,255, 0, 0) }, // Top-right
+			{ 10.0f, 10.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,255, 0, 0) }, // Bottom-right
+			{ 0.0f,  10.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,255, 0, 0) }  // Bottom-left
+		};
+
+		// Draw the rectangle using DrawPrimitiveUP
+		pDevice->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, oxrVerts, sizeof(VertexData2D));
 	}
 }
 

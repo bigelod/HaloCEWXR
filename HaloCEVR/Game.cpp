@@ -1,3 +1,4 @@
+#include "WinSock2.h"
 #include "Game.h"
 #include "Logger.h"
 #include "Hooking/Hooks.h"
@@ -12,7 +13,7 @@
 #ifdef EMULATE_VR
 #include "VR/VREmulator.h"
 #else
-#include "VR/OpenVR.h"
+#include "VR/WinXrApi.h"
 #endif
 
 #if USE_PROFILER
@@ -44,7 +45,7 @@ void Game::Init()
 #ifdef EMULATE_VR
 	vr = new VREmulator();
 #else
-	vr = new OpenVR();
+	vr = new WinXrApi();
 #endif
 
 	vr->Init();
@@ -113,7 +114,7 @@ void Game::OnInitDirectX()
 	SetForegroundWindow(GetActiveWindow());
 
 	// Ideally these values would be in a 4:3 ratio, but this causes the mouse position to stop aligning correctly
-	overlayWidth = static_cast<UINT>(std::max(vr->GetViewHeight(), vr->GetViewWidth()) * c_UIOverlayRenderScale->Value());
+	overlayWidth = static_cast<UINT>(max(vr->GetViewHeight(), vr->GetViewWidth()) * c_UIOverlayRenderScale->Value());
 	if (overlayWidth < 640) { // Clamp low to 640px so user can't degrade/break the config UI 
 		overlayWidth = 640; 
 	}
@@ -128,10 +129,10 @@ void Game::OnInitDirectX()
 	scopeTextures[0] = vr->GetScopeTexture();
 
 	D3DSURFACE_DESC desc;
-	scopeSurfaces[0]->GetDesc(&desc);
+	//scopeSurfaces[0]->GetDesc(&desc);
 
-	CreateTextureAndSurface(desc.Width, desc.Height, desc.Usage, desc.Format, &scopeSurfaces[1], &scopeTextures[1]);
-	CreateTextureAndSurface(desc.Width / 2, desc.Height / 2, desc.Usage, desc.Format, &scopeSurfaces[2], &scopeTextures[2]);
+	//CreateTextureAndSurface(desc.Width, desc.Height, desc.Usage, desc.Format, &scopeSurfaces[1], &scopeTextures[1]);
+	//CreateTextureAndSurface(desc.Width / 2, desc.Height / 2, desc.Usage, desc.Format, &scopeSurfaces[2], &scopeTextures[2]);
 
 	uiRenderer = new UIRenderer();
 
@@ -139,7 +140,8 @@ void Game::OnInitDirectX()
 
 	settingsMenu = new SettingsMenu();
 
-	settingsMenu->CreateMenus();
+	//!!! WinlatorXR specific code change !!!
+	//settingsMenu->CreateMenus();
 }
 
 void Game::PreDrawFrame(struct Renderer* renderer, float deltaTime)
@@ -260,6 +262,9 @@ void Game::PreDrawFrame(struct Renderer* renderer, float deltaTime)
 
 	inGameRenderer.DrawCoordinate(controller * Vector3(0.0f, 0.0f, 0.0f) * MetresToWorld(1.0f) + worldPos, handRotation3, 0.05f, false);
 #endif
+
+	// !!! WinlatorXR specific code change !!!
+	//inGameRenderer.DrawRect(0.0f, 0.0f, 5.0f, 5.0f, D3DCOLOR_ARGB(255, 255, 0, 0));
 
 	vr->PreDrawFrame(renderer, deltaTime);
 }
@@ -814,6 +819,7 @@ Vector3 Game::GetSmoothedInput() const
 void Game::UpdateCamera(float& yaw, float& pitch)
 {
 	VR_PROFILE_SCOPE(Game_UpdateCamera);
+
 	// Don't bother simulating inputs if we aren't actually in vr
 #ifdef EMULATE_VR
 	return;
@@ -832,6 +838,7 @@ void Game::UpdateCamera(float& yaw, float& pitch)
 void Game::SetMousePosition(int& x, int& y)
 {
 	VR_PROFILE_SCOPE(Game_SetMousePosition);
+
 	// Don't bother simulating inputs if we aren't actually in vr
 #ifndef EMULATE_VR
 	inputHandler.SetMousePosition(x, y);
@@ -839,6 +846,7 @@ void Game::SetMousePosition(int& x, int& y)
 	if (Helpers::IsMouseVisible())
 	{
 		uiRenderer->MoveCursor(static_cast<float>(x), static_cast<float>(y));
+
 #ifndef EMULATE_VR
 		// Stop menu hover events happening while ui is up
 		if (settingsMenu->bVisible)

@@ -128,6 +128,7 @@
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
       <IgnoreSpecificDefaultLibraries>LIBCMT</IgnoreSpecificDefaultLibraries>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /D /Y "$(TargetDir)d3d9.dll" "$(HALOCEVR_DIR)"</Command>
@@ -267,8 +268,9 @@
     <ClCompile Include="UI\UIRenderer.cpp" />
     <ClCompile Include="UI\UITabPanel.cpp" />
     <ClCompile Include="UI\UITextButton.cpp" />
-    <ClCompile Include="VR\OpenVR.cpp" />
     <ClCompile Include="VR\VREmulator.cpp" />
+    <ClCompile Include="VR\WinXrApi.cpp" />
+    <ClCompile Include="VR\WinXrApiUDP.cpp" />
     <ClCompile Include="WeaponHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -311,10 +313,11 @@
     <ClInclude Include="UI\UIRenderer.h" />
     <ClInclude Include="UI\UITabPanel.h" />
     <ClInclude Include="UI\UITextButton.h" />
-    <ClInclude Include="VR\OpenVR.h" />
     <ClInclude Include="Maths\Vectors.h" />
     <ClInclude Include="VR\VREmulator.h" />
     <ClInclude Include="VR\IVR.h" />
+    <ClInclude Include="VR\WinXrApi.h" />
+    <ClInclude Include="VR\WinXrApiUDP.h" />
     <ClInclude Include="WeaponHandler.h" />
   </ItemGroup>
   <ItemGroup>
@@ -333,7 +336,7 @@
       <UserProperties />
     </VisualStudio>
   </ProjectExtensions>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LocalDebuggerCommand>$(HALOCEVR_DIR)\$(HALOCEVR_EXE)</LocalDebuggerCommand>
     <LocalDebuggerCommandArguments>
     </LocalDebuggerCommandArguments>

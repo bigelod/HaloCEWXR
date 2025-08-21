@@ -29,9 +29,13 @@ BOOL APIENTRY DllMain( HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReser
 		Logger::log << "[DLL] HaloCEVR attached" << std::endl;
 		break;
 	case DLL_THREAD_ATTACH:
+		Logger::log << "[DLL] Thread Attached" << std::endl;
+		break;
 	case DLL_THREAD_DETACH:
+		Logger::log << "[DLL] Thread Dettached" << std::endl;
 		break;
 	case DLL_PROCESS_DETACH:
+		Logger::log << "[DLL] HaloCEVR dettached" << std::endl;
 		Game::instance.Shutdown();
 		bHasInit = false;
 		break;

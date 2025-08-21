@@ -31,6 +31,7 @@ protected:
 	void DrawPolygons(struct IDirect3DDevice9* pDevice);
 
 	static constexpr int MAX_LINES = 32;
+	static constexpr int MAX_RECTS = 16;
 
 	struct VertexData2D
 	{
@@ -75,7 +76,7 @@ protected:
 	VertexData3D vertices3D[MAX_LINES];
 	int vertex2DCount = 0;
 	int vertex3DCount = 0;
-
+	
 	std::vector<VertexData2D> lines2D;
 	std::vector<Polygon2D> polygons2D;
 	std::vector<VertexData3D> lines3D;

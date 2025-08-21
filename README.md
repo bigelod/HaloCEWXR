@@ -1,3 +1,24 @@
+# WinlatorXR port of Halo: Combat Evolved VR
+
+NOTE: This might build, but it's still in active development and crashes on load on actual Quest Winlator containers as of August 2025
+
+# To-Do:
+
+* 6DOF tracking / input collection from WinlatorXR over UDP
+* Map the 6DOF data to the game controls
+* Fit the game render window to the entire display, for the red pixel OpenXR needs to be in the correct spot
+* Create the /vr file if the Z drive exists on load
+* Try to delete the /vr file on close
+* Fix the DLL injection failing on actual WinlatorXR container on Quest/Pic
+
+# Stretch-Goal(s) / Unlikely Bonus Features:
+
+* Restore the mirror window or show that instead of the main game window, and enable SBS with it via creation of the /sbs file
+
+
+# Original ReadMe:
+
+
 <p align="center">
   <img width="460" height="215" src="./Extras/Bindings/icon.png">
 </p>

@@ -23,7 +23,12 @@ void WinXrApiUDP::ReceiveData()
 	serverAddr.sin_addr.s_addr = INADDR_ANY;
 	serverAddr.sin_port = htons(udpPort);
 
-	bind(udpSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
+	try {
+		bind(udpSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
+	}
+	catch (const std::exception& e) {
+		Logger::log << "Error starting UDP receiver: " << e.what() << std::endl;
+	}	
 
 	while (true)
 	{
@@ -33,12 +38,12 @@ void WinXrApiUDP::ReceiveData()
 			int addrLen = sizeof(clientAddr);
 			ptrdiff_t bytesReceived = recvfrom(udpSocket, buffer, sizeof(buffer), 0, (struct sockaddr*)&clientAddr, &addrLen);
 
-			if (bytesReceived > 0)
+			if (bytesReceived > 0 && bytesReceived < 1024)
 			{
 				buffer[bytesReceived] = '\0';
 				std::string returnData(buffer);
 
-				Logger::log << "UDP DATA " + returnData << std::endl;
+				//Logger::log << "UDP DATA " + returnData << std::endl;
 
 				{
 					std::lock_guard<std::mutex> lock(mtx);
@@ -54,7 +59,7 @@ void WinXrApiUDP::ReceiveData()
 		}
 		catch (const std::exception& e)
 		{
-			// Handle exception
+			Logger::log << "Error receiving UDP data: " << e.what() << std::endl;
 		}
 	}
 }
@@ -69,7 +74,7 @@ void WinXrApiUDP::KillReceiver()
 	}
 	catch (const std::exception& e)
 	{
-		// Handle exception
+		Logger::log << "Error killing UDP receiver: " << e.what() << std::endl;
 	}
 }
 

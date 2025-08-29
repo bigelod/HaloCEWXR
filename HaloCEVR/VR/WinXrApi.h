@@ -1,5 +1,5 @@
 #pragma once
-//#include "WinXrApiUDP.h"
+#include "WinXrApiUDP.h"
 #include "IVR.h"
 #include <wtypes.h>
 #include <d3d9.h>
@@ -58,6 +58,7 @@ public:
 	std::string GetKeyboardInput();
 	std::string GetDeviceName();
 	// End Interface IVR
+	~WinXrApi();
 
 protected:
 	void CreateSharedTarget();
@@ -160,6 +161,6 @@ protected:
 	std::string keyboardBuffer;
 	bool keystate[128];
 
-	//WinXrApiUDP* udpReader;
+	WinXrApiUDP* udpReader;
 };
 

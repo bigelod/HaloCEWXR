@@ -1,4 +1,4 @@
-//#include "WinXrApiUDP.h"
+#include "WinXrApiUDP.h"
 #include <d3d9.h>
 #include "WinXrApi.h"
 #include "../Helpers/DX9.h"
@@ -8,6 +8,8 @@
 #include "../Logger.h"
 #include "../DirectXWrappers/IDirect3DDevice9ExWrapper.h"
 #include "../Game.h"
+#include <filesystem>
+#include <iostream>
 
 template<typename T, std::size_t N>
 constexpr std::size_t arraySize(T(&)[N]) {
@@ -30,15 +32,50 @@ LRESULT CALLBACK WindowProcXrApi(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 
 void WinXrApi::Init()
 {
-	//udpReader = new WinXrApiUDP();
+	Logger::log << "[WinXrApi] initialising WinlatorXR VR mode..." << std::endl;
+
+	std::filesystem::path dirPath = "Z:/tmp/xr";
+	std::filesystem::path fallbackDir = "D:/";
+	std::filesystem::path filePath = dirPath / "vr";
+	std::filesystem::path fallbackFile = fallbackDir / "vr";
+
+	if (std::filesystem::exists(dirPath) && std::filesystem::is_directory(dirPath)) {
+		try {
+			std::ofstream file(filePath);
+			if (file.is_open()) {
+				file << "VR";
+				file.close();
+			}
+			else {
+				
+			}
+		}
+		catch (const std::exception& e) {
+			Logger::log << "Error writing file: " << e.what() << std::endl;
+		}
+	}
+	else {
+		try {
+			std::ofstream file(fallbackFile);
+			if (file.is_open()) {
+				file << "VR";
+				file.close();
+			}
+			else {
+
+			}
+		}
+		catch (const std::exception& e) {
+			Logger::log << "Error writing file: " << e.what() << std::endl;
+		}
+	}
+
+	Logger::log << "[WinXrApi] starting UDP listener ..." << std::endl;
+	udpReader = new WinXrApiUDP();
 }
 
 void WinXrApi::OnGameFinishInit()
 {
-	//std::string txt = udpReader->GetRetData();
-
-	//Logger::log << txt << std::endl;
-
 	HWND hWnd;
 	WNDCLASSEX wc;
 	HINSTANCE hInstance = GetModuleHandle(NULL);
@@ -117,8 +154,15 @@ void WinXrApi::Shutdown()
 
 void WinXrApi::UpdatePoses()
 {
-	// Pretend we're waiting for the poses
-	Sleep(2);
+	Logger::log << "[WinXrApi] Getting UDP Data..." << std::endl;
+
+	std::string txt = udpReader->GetRetData();
+
+	Logger::log << txt << std::endl;
+
+	//Example return data:
+	//[Game] WinXrApi Getting Data...
+	//client0 0.305 - 0.371 - 0.825 0.297 0.0 0.0 0.055 - 0.404 - 0.533 0.187 - 0.167 - 0.857 - 0.451 0.0 0.0 0.567 - 0.412 - 0.283 - 0.378 0.294 - 0.166 - 0.862 0.130 0.099 0.007 0.0684 99.00 103.40 41
 }
 
 void WinXrApi::UpdateCameraFrustum(CameraFrustum* frustum, int eye)
@@ -575,5 +619,32 @@ void WinXrApi::CreateTexAndSurface(int index, UINT width, UINT height, DWORD usa
 		//{
 		//	Logger::log << "Failed to get vr render surface from " << index << ": " << result << std::endl;
 		//}
+	}
+}
+
+WinXrApi::~WinXrApi()
+{
+	Logger::log << "[WinXrApi] ending WinlatorXR VR mode..." << std::endl;
+
+	std::filesystem::path dirPath = "Z:/tmp/xr";
+	std::filesystem::path fallbackDir = "D:/";
+	std::filesystem::path filePath = dirPath / "vr";
+	std::filesystem::path fallbackFile = fallbackDir / "vr";
+
+	if (std::filesystem::exists(filePath) && std::filesystem::is_regular_file(filePath)) {
+		try {
+			std::filesystem::remove(filePath);
+		}
+		catch (const std::exception& e) {
+			Logger::log << "Error deleting file: " << e.what() << std::endl;
+		}
+	}
+	else {
+		try {
+			std::filesystem::remove(fallbackFile);
+		}
+		catch (const std::exception& e) {
+			Logger::log << "Error deleting file: " << e.what() << std::endl;
+		}
 	}
 }

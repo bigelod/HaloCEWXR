@@ -10,7 +10,7 @@ xcopy "./Extras/Images" "./Output/VR/Images/" /E /I
 :: Remove any dev files used to generate the bindings
 del ".\Output\VR\OpenVR\*.py"
 :: copy openvr_api.dll to top level
-xcopy "./ThirdParty/OpenVR/bin/openvr_api.dll" "./Output/" /F
+:: xcopy "./ThirdParty/OpenVR/bin/openvr_api.dll" "./Output/" /F
 :: Copy .dlls to top level
 robocopy "./Release" "./Output" "*.dll"
 :: Zip everything

@@ -63,6 +63,9 @@ void Game::Init()
 
 void Game::Shutdown()
 {
+	//Don't allow shutdown for WinlatorXR
+	return;
+
 	if (bHasShutdown)
 	{
 		return;

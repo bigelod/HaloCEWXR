@@ -18,6 +18,8 @@ HRESULT IDirect3D9ExWrapper::CreateDevice(UINT Adapter, D3DDEVTYPE DeviceType, H
 		Logger::log << "New dimensions: " << Game::instance.backBufferWidth << "x" << Game::instance.backBufferHeight << std::endl;
 	}
 
+	Logger::log << "Creating with Adapter: " << Adapter << std::endl;
+
 	IDirect3DDevice9Ex* RealDevice = nullptr;
 	HRESULT Result = Real->CreateDeviceEx(Adapter, DeviceType, hFocusWindow, BehaviorFlags, pPresentationParameters, NULL, &RealDevice);
 

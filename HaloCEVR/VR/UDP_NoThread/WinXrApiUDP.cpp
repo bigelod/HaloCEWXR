@@ -1,0 +1,151 @@
+#include "WinXrApiUDP.h"
+#include "../Logger.h"
+#include <Winsock2.h>
+#include <iostream>
+#include <thread>
+#include <cstring>
+#include <io.h>
+#include <mutex>
+#include <condition_variable>
+
+WinXrApiUDP::WinXrApiUDP()
+{
+	try {
+		Logger::log << "Starting UDP receiver thread..." << std::endl;
+
+		//udpReadThread = std::thread(&WinXrApiUDP::ReceiveData, this);
+		//udpReadThread.detach();
+
+		udpSocket = socket(AF_INET, SOCK_DGRAM, 0);
+		struct sockaddr_in serverAddr, clientAddr;
+		memset(&serverAddr, 0, sizeof(serverAddr));
+		serverAddr.sin_family = AF_INET;
+		serverAddr.sin_addr.s_addr = INADDR_ANY;
+		serverAddr.sin_port = htons(udpPort);
+
+		try {
+			bind(udpSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
+		}
+		catch (const std::exception& e) {
+			Logger::log << "Error starting UDP receiver: " << e.what() << std::endl;
+		}
+	}
+	catch (const std::exception& e) {
+		Logger::log << "Error starting UDP receiver thread: " << e.what() << std::endl;
+	}
+}
+
+void WinXrApiUDP::ReceiveData()
+{
+	udpSocket = socket(AF_INET, SOCK_DGRAM, 0);
+	struct sockaddr_in serverAddr, clientAddr;
+	memset(&serverAddr, 0, sizeof(serverAddr));
+	serverAddr.sin_family = AF_INET;
+	serverAddr.sin_addr.s_addr = INADDR_ANY;
+	serverAddr.sin_port = htons(udpPort);
+
+	try {
+		bind(udpSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
+	}
+	catch (const std::exception& e) {
+		Logger::log << "Error starting UDP receiver: " << e.what() << std::endl;
+	}
+
+	while (true)
+	{
+		try
+		{
+			char buffer[1024];
+			int addrLen = sizeof(clientAddr);
+
+			ptrdiff_t bytesReceived = recvfrom(udpSocket, buffer, sizeof(buffer), 0, (struct sockaddr*)&clientAddr, &addrLen);
+
+			if (bytesReceived > 0 && bytesReceived < 1024)
+			{
+				buffer[bytesReceived] = '\0';
+				std::string returnData(buffer);
+
+				Logger::log << "UDP DATA " + returnData << std::endl;
+
+				{
+					std::lock_guard<std::mutex> lock(mtx);
+					retData = returnData;
+				}
+				cv.notify_all();
+
+				// if (posData != nullptr)
+				// {
+				//     posData->ReceiveData(returnData);
+				// }
+			}
+		}
+		catch (const std::exception& e)
+		{
+			Logger::log << "Error receiving UDP data: " << e.what() << std::endl;
+		}
+	}
+}
+
+void WinXrApiUDP::KillReceiver()
+{
+	/*try
+	{
+		udpReadThread.~thread();
+		udpReadThread = std::thread();
+		_close(udpSocket);
+	}
+	catch (const std::exception& e)
+	{
+		Logger::log << "Error killing UDP receiver: " << e.what() << std::endl;
+	}*/
+}
+
+std::string WinXrApiUDP::GetRetData() {
+	/*std::unique_lock<std::mutex> lock(mtx);
+	cv.wait(lock, [this] { return !retData.empty(); });*/
+
+	struct sockaddr_in serverAddr, clientAddr;
+	memset(&serverAddr, 0, sizeof(serverAddr));
+	serverAddr.sin_family = AF_INET;
+	serverAddr.sin_addr.s_addr = INADDR_ANY;
+	serverAddr.sin_port = htons(udpPort);
+
+	try
+	{
+		char buffer[1024];
+		int addrLen = sizeof(clientAddr);
+
+		ptrdiff_t bytesReceived = recvfrom(udpSocket, buffer, sizeof(buffer), 0, (struct sockaddr*)&clientAddr, &addrLen);
+
+		if (bytesReceived > 0 && bytesReceived < 1024)
+		{
+			buffer[bytesReceived] = '\0';
+			std::string returnData(buffer);
+
+			//Logger::log << "UDP DATA " + returnData << std::endl;
+
+			//{
+				//std::lock_guard<std::mutex> lock(mtx);
+			retData = returnData;
+			//}
+			//cv.notify_all();
+
+			// if (posData != nullptr)
+			// {
+			//     posData->ReceiveData(returnData);
+			// }
+		}
+	}
+	catch (const std::exception& e)
+	{
+		Logger::log << "Error receiving UDP data: " << e.what() << std::endl;
+	}
+
+
+	return retData;
+}
+
+WinXrApiUDP::~WinXrApiUDP()
+{
+	KillReceiver();
+}

@@ -113,9 +113,8 @@ void WinXrApi::OnGameFinishInit()
 	D3DSURFACE_DESC desc;
 
 	gameSurface->GetDesc(&desc);
-	gameSurface->Release();
-
-	Logger::log << "Released the gameSurface" << std::endl;
+	//gameSurface->Release();
+	//Logger::log << "Released the gameSurface" << std::endl;
 
 	/*D3DPRESENT_PARAMETERS present;
 	ZeroMemory(&present, sizeof(present));

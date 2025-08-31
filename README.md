@@ -5,7 +5,8 @@ NOTE: This might build, but it's still in active development and crashes on load
 # To-Do:
 
 * Map the 6DOF data to the game controls
-* Fit the game render window to the entire display, for the red pixel OpenXR needs to be in the correct spot
+* Fit the game render window to the entire display 
+* Remove the black borders (the red pixel OpenXR needs to be in the correct spot)
 * Fix the DLL injection failing on actual WinlatorXR container on Quest/Pic
 
 # Done:

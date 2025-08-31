@@ -4,12 +4,17 @@ NOTE: This might build, but it's still in active development and crashes on load
 
 # To-Do:
 
-* 6DOF tracking / input collection from WinlatorXR over UDP
 * Map the 6DOF data to the game controls
 * Fit the game render window to the entire display, for the red pixel OpenXR needs to be in the correct spot
+* Fix the DLL injection failing on actual WinlatorXR container on Quest/Pic
+
+# Done:
+
+* 6DOF tracking / input collection from WinlatorXR over UDP
+* Display the top-left corner "red pixel" for OpenXR frame reference to WinlatorXR VR mode
 * Create the /vr file if the Z drive exists on load
 * Try to delete the /vr file on close
-* Fix the DLL injection failing on actual WinlatorXR container on Quest/Pic
+
 
 # Stretch-Goal(s) / Unlikely Bonus Features:
 

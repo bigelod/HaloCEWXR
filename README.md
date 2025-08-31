@@ -10,7 +10,7 @@ NOTE: This might build, but it's still in active development and crashes on load
 
 # Done:
 
-* 6DOF tracking / input collection from WinlatorXR over UDP
+* 6DOF tracking / input string collection from WinlatorXR over UDP background thread
 * Display the top-left corner "red pixel" for OpenXR frame reference to WinlatorXR VR mode
 * Create the /vr file if the Z drive exists on load
 * Try to delete the /vr file on close

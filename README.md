@@ -1,11 +1,18 @@
 # WinlatorXR port of Halo: Combat Evolved VR
 
-NOTE: This might build, but it's still in active development and mostly crashes during load on actual Quest Winlator containers as of September 2025
+NOTE: This is buggy, it is still in active development and only works using the Debug version of the DLLS (including VC++ and DirectX9) on actual Quest Winlator containers as of September 2025
 
-# To-Do:
+# To-Do - BUG FIXES:
 
-* Map the 6DOF data to the game controls
-* Fix the DLL injection failing on actual WinlatorXR container on Quest/Pic
+* Fix the DLL injection failing on actual WinlatorXR container on Quest/Pic with Release versions of the DLL (Debug working)
+* Fix the /vr file creation so it works before the UDP server listener starts (or find out why its not working as expected)
+* Investigate ways to enable audio without massive slowdown (known issue of Halo CE on WinlatorXR right now)
+* Investigate why the UI flys down-right off screen on the title screen over time
+* Investigate why the panel UI won't render in-game (notably annoying for the tutorial pop-ups)
+* Fix the sniper scope / zoom (currently broken)
+* Investigate artificial crouch behavior (currently broken)
+* Investigate the red pixel OpenXR Frame ID sync issue (currently only semi-working with odd container resolution like 646x522)
+* Investigate why re-opening Halo in the same running container gives a black screeen
 
 # Done:
 
@@ -15,11 +22,33 @@ NOTE: This might build, but it's still in active development and mostly crashes 
 * Try to delete the /vr file on close
 * Fit the game render window to the entire display 
 * Remove the black borders (the red pixel OpenXR needs to be in the correct spot)
+* Map the 6DOF data to the game controls
 
 
 # Stretch-Goal(s) / Unlikely Bonus Features:
 
+* Investigate ways to improve native render resolution without performance drops
 * Restore the mirror window or show that instead of the main game window, and enable SBS with it via creation of the /sbs file
+* Support left/right hand flipping for the movement and turn sticks
+
+
+# WinlatorXR Controls:
+
+* Left Stick - Move / UI arrows
+* Right Stick - Turn left/right
+* Right Stick Up - Switch Weapon
+* Right Stick Down - Melee Attack
+* Left Grip - Jump
+* Left Trigger - Zoom / Scope (currently broken) or ENTER for UI panels
+* Right Grip - Grenade
+* Right Trigger - Shoot
+* Left Click - Crouch (currently broken)
+* Right Click - NONE (WinlatorXR menu)
+* Left Menu Button - Escape / Menu (currently toggles too fast)
+* X - Switch Grenades
+* Y - Flashlight
+* B - Reload
+* A - Action 
 
 
 # Original ReadMe:

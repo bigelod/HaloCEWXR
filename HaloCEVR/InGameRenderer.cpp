@@ -474,7 +474,7 @@ void InGameRenderer::DrawRenderTargets(IDirect3DDevice9* pDevice)
 		pDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
 		pDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
 
-		pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 
 		pDevice->SetRenderState(D3DRS_SRGBWRITEENABLE, TRUE);
 
@@ -482,10 +482,10 @@ void InGameRenderer::DrawRenderTargets(IDirect3DDevice9* pDevice)
 		pDevice->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
 
 		VertexData2D oxrVerts[4] = {
-			{ 0.0f,   0.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,255, 0, 0) }, // Top-left
-			{ 10.0f,  0.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,255, 0, 0) }, // Top-right
-			{ 10.0f, 10.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,255, 0, 0) }, // Bottom-right
-			{ 0.0f,  10.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,255, 0, 0) }  // Bottom-left
+			{ 0.0f,   0.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,OpenXRFrameID, 0, 0) }, // Top-left
+			{ 10.0f,  0.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,OpenXRFrameID, 0, 0) }, // Top-right
+			{ 10.0f, 10.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,OpenXRFrameID, 0, 0) }, // Bottom-right
+			{ 0.0f,  10.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,OpenXRFrameID, 0, 0) }  // Bottom-left
 		};
 
 		// Draw the rectangle using DrawPrimitiveUP

@@ -22,6 +22,9 @@ public:
 	void PostRender();
 
 	void ClearRenderTargets();
+
+	//WinlatorXR Change
+	int OpenXRFrameID = 0;
 protected:
 
 	void Draw2DLines(struct IDirect3DDevice9* pDevice);

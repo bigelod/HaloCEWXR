@@ -114,7 +114,23 @@ void Game::OnInitDirectX()
 		return;
 	}
 
-	SetForegroundWindow(GetActiveWindow());
+	HWND window = GetActiveWindow();
+
+	RECT rc;
+	GetWindowRect(window, &rc);
+
+	// Modify window style
+	LONG_PTR style = GetWindowLongPtr(window, GWL_STYLE);
+	style &= ~(WS_THICKFRAME | WS_BORDER | WS_CAPTION);
+	SetWindowLongPtr(window, GWL_STYLE, style);
+
+	// Update window position and size
+	SetWindowPos(window, HWND_TOP,
+		rc.left, rc.top,
+		rc.right - rc.left, rc.bottom - rc.top,
+		SWP_FRAMECHANGED);
+
+	SetForegroundWindow(window);
 
 	// Ideally these values would be in a 4:3 ratio, but this causes the mouse position to stop aligning correctly
 	overlayWidth = static_cast<UINT>(max(vr->GetViewHeight(), vr->GetViewWidth()) * c_UIOverlayRenderScale->Value());
@@ -304,6 +320,8 @@ void Game::PostDrawEye(struct Renderer* renderer, float deltaTime, int eye)
 		Helpers::GetDirect3DDevice9()->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0);
 	}
 
+	// !!! WinlatorXR specific code change !!!
+	inGameRenderer.OpenXRFrameID = Game::OpenXRFrameID;
 	inGameRenderer.Render(Helpers::GetDirect3DDevice9());
 }
 
@@ -467,8 +485,9 @@ void Game::PostDrawFrame(struct Renderer* renderer, float deltaTime)
 		int dWidth = Helpers::GetRenderTargets()[0].width;
 		int dHeight = Helpers::GetRenderTargets()[0].height;
 
-		int trueWidth = 640;
-		int trueHeight = 480;
+		//Remove the black borders for WinlatorXR
+		int trueWidth = 1400; //640
+		int trueHeight = 1400; //480
 
 		float destAspect = static_cast<float>(trueWidth) / static_cast<float>(trueHeight);
 

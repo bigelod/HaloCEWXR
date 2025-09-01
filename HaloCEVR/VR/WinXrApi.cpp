@@ -10,6 +10,8 @@
 #include "../Game.h"
 #include <filesystem>
 #include <iostream>
+#include <sstream>
+#include <vector>
 
 template<typename T, std::size_t N>
 constexpr std::size_t arraySize(T(&)[N]) {
@@ -76,21 +78,21 @@ void WinXrApi::Init()
 
 void WinXrApi::OnGameFinishInit()
 {
-	HWND hWnd;
-	WNDCLASSEX wc;
-	HINSTANCE hInstance = GetModuleHandle(NULL);
+	//HWND hWnd;
+	//WNDCLASSEX wc;
+	//HINSTANCE hInstance = GetModuleHandle(NULL);
 
-	ZeroMemory(&wc, sizeof(WNDCLASSEX));
+	//ZeroMemory(&wc, sizeof(WNDCLASSEX));
 
-	wc.cbSize = sizeof(WNDCLASSEX);
-	wc.style = CS_HREDRAW | CS_VREDRAW;
-	wc.lpfnWndProc = WindowProcXrApi;
-	wc.hInstance = hInstance;
-	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
-	wc.lpszClassName = L"WindowClass";
+	//wc.cbSize = sizeof(WNDCLASSEX);
+	////wc.style = CS_HREDRAW | CS_VREDRAW;
+	//wc.lpfnWndProc = WindowProcXrApi;
+	//wc.hInstance = hInstance;
+	//wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	//wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
+	//wc.lpszClassName = L"WindowClass";
 
-	RegisterClassEx(&wc);
+	//RegisterClassEx(&wc);
 
 	//hWnd = CreateWindowEx(NULL, L"WindowClass", L"Mirror Window", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1200, 600, NULL, NULL, hInstance, NULL);
 
@@ -113,8 +115,8 @@ void WinXrApi::OnGameFinishInit()
 	D3DSURFACE_DESC desc;
 
 	gameSurface->GetDesc(&desc);
-	//gameSurface->Release();
-	//Logger::log << "Released the gameSurface" << std::endl;
+	gameSurface->Release();
+	Logger::log << "Released the gameSurface" << std::endl;
 
 	/*D3DPRESENT_PARAMETERS present;
 	ZeroMemory(&present, sizeof(present));
@@ -157,11 +159,58 @@ void WinXrApi::UpdatePoses()
 
 	std::string txt = udpReader->GetRetData();
 
-	//Logger::log << txt << std::endl;
-
+	//Logger::log << txt << std::endl;	 
+	
 	//Example return data:
 	//[Game] WinXrApi Getting Data...
 	//client0 0.213 0.287 -0.933 0.035 0.0 0.0 -0.008 -0.229 -0.173 0.095 -0.296 0.947 -0.077 0.0 0.0 0.154 -0.240 -0.140 0.146 -0.072 0.048 0.985 0.037 0.006 -0.017 0.0678 99.00 103.40 224 TFFFFFFFFFTTTFFFFFT
+
+	//Left Hand Quaternion X, Left Hand Quaternion Y, Left Hand Quaternion Z, Left Hand Quaternion W, Left Hand Thumbstick X, Left Hand Thumbstick Y, Left Hand X Position, Left Hand Y Position, Left Hand Z Position,
+	//Right Hand Quaternion X, Right Hand Quaternion Y, Right Hand Quaternion Z, Right Hand Quaternion W, Right Hand Thumbstick X, Right Hand Thumbstick Y, Right Hand X Position, Right Hand Y Position, Right Hand Z Position,
+	//HMD Quaternion X, HMD Quaternion Y, HMD Quaternion Z, HMD Quaternion W, HMD X Position, HMD Y position, HMD Z Position, 
+	//Current IPD, Current FOV Horizontal, Current FOV Vertical, XR Frame ID, Button String
+
+	std::istringstream iss(txt);
+	std::string client;
+	std::vector<float> floats(28);
+	int openXRFrameID;
+	std::string buttonString;
+
+	// Parse client string
+	iss >> client;
+
+	// Parse float values
+	for (auto& f : floats) {
+		iss >> f;
+	}
+
+	// Parse integer value and last string
+	iss >> openXRFrameID >> buttonString;
+
+	Game::instance.OpenXRFrameID = openXRFrameID;
+
+	//Logger::log << "Client: " << client << std::endl;
+	//Logger::log << "Floats: ";
+	//for (float val : floats) {
+	//	Logger::log << val << " ";
+	//}
+	//Logger::log << std::endl;
+	//Logger::log << "Open XR FrameID: " << openXRFrameID << std::endl;
+	//Logger::log << "Button String: " << buttonString << std::endl;
+
+	//BUTTONS:
+	//L_GRIP, L_MENU, L_THUMBSTICK_PRESS, L_THUMBSTICK_LEFT, L_THUMBSTICK_RIGHT, L_THUMBSTICK_UP, L_THUMBSTICK_DOWN, L_TRIGGER, L_X, L_Y, 
+	//R_A, R_B, R_GRIP, R_THUMBSTICK_PRESS, R_THUMBSTICK_LEFT, R_THUMBSTICK_RIGHT, R_THUMBSTICK_UP, R_THUMBSTICK_DOWN, R_TRIGGER
+	std::vector<bool> buttonBools;
+
+	for (char c : buttonString) {
+		if (c == 'F') {
+			buttonBools.push_back(false);
+		}
+		else if (c == 'T') {
+			buttonBools.push_back(true);
+		}
+	}
 }
 
 void WinXrApi::UpdateCameraFrustum(CameraFrustum* frustum, int eye)
@@ -265,84 +314,84 @@ void WinXrApi::SetCrosshairTransform(Matrix4& newTransform)
 
 void WinXrApi::UpdateInputs()
 {
-	if (bKeyboardActive)
-	{
-		for (size_t i = 32; i < 91; i++)
-		{
-			bool bPressed = GetAsyncKeyState(i) & 0x8000;
-			if (bPressed && !keystate[i])
-			{
-				keyboardBuffer += static_cast<unsigned char>(i);
-			}
-			keystate[i] = bPressed;
-		}
+	//if (bKeyboardActive)
+	//{
+	//	for (size_t i = 32; i < 91; i++)
+	//	{
+	//		bool bPressed = GetAsyncKeyState(i) & 0x8000;
+	//		if (bPressed && !keystate[i])
+	//		{
+	//			keyboardBuffer += static_cast<unsigned char>(i);
+	//		}
+	//		keystate[i] = bPressed;
+	//	}
 
-		bool bSubtract = GetAsyncKeyState(VK_SUBTRACT) & 0x8000;
-		if (bSubtract && !keystate[VK_SUBTRACT])
-		{
-			keyboardBuffer += '-';
-		}
-		keystate[VK_SUBTRACT] = bSubtract;
+	//	bool bSubtract = GetAsyncKeyState(VK_SUBTRACT) & 0x8000;
+	//	if (bSubtract && !keystate[VK_SUBTRACT])
+	//	{
+	//		keyboardBuffer += '-';
+	//	}
+	//	keystate[VK_SUBTRACT] = bSubtract;
 
-		bool bBackspace = GetAsyncKeyState(VK_BACK) & 0x8000;
-		if (bBackspace && !keystate[VK_BACK] && keyboardBuffer.size() > 0)
-		{
-			keyboardBuffer.pop_back();
-		}
-		keystate[VK_BACK] = bBackspace;
+	//	bool bBackspace = GetAsyncKeyState(VK_BACK) & 0x8000;
+	//	if (bBackspace && !keystate[VK_BACK] && keyboardBuffer.size() > 0)
+	//	{
+	//		keyboardBuffer.pop_back();
+	//	}
+	//	keystate[VK_BACK] = bBackspace;
 
-		return;
-	}
+	//	return;
+	//}
 
-	for (size_t i = 0; i < arraySize(bindings); i++)
-	{
-		bool bPressed = GetAsyncKeyState(bindings[i].virtualKey) & 0x8000;
-		bindings[i].bHasChanged = bPressed != bindings[i].bPressed;
-		bindings[i].bPressed = bPressed;
-	}
+	//for (size_t i = 0; i < arraySize(bindings); i++)
+	//{
+	//	bool bPressed = GetAsyncKeyState(bindings[i].virtualKey) & 0x8000;
+	//	bindings[i].bHasChanged = bPressed != bindings[i].bPressed;
+	//	bindings[i].bPressed = bPressed;
+	//}
 
-	for (size_t i = 0; i < arraySize(axes1D); i++)
-	{
-		axes1D[i] = 0.0f;
-	}
+	//for (size_t i = 0; i < arraySize(axes1D); i++)
+	//{
+	//	axes1D[i] = 0.0f;
+	//}
 
-	for (size_t i = 0; i < arraySize(axisBindings); i++)
-	{
-		bool bPressed = GetAsyncKeyState(axisBindings[i].virtualKey) & 0x8000;
-		if (bPressed)
-		{
-			axes1D[axisBindings[i].axisId] += axisBindings[i].scale * 1.0f;
-		}
-	}
+	//for (size_t i = 0; i < arraySize(axisBindings); i++)
+	//{
+	//	bool bPressed = GetAsyncKeyState(axisBindings[i].virtualKey) & 0x8000;
+	//	if (bPressed)
+	//	{
+	//		axes1D[axisBindings[i].axisId] += axisBindings[i].scale * 1.0f;
+	//	}
+	//}
 
-	// Respond to fake inputs used to control gun hand
+	//// Respond to fake inputs used to control gun hand
 
-	Vector2 handMoveFlat = GetVector2Input(inputMoveHandFlat) * Game::instance.lastDeltaTime;
-	Vector2 handMoveVert = GetVector2Input(inputMoveHandVert) * Game::instance.lastDeltaTime;
+	//Vector2 handMoveFlat = GetVector2Input(inputMoveHandFlat) * Game::instance.lastDeltaTime;
+	//Vector2 handMoveVert = GetVector2Input(inputMoveHandVert) * Game::instance.lastDeltaTime;
 
-	// Swap between moving/rotating
-	bool bhandModeChanged;
-	bool bSwapHandMove = GetBoolInput(inputMoveHandSwap, bhandModeChanged);
-	if (bhandModeChanged && bSwapHandMove)
-	{
-		bMoveHand ^= true;
-	}
+	//// Swap between moving/rotating
+	//bool bhandModeChanged;
+	//bool bSwapHandMove = GetBoolInput(inputMoveHandSwap, bhandModeChanged);
+	//if (bhandModeChanged && bSwapHandMove)
+	//{
+	//	bMoveHand ^= true;
+	//}
 
-	constexpr float moveSpeed = 0.5f;
-	constexpr float rotSpeed = 180.0f;
+	//constexpr float moveSpeed = 0.5f;
+	//constexpr float rotSpeed = 180.0f;
 
-	if (bMoveHand)
-	{
-		mainHandOffset.x += handMoveFlat.x * moveSpeed;
-		mainHandOffset.y += handMoveFlat.y * moveSpeed;
-		mainHandOffset.z += handMoveVert.x * moveSpeed;
-	}
-	else
-	{
-		mainHandRot.x += handMoveFlat.x * rotSpeed;
-		mainHandRot.y += handMoveFlat.y * rotSpeed;
-		mainHandRot.z += handMoveVert.x * rotSpeed;
-	}
+	//if (bMoveHand)
+	//{
+	//	mainHandOffset.x += handMoveFlat.x * moveSpeed;
+	//	mainHandOffset.y += handMoveFlat.y * moveSpeed;
+	//	mainHandOffset.z += handMoveVert.x * moveSpeed;
+	//}
+	//else
+	//{
+	//	mainHandRot.x += handMoveFlat.x * rotSpeed;
+	//	mainHandRot.y += handMoveFlat.y * rotSpeed;
+	//	mainHandRot.z += handMoveVert.x * rotSpeed;
+	//}
 }
 
 InputBindingID WinXrApi::RegisterBoolInput(std::string set, std::string action)

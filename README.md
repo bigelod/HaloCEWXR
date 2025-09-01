@@ -2,6 +2,31 @@
 
 NOTE: This is buggy, it is still in active development and only works using the Debug version of the DLLS (including VC++ and DirectX9) on actual Quest Winlator containers as of September 2025
 
+# Current buggy way of running the game in WinlatorXR:
+
+* Build the Debug DLLs
+* Copy these DLLs from PC to System32 and SysWow64 directory for their 32/64 bit versions (not sure if required yet):
+*  -> ucrtbased.dll
+*  -> vcruntime140d.dll
+*  -> msvcp140d.dll
+*  -> webservices.dll
+*  -> ws2_32.dll
+*  -> ws2help.dll
+* Install Halo CE on WinlatorXR, make sure it works first
+* Copy the VR, fonts, chimera / strings.dll, and d3d9.dll DEBUG version to the Halo install directory on Quest WinlatorXR (don't install the modified EXEs or sound mod, they don't seem to work)
+* Install Wine MONO / MSVC++ runtimes / DirectX offline runtimes ETC (exact ones needed to be determined)
+* Edit the Wine configuration to make halo.exe run as a Windows 10 program
+* Also edit the libraries for this so d3d9.dll runs native first then built-in
+* Manually create the "vr" file in Z:/tmp/xrtemp/ (need to do this every container start until bug fixed)
+* Run Halo CE WXR
+
+# Optional: Run/debug the game on your development PC:
+
+* Download the WinlatorXR source code and make your own build with the UDP debugging enabled, run it on your device
+* Create the udp_debug folder in your Downloads directory on Quest/Pico, and put a file in named after the IP of your dev server
+* Run a VR experience like SixDOFinator or create a file named "vr" manually in Z:/tmp/xrtemp/ to enable data sending
+* Run the project on PC, 6DOF data will stream to it from the Quest/Pico device
+
 # To-Do - BUG FIXES:
 
 * Fix the DLL injection failing on actual WinlatorXR container on Quest/Pic with Release versions of the DLL (Debug working)

@@ -5,6 +5,7 @@
 #include "../Helpers/RenderTarget.h"
 #include "../Helpers/Camera.h"
 #include "../Helpers/Renderer.h"
+#include "../Helpers/Cutscene.h"
 #include "../Logger.h"
 #include "../DirectXWrappers/IDirect3DDevice9ExWrapper.h"
 #include "../Game.h"
@@ -267,30 +268,40 @@ void WinXrApi::UpdateCameraFrustum(CameraFrustum* frustum, int eye)
 {
 	const float DIST = Game::instance.MetresToWorld(IPDVal / 1000.0f);
 
-	Vector3 rightVec = frustum->facingDirection.cross(frustum->upDirection);
+	Matrix4 headMatrix = GetHMDTransform(true);
 
-	frustum->position += rightVec * DIST * (float)(2 * eye - 1);
+	// Yaw should follow cutscene camera
+	CutsceneData* cutscene = Helpers::GetCutsceneData();
+
+	if (cutscene->bInCutscene)
+	{
+		float cameraYaw = atan2(frustum->facingDirection.y, frustum->facingDirection.x) * (180.0f / 3.1415926f);
+		headMatrix.rotateZ(cameraYaw);
+	}
+
+	Matrix4 viewMatrix = (headMatrix).scale(Game::instance.MetresToWorld(1.0f));
+	Matrix3 rotationMatrix = GetRotationMatrix(headMatrix);
+
+	/*Vector3 rightVec = frustum->facingDirection.cross(frustum->upDirection);
+
+	frustum->position += rightVec * DIST * (float)(2 * eye - 1);*/
 
 	frustum->fov = FOVTotal; // 60 degrees normally
+
+	frustum->facingDirection = Vector3(1.0f, 0.0f, 0.0f);
+	frustum->upDirection = Vector3(0.0f, 0.0f, -1.0f);
+
+	frustum->facingDirection = (rotationMatrix * frustum->facingDirection).normalize();
+	frustum->upDirection = (rotationMatrix * frustum->upDirection).normalize();
+
+	Vector3 newPos = viewMatrix * Vector3(0.0f, 0.0f, 0.0f);
+
+	frustum->position = frustum->position + newPos;
 }
 
 Matrix4 WinXrApi::GetControllerTransform(ControllerRole role, bool bRenderPose)
 {
-	/*if (role == (Game::instance.bLeftHanded ? ControllerRole::Right : ControllerRole::Left))
-	{
-		return Matrix4().translate(0.0f, 0.25f, -0.25f);
-	}
-	else
-	{
-		Matrix4 trans;
-		trans.rotateZ(mainHandRot.z);
-		trans.rotateY(mainHandRot.y);
-		trans.rotateX(mainHandRot.x);
-		trans.translate(mainHandOffset);
-		return trans;
-	}*/
-
-	Matrix4 outMatrix; //= GetRawControllerTransform(role, bRenderPose);
+	Matrix4 outMatrix;
 
 	Vector3 bonePos = Vector3(LHandPos.x, LHandPos.y, LHandPos.z);
 	Vector4 quat = Vector4(LHandQuat.x, LHandQuat.y, -LHandQuat.z, LHandQuat.w);
@@ -347,7 +358,7 @@ Matrix4 WinXrApi::GetControllerTransform(ControllerRole role, bool bRenderPose)
 	boneMatrixGame.rotate(180.0f, boneMatrixGame * Vector3(0.0f, 0.0f, 1.0f));
 	boneMatrixGame.rotate(180.0f, boneMatrixGame * Vector3(0.0f, 1.0f, 0.0f));
 	boneMatrixGame.rotate(180.0f, boneMatrixGame * Vector3(1.0f, 0.0f, 0.0f));
-	boneMatrixGame.translate(pos).rotateZ(-yawOffset);;
+	boneMatrixGame.translate(pos).translate(-positionOffset).rotateZ(-yawOffset);;
 
 	outMatrix = outMatrix * boneMatrixGame;
 
@@ -400,7 +411,7 @@ Matrix4 WinXrApi::GetHMDTransform(bool bRenderPose)
 	boneMatrixGame.rotate(180.0f, boneMatrixGame * Vector3(0.0f, 0.0f, 1.0f));
 	boneMatrixGame.rotate(180.0f, boneMatrixGame * Vector3(0.0f, 1.0f, 0.0f));
 	boneMatrixGame.rotate(180.0f, boneMatrixGame * Vector3(1.0f, 0.0f, 0.0f));
-	boneMatrixGame.translate(pos).rotateZ(-yawOffset);
+	boneMatrixGame.translate(pos).translate(-positionOffset).rotateZ(-yawOffset);
 
 	outMatrix = outMatrix * boneMatrixGame;
 
@@ -534,6 +545,7 @@ void WinXrApi::UpdateInputs()
 	bindings[9].bHasChanged = LClick != bindings[9].bPressed;
 	bindings[9].bPressed = LClick;
 
+	//TODO: Fix the crashing when trying to zoom / use scope
 	//Zoom
 	//bindings[10].bHasChanged = LTrigger != bindings[10].bPressed;
 	//bindings[10].bPressed = LTrigger;
@@ -549,6 +561,11 @@ void WinXrApi::UpdateInputs()
 	//Looking
 	axes1D[2] = RThumbstick.x;
 	axes1D[3] = RThumbstick.y;
+}
+
+void WinXrApi::Recentre()
+{
+	SetLocationOffset(Vector3(0.0f, 0.0f, 0.0f));
 }
 
 void WinXrApi::SetLocationOffset(Vector3 newOffset)
@@ -723,17 +740,17 @@ void WinXrApi::DrawEye(struct Renderer* renderer, float deltaTime, int eye)
 
 void WinXrApi::PostDrawFrame(struct Renderer* renderer, float deltaTime)
 {
-	IDirect3DQuery9* pEventQuery = nullptr;
+	/*IDirect3DQuery9* pEventQuery = nullptr;
 	Helpers::GetDirect3DDevice9()->CreateQuery(D3DQUERYTYPE_EVENT, &pEventQuery);
 	if (pEventQuery != nullptr)
 	{
 		pEventQuery->Issue(D3DISSUE_END);
 		while (pEventQuery->GetData(nullptr, 0, D3DGETDATA_FLUSH) != S_OK);
 		pEventQuery->Release();
-	}
+	}*/
 
-	DrawEye(renderer, deltaTime, 0);
-	DrawEye(renderer, deltaTime, 1);
+	//DrawEye(renderer, deltaTime, 0);
+	//DrawEye(renderer, deltaTime, 1);
 
 	/*HRESULT result = mirrorDevice->EndScene();
 	if (FAILED(result))

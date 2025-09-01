@@ -25,7 +25,8 @@ public:
 	float GetAspect() { return 1.0f; }
 	int GetScopeWidth() { return 800; }
 	int GetScopeHeight() { return 600; }
-	void Recentre() {};
+	void PositionOverlay();
+	void Recentre();
 	void SetLocationOffset(Vector3 newOffset);
 	Vector3 GetLocationOffset();
 	void SetYawOffset(float newOffset);
@@ -161,6 +162,15 @@ protected:
 		{"Move", 0, 1},
 		{"Look", 2, 3}
 	};
+
+	Matrix3 GetRotationMatrix(Matrix4& matrix)
+	{
+		return Matrix3(
+			matrix[0], matrix[1], matrix[2],
+			matrix[4], matrix[5], matrix[6],
+			matrix[8], matrix[9], matrix[10]
+		);
+	}
 
 	InputBindingID inputMoveHandFlat = 0;
 	InputBindingID inputMoveHandVert = 0;

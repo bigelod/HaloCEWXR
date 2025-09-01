@@ -26,11 +26,11 @@ public:
 	int GetScopeWidth() { return 800; }
 	int GetScopeHeight() { return 600; }
 	void Recentre() {};
-	void SetLocationOffset(Vector3 newOffset) {}
-	Vector3 GetLocationOffset() { return Vector3(0.0f, 0.0f, 0.0f); }
-	void SetYawOffset(float newOffset) {}
-	float GetYawOffset() { return 0.0f; }
-	Matrix4 GetHMDTransform(bool bRenderPose = false) { return Matrix4(); }
+	void SetLocationOffset(Vector3 newOffset);
+	Vector3 GetLocationOffset();
+	void SetYawOffset(float newOffset);
+	float GetYawOffset();
+	Matrix4 GetHMDTransform(bool bRenderPose = false);
 	Matrix4 GetControllerTransform(ControllerRole role, bool bRenderPose = false);
 	Matrix4 GetRawControllerTransform(ControllerRole role, bool bRenderPose = false);
 	Matrix4 GetControllerBoneTransform(ControllerRole role, int bone, bool bRenderPose = false);
@@ -57,6 +57,32 @@ public:
 	void HideKeyboard();
 	std::string GetKeyboardInput();
 	std::string GetDeviceName();
+	float IPDVal;
+	float FOVH;
+	float FOVV;
+	float FOVTotal = 1.0472f;
+	Vector4 QuaternionMultiply(const Vector4& q1, const Vector4& q2);
+	Vector3 HMDPos;
+	Vector3 LHandPos;
+	Vector3 RHandPos;
+	Vector4 HMDQuat;
+	Vector4 LHandQuat;
+	Vector4 RHandQuat;
+	Vector2 LThumbstick;
+	Vector2 RThumbstick;
+	bool LTrigger = false;
+	bool LGrip = false;
+	bool LClick = false;
+	bool RTrigger = false;
+	bool RGrip = false;
+	bool RClick = false;
+	bool L_X = false;
+	bool L_Y = false;
+	bool R_A = false;
+	bool R_B = false;
+	bool L_Menu = false;
+	bool R_ThumbDown = false;
+	bool R_ThumbUp = false;
 	// End Interface IVR
 	~WinXrApi();
 
@@ -66,6 +92,9 @@ protected:
 	void CreateTexAndSurface(int index, UINT width, UINT height, DWORD usage, D3DFORMAT format);
 
 	void DrawEye(struct Renderer* renderer, float deltaTime, int eye);
+
+	Vector3 positionOffset;
+	float yawOffset;
 
 	HWND hWnd;
 	struct IDirect3DDevice9* mirrorDevice = nullptr;
@@ -120,33 +149,17 @@ protected:
 		int indexY = 0;
 	};
 
-	float axes1D[6] = {
-		0.0f,
+	float axes1D[4] = {
 		0.0f,
 		0.0f,
 		0.0f,
 		0.0f
 	};
 
-	Axis2D axes2D[3] =
+	Axis2D axes2D[2] =
 	{
 		{"Move", 0, 1},
-		{"EMU_MoveHandFlat", 2, 3},
-		{"EMU_MoveHandVert", 4, 5}
-	};
-
-	AxisBinding axisBindings[10] =
-	{
-		{'W', 1, 1},
-		{'S', -1, 1},
-		{'A', -1, 0},
-		{'D', 1, 0},
-		{'I', 1, 3},
-		{'K', -1, 3},
-		{'J', -1, 2},
-		{'L', 1, 2},
-		{'U', -1, 4},
-		{'O', 1, 4},
+		{"Look", 2, 3}
 	};
 
 	InputBindingID inputMoveHandFlat = 0;

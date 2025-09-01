@@ -34,6 +34,19 @@ LRESULT CALLBACK WindowProcXrApi(HWND hWnd, UINT message, WPARAM wParam, LPARAM 
 
 void WinXrApi::Init()
 {
+	IPDVal = 64.0f;
+
+	LHandQuat = Vector4(0, 0, 0, 0);
+	LHandPos = Vector3(0, 0, 0);
+	LThumbstick = Vector2(0, 0);
+
+	RHandQuat = Vector4(0, 0, 0, 0);
+	RHandPos = Vector3(0, 0, 0);
+	RThumbstick = Vector2(0, 0);
+
+	HMDQuat = Vector4(0, 0, 0, 0);
+	HMDPos = Vector3(0, 0, 0);
+
 	Logger::log << "[WinXrApi] initialising WinlatorXR VR mode..." << std::endl;
 
 	std::filesystem::path dirPath = "Z:/tmp/xr";
@@ -78,21 +91,21 @@ void WinXrApi::Init()
 
 void WinXrApi::OnGameFinishInit()
 {
-	//HWND hWnd;
-	//WNDCLASSEX wc;
-	//HINSTANCE hInstance = GetModuleHandle(NULL);
+	/*HWND hWnd;
+	WNDCLASSEX wc;
+	HINSTANCE hInstance = GetModuleHandle(NULL);
 
-	//ZeroMemory(&wc, sizeof(WNDCLASSEX));
+	ZeroMemory(&wc, sizeof(WNDCLASSEX));
 
-	//wc.cbSize = sizeof(WNDCLASSEX);
-	////wc.style = CS_HREDRAW | CS_VREDRAW;
-	//wc.lpfnWndProc = WindowProcXrApi;
-	//wc.hInstance = hInstance;
-	//wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	//wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
-	//wc.lpszClassName = L"WindowClass";
+	wc.cbSize = sizeof(WNDCLASSEX);
+	wc.style = CS_HREDRAW | CS_VREDRAW;
+	wc.lpfnWndProc = WindowProcXrApi;
+	wc.hInstance = hInstance;
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
+	wc.lpszClassName = L"WindowClass";
 
-	//RegisterClassEx(&wc);
+	RegisterClassEx(&wc);*/
 
 	//hWnd = CreateWindowEx(NULL, L"WindowClass", L"Mirror Window", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, 1200, 600, NULL, NULL, hInstance, NULL);
 
@@ -165,11 +178,6 @@ void WinXrApi::UpdatePoses()
 	//[Game] WinXrApi Getting Data...
 	//client0 0.213 0.287 -0.933 0.035 0.0 0.0 -0.008 -0.229 -0.173 0.095 -0.296 0.947 -0.077 0.0 0.0 0.154 -0.240 -0.140 0.146 -0.072 0.048 0.985 0.037 0.006 -0.017 0.0678 99.00 103.40 224 TFFFFFFFFFTTTFFFFFT
 
-	//Left Hand Quaternion X, Left Hand Quaternion Y, Left Hand Quaternion Z, Left Hand Quaternion W, Left Hand Thumbstick X, Left Hand Thumbstick Y, Left Hand X Position, Left Hand Y Position, Left Hand Z Position,
-	//Right Hand Quaternion X, Right Hand Quaternion Y, Right Hand Quaternion Z, Right Hand Quaternion W, Right Hand Thumbstick X, Right Hand Thumbstick Y, Right Hand X Position, Right Hand Y Position, Right Hand Z Position,
-	//HMD Quaternion X, HMD Quaternion Y, HMD Quaternion Z, HMD Quaternion W, HMD X Position, HMD Y position, HMD Z Position, 
-	//Current IPD, Current FOV Horizontal, Current FOV Vertical, XR Frame ID, Button String
-
 	std::istringstream iss(txt);
 	std::string client;
 	std::vector<float> floats(28);
@@ -198,9 +206,6 @@ void WinXrApi::UpdatePoses()
 	//Logger::log << "Open XR FrameID: " << openXRFrameID << std::endl;
 	//Logger::log << "Button String: " << buttonString << std::endl;
 
-	//BUTTONS:
-	//L_GRIP, L_MENU, L_THUMBSTICK_PRESS, L_THUMBSTICK_LEFT, L_THUMBSTICK_RIGHT, L_THUMBSTICK_UP, L_THUMBSTICK_DOWN, L_TRIGGER, L_X, L_Y, 
-	//R_A, R_B, R_GRIP, R_THUMBSTICK_PRESS, R_THUMBSTICK_LEFT, R_THUMBSTICK_RIGHT, R_THUMBSTICK_UP, R_THUMBSTICK_DOWN, R_TRIGGER
 	std::vector<bool> buttonBools;
 
 	for (char c : buttonString) {
@@ -211,23 +216,67 @@ void WinXrApi::UpdatePoses()
 			buttonBools.push_back(true);
 		}
 	}
+
+	//FLOATS:
+	//Left Hand Quaternion X, Left Hand Quaternion Y, Left Hand Quaternion Z, Left Hand Quaternion W, Left Hand Thumbstick X, Left Hand Thumbstick Y, 
+	//Left Hand X Position, Left Hand Y Position, Left Hand Z Position,
+	//Right Hand Quaternion X, Right Hand Quaternion Y, Right Hand Quaternion Z, Right Hand Quaternion W, Right Hand Thumbstick X, Right Hand Thumbstick Y, 
+	//Right Hand X Position, Right Hand Y Position, Right Hand Z Position,
+	//HMD Quaternion X, HMD Quaternion Y, HMD Quaternion Z, HMD Quaternion W, HMD X Position, HMD Y position, HMD Z Position, 
+	//Current IPD, Current FOV Horizontal, Current FOV Vertical, XR Frame ID, Button String
+
+	//BUTTONS:
+	//L_GRIP, L_MENU, L_THUMBSTICK_PRESS, L_THUMBSTICK_LEFT, L_THUMBSTICK_RIGHT, L_THUMBSTICK_UP, L_THUMBSTICK_DOWN, L_TRIGGER, L_X, L_Y, 
+	//R_A, R_B, R_GRIP, R_THUMBSTICK_PRESS, R_THUMBSTICK_LEFT, R_THUMBSTICK_RIGHT, R_THUMBSTICK_UP, R_THUMBSTICK_DOWN, R_TRIGGER
+
+	LHandQuat = Vector4(floats[0], floats[1], floats[2], floats[3]);
+	LHandPos = Vector3(floats[6], floats[7], floats[8]);
+	LThumbstick = Vector2(floats[4], floats[5]);
+	
+	RHandQuat = Vector4(floats[9], floats[10], floats[11], floats[12]);
+	RHandPos = Vector3(floats[15], floats[16], floats[17]);
+	RThumbstick = Vector2(floats[13], floats[14]);
+
+	HMDQuat = Vector4(floats[18], floats[19], floats[20], floats[21]);
+	HMDPos = Vector3(floats[22], floats[23], floats[24]);
+
+	IPDVal = floats[25];
+	FOVH = floats[26];
+	FOVV = floats[27];
+
+	FOVTotal = FOVH / FOVV;
+
+	LTrigger = buttonBools[7];
+	LGrip = buttonBools[0];
+	LClick = buttonBools[2];
+	RTrigger = buttonBools[18];
+	RGrip = buttonBools[12];
+	RClick = buttonBools[13];
+	L_X = buttonBools[8];
+	L_Y = buttonBools[9];
+	R_A = buttonBools[10];
+	R_B = buttonBools[11];
+	L_Menu = buttonBools[1];
+
+	R_ThumbUp = buttonBools[16];
+	R_ThumbDown = buttonBools[17];
+
 }
 
 void WinXrApi::UpdateCameraFrustum(CameraFrustum* frustum, int eye)
 {
-	// Emulate a 64mm IPD
-	const float DIST = Game::instance.MetresToWorld(64.0f / 1000.0f);
+	const float DIST = Game::instance.MetresToWorld(IPDVal / 1000.0f);
 
 	Vector3 rightVec = frustum->facingDirection.cross(frustum->upDirection);
 
 	frustum->position += rightVec * DIST * (float)(2 * eye - 1);
 
-	frustum->fov = 1.0472f; // 60 degrees
+	frustum->fov = FOVTotal; // 60 degrees normally
 }
 
 Matrix4 WinXrApi::GetControllerTransform(ControllerRole role, bool bRenderPose)
 {
-	if (role == (Game::instance.bLeftHanded ? ControllerRole::Right : ControllerRole::Left))
+	/*if (role == (Game::instance.bLeftHanded ? ControllerRole::Right : ControllerRole::Left))
 	{
 		return Matrix4().translate(0.0f, 0.25f, -0.25f);
 	}
@@ -239,7 +288,123 @@ Matrix4 WinXrApi::GetControllerTransform(ControllerRole role, bool bRenderPose)
 		trans.rotateX(mainHandRot.x);
 		trans.translate(mainHandOffset);
 		return trans;
+	}*/
+
+	Matrix4 outMatrix; //= GetRawControllerTransform(role, bRenderPose);
+
+	Vector3 bonePos = Vector3(LHandPos.x, LHandPos.y, LHandPos.z);
+	Vector4 quat = Vector4(LHandQuat.x, LHandQuat.y, -LHandQuat.z, LHandQuat.w);
+
+	if (role == (Game::instance.bLeftHanded ? ControllerRole::Right : ControllerRole::Left))
+	{
+		if (!Game::instance.bLeftHanded) {
+			bonePos = Vector3(LHandPos.x, LHandPos.y, LHandPos.z);
+			quat = Vector4(LHandQuat.x, LHandQuat.y, -LHandQuat.z, LHandQuat.w);
+		}
+		else {
+			bonePos = Vector3(RHandPos.x, RHandPos.y, RHandPos.z);
+			quat = Vector4(RHandQuat.x, RHandQuat.y, -RHandQuat.z, RHandQuat.w);
+		}		
 	}
+	else {
+		if (!Game::instance.bLeftHanded) {
+			bonePos = Vector3(RHandPos.x, RHandPos.y, RHandPos.z);
+			quat = Vector4(RHandQuat.x, RHandQuat.y, -RHandQuat.z, RHandQuat.w);
+		}
+		else {
+			bonePos = Vector3(LHandPos.x, LHandPos.y, LHandPos.z);
+			quat = Vector4(LHandQuat.x, LHandQuat.y, -LHandQuat.z, LHandQuat.w);
+		}
+	}
+
+	Vector4 rollInversion = Vector4(0.0f, 0.0f, 1.0f, 0.0f); // Quaternion for 180-degree rotation around Z-axis
+	quat = QuaternionMultiply(quat, rollInversion);
+
+	Matrix4 boneMatrix;
+	Transform tempTransform;
+	Helpers::MakeTransformFromQuat(&quat, &tempTransform);
+
+	for (int x = 0; x < 3; x++)
+	{
+		for (int y = 0; y < 3; y++)
+		{
+			// Not sure why get is const, you can directly set the values with setrow/setcolumn anyway
+			const_cast<float*>(boneMatrix.get())[x + y * 4] = tempTransform.rotation[x + y * 3];
+		}
+	}
+
+	boneMatrix.setColumn(3, bonePos);
+
+	Matrix4 boneMatrixGame(
+		boneMatrix.get()[2 + 2 * 4], boneMatrix.get()[0 + 2 * 4], -boneMatrix.get()[1 + 2 * 4], 0.0,
+		boneMatrix.get()[2 + 0 * 4], boneMatrix.get()[0 + 0 * 4], -boneMatrix.get()[1 + 0 * 4], 0.0,
+		-boneMatrix.get()[2 + 1 * 4], -boneMatrix.get()[0 + 1 * 4], boneMatrix.get()[1 + 1 * 4], 0.0,
+		-boneMatrix.get()[2 + 3 * 4], -boneMatrix.get()[0 + 3 * 4], boneMatrix.get()[1 + 3 * 4], 1.0f
+	);
+
+	Vector3 pos = boneMatrixGame * Vector3(0.0f, 0.0f, 0.0f);
+	boneMatrixGame.translate(-pos);
+	boneMatrixGame.rotate(180.0f, boneMatrixGame * Vector3(0.0f, 0.0f, 1.0f));
+	boneMatrixGame.rotate(180.0f, boneMatrixGame * Vector3(0.0f, 1.0f, 0.0f));
+	boneMatrixGame.rotate(180.0f, boneMatrixGame * Vector3(1.0f, 0.0f, 0.0f));
+	boneMatrixGame.translate(pos).rotateZ(-yawOffset);;
+
+	outMatrix = outMatrix * boneMatrixGame;
+
+	return outMatrix;
+}
+
+Vector4 WinXrApi::QuaternionMultiply(const Vector4& q1, const Vector4& q2) {
+	return Vector4(
+		q1.w * q2.x + q1.x * q2.w + q1.y * q2.z - q1.z * q2.y,
+		q1.w * q2.y - q1.x * q2.z + q1.y * q2.w + q1.z * q2.x,
+		q1.w * q2.z + q1.x * q2.y - q1.y * q2.x + q1.z * q2.w,
+		q1.w * q2.w - q1.x * q2.x - q1.y * q2.y - q1.z * q2.z
+	);
+}
+
+Matrix4 WinXrApi::GetHMDTransform(bool bRenderPose)
+{
+	Matrix4 outMatrix;
+
+	Vector3 bonePos = Vector3(HMDPos.x, HMDPos.y, HMDPos.z);
+	Vector4 quat = Vector4(HMDQuat.x, HMDQuat.y, -HMDQuat.z, HMDQuat.w);
+
+	Vector4 rollInversion = Vector4(0.0f, 0.0f, 1.0f, 0.0f); // Quaternion for 180-degree rotation around Z-axis
+	quat = QuaternionMultiply(quat, rollInversion);
+
+	Matrix4 boneMatrix;
+	Transform tempTransform;
+	Helpers::MakeTransformFromQuat(&quat, &tempTransform);
+
+	for (int x = 0; x < 3; x++)
+	{
+		for (int y = 0; y < 3; y++)
+		{
+			// Not sure why get is const, you can directly set the values with setrow/setcolumn anyway
+			const_cast<float*>(boneMatrix.get())[x + y * 4] = tempTransform.rotation[x + y * 3];
+		}
+	}
+
+	boneMatrix.setColumn(3, bonePos);
+
+	Matrix4 boneMatrixGame(
+		boneMatrix.get()[2 + 2 * 4], boneMatrix.get()[0 + 2 * 4], -boneMatrix.get()[1 + 2 * 4], 0.0,
+		boneMatrix.get()[2 + 0 * 4], boneMatrix.get()[0 + 0 * 4], -boneMatrix.get()[1 + 0 * 4], 0.0,
+		-boneMatrix.get()[2 + 1 * 4], -boneMatrix.get()[0 + 1 * 4], boneMatrix.get()[1 + 1 * 4], 0.0,
+		-boneMatrix.get()[2 + 3 * 4], -boneMatrix.get()[0 + 3 * 4], boneMatrix.get()[1 + 3 * 4], 1.0f
+	);
+
+	Vector3 pos = boneMatrixGame * Vector3(0.0f, 0.0f, 0.0f);
+	boneMatrixGame.translate(-pos);
+	boneMatrixGame.rotate(180.0f, boneMatrixGame * Vector3(0.0f, 0.0f, 1.0f));
+	boneMatrixGame.rotate(180.0f, boneMatrixGame * Vector3(0.0f, 1.0f, 0.0f));
+	boneMatrixGame.rotate(180.0f, boneMatrixGame * Vector3(1.0f, 0.0f, 0.0f));
+	boneMatrixGame.translate(pos).rotateZ(-yawOffset);
+
+	outMatrix = outMatrix * boneMatrixGame;
+
+	return outMatrix;
 }
 
 Matrix4 WinXrApi::GetRawControllerTransform(ControllerRole role, bool bRenderPose)
@@ -314,84 +479,96 @@ void WinXrApi::SetCrosshairTransform(Matrix4& newTransform)
 
 void WinXrApi::UpdateInputs()
 {
-	//if (bKeyboardActive)
-	//{
-	//	for (size_t i = 32; i < 91; i++)
-	//	{
-	//		bool bPressed = GetAsyncKeyState(i) & 0x8000;
-	//		if (bPressed && !keystate[i])
-	//		{
-	//			keyboardBuffer += static_cast<unsigned char>(i);
-	//		}
-	//		keystate[i] = bPressed;
-	//	}
+	//BINDINGS:
+	//{ "Jump", VK_SPACE },
+	//{ "SwitchGrenades", 'G' },
+	//{ "Interact", 'E' },
+	//{ "SwitchWeapons", VK_TAB },
+	//{ "Melee", 'Q' },
+	//{ "Flashlight", 'F' },
+	//{ "Grenade", VK_RBUTTON },
+	//{ "Fire", VK_LBUTTON },
+	//{ "MenuBack", 'P' }, // Intentionally weird binding because we don't override this in the same way and it would conflict
+	//{ "Crouch", VK_LCONTROL },
+	//{ "Zoom", 'Z' },
+	//{ "Reload", 'R' },
+	//{ "EMU_MoveHandSwap", 'H' }
 
-	//	bool bSubtract = GetAsyncKeyState(VK_SUBTRACT) & 0x8000;
-	//	if (bSubtract && !keystate[VK_SUBTRACT])
-	//	{
-	//		keyboardBuffer += '-';
-	//	}
-	//	keystate[VK_SUBTRACT] = bSubtract;
+	//Jump
+	bindings[0].bHasChanged = LGrip != bindings[0].bPressed;
+	bindings[0].bPressed = LGrip;
 
-	//	bool bBackspace = GetAsyncKeyState(VK_BACK) & 0x8000;
-	//	if (bBackspace && !keystate[VK_BACK] && keyboardBuffer.size() > 0)
-	//	{
-	//		keyboardBuffer.pop_back();
-	//	}
-	//	keystate[VK_BACK] = bBackspace;
+	//Switch Grenades
+	bindings[1].bHasChanged = L_X != bindings[1].bPressed;
+	bindings[1].bPressed = L_X;
 
-	//	return;
-	//}
+	//Interact
+	bindings[2].bHasChanged = R_A != bindings[2].bPressed;
+	bindings[2].bPressed = R_A;
 
-	//for (size_t i = 0; i < arraySize(bindings); i++)
-	//{
-	//	bool bPressed = GetAsyncKeyState(bindings[i].virtualKey) & 0x8000;
-	//	bindings[i].bHasChanged = bPressed != bindings[i].bPressed;
-	//	bindings[i].bPressed = bPressed;
-	//}
+	//Switch Weapons
+	bindings[3].bHasChanged = R_ThumbUp != bindings[3].bPressed;
+	bindings[3].bPressed = R_ThumbUp;
 
-	//for (size_t i = 0; i < arraySize(axes1D); i++)
-	//{
-	//	axes1D[i] = 0.0f;
-	//}
+	//Melee
+	bindings[4].bHasChanged = R_ThumbDown != bindings[4].bPressed;
+	bindings[4].bPressed = R_ThumbDown;
 
-	//for (size_t i = 0; i < arraySize(axisBindings); i++)
-	//{
-	//	bool bPressed = GetAsyncKeyState(axisBindings[i].virtualKey) & 0x8000;
-	//	if (bPressed)
-	//	{
-	//		axes1D[axisBindings[i].axisId] += axisBindings[i].scale * 1.0f;
-	//	}
-	//}
+	//Flashlight
+	bindings[5].bHasChanged = L_Y != bindings[5].bPressed;
+	bindings[5].bPressed = L_Y;
 
-	//// Respond to fake inputs used to control gun hand
+	//Grenade
+	bindings[6].bHasChanged = RGrip != bindings[6].bPressed;
+	bindings[6].bPressed = RGrip;
 
-	//Vector2 handMoveFlat = GetVector2Input(inputMoveHandFlat) * Game::instance.lastDeltaTime;
-	//Vector2 handMoveVert = GetVector2Input(inputMoveHandVert) * Game::instance.lastDeltaTime;
+	//Fire
+	bindings[7].bHasChanged = RTrigger != bindings[7].bPressed;
+	bindings[7].bPressed = RTrigger;
 
-	//// Swap between moving/rotating
-	//bool bhandModeChanged;
-	//bool bSwapHandMove = GetBoolInput(inputMoveHandSwap, bhandModeChanged);
-	//if (bhandModeChanged && bSwapHandMove)
-	//{
-	//	bMoveHand ^= true;
-	//}
+	//MenuBack
+	bindings[8].bHasChanged = L_Menu != bindings[8].bPressed;
+	bindings[8].bPressed = L_Menu;
 
-	//constexpr float moveSpeed = 0.5f;
-	//constexpr float rotSpeed = 180.0f;
+	//Crouch
+	bindings[9].bHasChanged = LClick != bindings[9].bPressed;
+	bindings[9].bPressed = LClick;
 
-	//if (bMoveHand)
-	//{
-	//	mainHandOffset.x += handMoveFlat.x * moveSpeed;
-	//	mainHandOffset.y += handMoveFlat.y * moveSpeed;
-	//	mainHandOffset.z += handMoveVert.x * moveSpeed;
-	//}
-	//else
-	//{
-	//	mainHandRot.x += handMoveFlat.x * rotSpeed;
-	//	mainHandRot.y += handMoveFlat.y * rotSpeed;
-	//	mainHandRot.z += handMoveVert.x * rotSpeed;
-	//}
+	//Zoom
+	//bindings[10].bHasChanged = LTrigger != bindings[10].bPressed;
+	//bindings[10].bPressed = LTrigger;
+
+	//Reload
+	bindings[11].bHasChanged = R_B != bindings[11].bPressed;
+	bindings[11].bPressed = R_B;
+
+	//Movement
+	axes1D[0] = LThumbstick.x;
+	axes1D[1] = LThumbstick.y;
+
+	//Looking
+	axes1D[2] = RThumbstick.x;
+	axes1D[3] = RThumbstick.y;
+}
+
+void WinXrApi::SetLocationOffset(Vector3 newOffset)
+{
+	positionOffset = newOffset;
+}
+
+Vector3 WinXrApi::GetLocationOffset()
+{
+	return positionOffset;
+}
+
+void WinXrApi::SetYawOffset(float newOffset)
+{
+	yawOffset = newOffset;
+}
+
+float WinXrApi::GetYawOffset()
+{
+	return yawOffset;
 }
 
 InputBindingID WinXrApi::RegisterBoolInput(std::string set, std::string action)

@@ -486,8 +486,8 @@ void Game::PostDrawFrame(struct Renderer* renderer, float deltaTime)
 		int dHeight = Helpers::GetRenderTargets()[0].height;
 
 		//Remove the black borders for WinlatorXR
-		int trueWidth = 1400; //640
-		int trueHeight = 1400; //480
+		int trueWidth = sWidth; //640
+		int trueHeight = sHeight; //480
 
 		float destAspect = static_cast<float>(trueWidth) / static_cast<float>(trueHeight);
 

@@ -153,15 +153,15 @@ void WinXrApi::Shutdown()
 
 void WinXrApi::UpdatePoses()
 {
-	Logger::log << "[WinXrApi] Getting UDP Data..." << std::endl;
+	//Logger::log << "[WinXrApi] Getting UDP Data..." << std::endl;
 
 	std::string txt = udpReader->GetRetData();
 
-	Logger::log << txt << std::endl;
+	//Logger::log << txt << std::endl;
 
 	//Example return data:
 	//[Game] WinXrApi Getting Data...
-	//client0 0.305 - 0.371 - 0.825 0.297 0.0 0.0 0.055 - 0.404 - 0.533 0.187 - 0.167 - 0.857 - 0.451 0.0 0.0 0.567 - 0.412 - 0.283 - 0.378 0.294 - 0.166 - 0.862 0.130 0.099 0.007 0.0684 99.00 103.40 41
+	//client0 0.213 0.287 -0.933 0.035 0.0 0.0 -0.008 -0.229 -0.173 0.095 -0.296 0.947 -0.077 0.0 0.0 0.154 -0.240 -0.140 0.146 -0.072 0.048 0.985 0.037 0.006 -0.017 0.0678 99.00 103.40 224 TFFFFFFFFFTTTFFFFFT
 }
 
 void WinXrApi::UpdateCameraFrustum(CameraFrustum* frustum, int eye)

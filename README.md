@@ -5,8 +5,6 @@ NOTE: This might build, but it's still in active development and crashes on load
 # To-Do:
 
 * Map the 6DOF data to the game controls
-* Fit the game render window to the entire display 
-* Remove the black borders (the red pixel OpenXR needs to be in the correct spot)
 * Fix the DLL injection failing on actual WinlatorXR container on Quest/Pic
 
 # Done:
@@ -15,6 +13,8 @@ NOTE: This might build, but it's still in active development and crashes on load
 * Display the top-left corner "red pixel" for OpenXR frame reference to WinlatorXR VR mode
 * Create the /vr file if the Z drive exists on load
 * Try to delete the /vr file on close
+* Fit the game render window to the entire display 
+* Remove the black borders (the red pixel OpenXR needs to be in the correct spot)
 
 
 # Stretch-Goal(s) / Unlikely Bonus Features:

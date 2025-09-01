@@ -1,6 +1,6 @@
 # WinlatorXR port of Halo: Combat Evolved VR
 
-NOTE: This might build, but it's still in active development and crashes on load on actual Quest Winlator containers as of August 2025
+NOTE: This might build, but it's still in active development and mostly crashes during load on actual Quest Winlator containers as of September 2025
 
 # To-Do:
 

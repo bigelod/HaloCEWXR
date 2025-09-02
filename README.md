@@ -4,7 +4,7 @@ NOTE: This is buggy, it is still in active development and only works using the 
 
 # Current buggy way of running the game in WinlatorXR:
 
-* Build the Debug DLLs
+* Build the Debug d3d9 DLL
 * Copy these DLLs from PC to System32 and SysWow64 directory for their 32/64 bit versions (not sure if required yet):
 *  -> ucrtbased.dll
 *  -> vcruntime140d.dll

@@ -13,7 +13,7 @@ NOTE: This is buggy, it is still in active development and only works using the 
 *  -> ws2_32.dll
 *  -> ws2help.dll
 * Install Halo CE on WinlatorXR, make sure it works first
-* Copy the VR, fonts, chimera / strings.dll, and d3d9.dll DEBUG version to the Halo install directory on Quest WinlatorXR (don't install the modified EXEs or sound mod, they don't seem to work)
+* Copy the VR, fonts, chimera / strings.dll, and d3d9.dll DEBUG version to the Halo install directory on Quest WinlatorXR (don't install the modified large memory EXEs, they don't seem to work)
 * Install Wine MONO / MSVC++ runtimes / DirectX offline runtimes ETC (exact ones needed to be determined)
 * Edit the Wine configuration to make halo.exe run as a Windows 10 program
 * Also edit the libraries for this so d3d9.dll runs native first then built-in
@@ -29,16 +29,16 @@ NOTE: This is buggy, it is still in active development and only works using the 
 # To-Do - BUG FIXES:
 
 * Fix the DLL injection failing on actual WinlatorXR container on Quest/Pic with Release versions of the DLL (Debug working)
-* Investigate ways to enable audio without massive slowdown (known issue of Halo CE on WinlatorXR right now)
 * Investigate why the UI flys down-right off screen on the title screen over time
 * Investigate why the panel UI won't render in-game (notably annoying for the tutorial pop-ups)
-* Fix the sniper scope / zoom (currently broken)
-* Investigate artificial crouch behavior (currently broken)
-* Investigate the red pixel OpenXR Frame ID sync issue (currently only semi-working with odd container resolution like 646x522)
+* Fix the sniper scope / zoom (currently broken, crashes on Sniper equip)
+* Investigate artificial crouch behavior (currently broken, might be disabled by the PCVR mod?)
+* Investigate the red pixel OpenXR Frame ID sync issue (currently only semi-working with odd container resolution like 646x522 or running as a shortcut)
 * Investigate why re-opening Halo in the same running container gives a black screeen
 
 # Done:
 
+* Investigate ways to enable audio without massive slowdown (known issue of Halo CE on WinlatorXR right now)
 * 6DOF tracking / input string collection from WinlatorXR over UDP background thread
 * Display the top-left corner "red pixel" for OpenXR frame reference to WinlatorXR VR mode
 * Create the /vr file if the Z drive exists on load
@@ -47,6 +47,7 @@ NOTE: This is buggy, it is still in active development and only works using the 
 * Remove the black borders (the red pixel OpenXR needs to be in the correct spot)
 * Map the 6DOF data to the game controls
 * Fix the /vr file creation so it works before the UDP server listener starts (or find out why its not working as expected)
+* Restore the in-game HUD display without losing the red pixel overlay
 
 
 # Stretch-Goal(s) / Unlikely Bonus Features:

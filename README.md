@@ -17,20 +17,18 @@ NOTE: This is buggy, it is still in active development and only works using the 
 * Install Wine MONO / MSVC++ runtimes / DirectX offline runtimes ETC (exact ones needed to be determined)
 * Edit the Wine configuration to make halo.exe run as a Windows 10 program
 * Also edit the libraries for this so d3d9.dll runs native first then built-in
-* Manually create the "vr" file in Z:/tmp/xr/ (need to do this every container start until bug fixed)
 * Run Halo CE WXR
 
 # Optional: Run/debug the game on your development PC:
 
 * Download the WinlatorXR source code and make your own build with the UDP debugging enabled, run it on your device
 * Create the udp_debug folder in your Downloads directory on Quest/Pico, and put a file in named after the IP of your dev server
-* Run a VR experience like SixDOFinator or create a file named "vr" manually in Z:/tmp/xrtemp/ to enable data sending
+* Run a VR experience like SixDOFinator or create a file named "vr" manually in Z:/tmp/xr/ to enable data sending
 * Run the project on PC, 6DOF data will stream to it from the Quest/Pico device
 
 # To-Do - BUG FIXES:
 
 * Fix the DLL injection failing on actual WinlatorXR container on Quest/Pic with Release versions of the DLL (Debug working)
-* Fix the /vr file creation so it works before the UDP server listener starts (or find out why its not working as expected)
 * Investigate ways to enable audio without massive slowdown (known issue of Halo CE on WinlatorXR right now)
 * Investigate why the UI flys down-right off screen on the title screen over time
 * Investigate why the panel UI won't render in-game (notably annoying for the tutorial pop-ups)
@@ -48,6 +46,7 @@ NOTE: This is buggy, it is still in active development and only works using the 
 * Fit the game render window to the entire display 
 * Remove the black borders (the red pixel OpenXR needs to be in the correct spot)
 * Map the 6DOF data to the game controls
+* Fix the /vr file creation so it works before the UDP server listener starts (or find out why its not working as expected)
 
 
 # Stretch-Goal(s) / Unlikely Bonus Features:

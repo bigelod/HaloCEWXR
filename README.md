@@ -17,7 +17,7 @@ NOTE: This is buggy, it is still in active development and only works using the 
 * Install Wine MONO / MSVC++ runtimes / DirectX offline runtimes ETC (exact ones needed to be determined)
 * Edit the Wine configuration to make halo.exe run as a Windows 10 program
 * Also edit the libraries for this so d3d9.dll runs native first then built-in
-* Manually create the "vr" file in Z:/tmp/xrtemp/ (need to do this every container start until bug fixed)
+* Manually create the "vr" file in Z:/tmp/xr/ (need to do this every container start until bug fixed)
 * Run Halo CE WXR
 
 # Optional: Run/debug the game on your development PC:

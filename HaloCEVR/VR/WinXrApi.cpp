@@ -48,14 +48,28 @@ void WinXrApi::Init()
 	HMDQuat = Vector4(0, 0, 0, 0);
 	HMDPos = Vector3(0, 0, 0);
 
-	Logger::log << "[WinXrApi] initialising WinlatorXR VR mode..." << std::endl;
+	Logger::log << "[WinXrApi] Initialising WinlatorXR VR mode..." << std::endl;
 
+	std::filesystem::path tmpPath = "Z:/";
 	std::filesystem::path dirPath = "Z:/tmp/xr";
 	std::filesystem::path fallbackDir = "D:/";
 	std::filesystem::path filePath = dirPath / "vr";
 	std::filesystem::path fallbackFile = fallbackDir / "vr";
 
-	if (std::filesystem::exists(dirPath) && std::filesystem::is_directory(dirPath)) {
+	if (std::filesystem::exists(tmpPath) && std::filesystem::is_directory(tmpPath)) {
+		if (std::filesystem::exists(dirPath) && std::filesystem::is_directory(dirPath)) {
+			//Nothing to do
+		}
+		else {
+			//Try to create the folder
+			try {
+				std::filesystem::create_directories(dirPath);
+			}
+			catch (const std::exception& e) {
+				Logger::log << "[WinXrApi] Error creating tmp/xr directory: " << e.what() << std::endl;
+			}
+		}
+
 		try {
 			std::ofstream file(filePath);
 			if (file.is_open()) {
@@ -67,7 +81,7 @@ void WinXrApi::Init()
 			}
 		}
 		catch (const std::exception& e) {
-			Logger::log << "Error writing file: " << e.what() << std::endl;
+			Logger::log << "[WinXrApi] Error writing VR file: " << e.what() << std::endl;
 		}
 	}
 	else {
@@ -82,7 +96,7 @@ void WinXrApi::Init()
 			}
 		}
 		catch (const std::exception& e) {
-			Logger::log << "Error writing file: " << e.what() << std::endl;
+			Logger::log << "[WinXrApi] Error writing test VR file: " << e.what() << std::endl;
 		}
 	}
 

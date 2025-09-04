@@ -25,7 +25,6 @@ public:
 	float GetAspect() { return 1.0f; }
 	int GetScopeWidth() { return 800; }
 	int GetScopeHeight() { return 600; }
-	void PositionOverlay();
 	void Recentre();
 	void SetLocationOffset(Vector3 newOffset);
 	Vector3 GetLocationOffset();

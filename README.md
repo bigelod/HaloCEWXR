@@ -36,8 +36,6 @@ Thanks to GmoLargey for testing!
 
 * Fix the DLL injection failing on actual WinlatorXR container on Quest/Pic with Release versions of the DLL (Debug working)
 * Investigate why the UI flys down-right off screen on the title screen over time
-* Investigate why the pause panel UI keeps toggling on/off in-game on button press (add delay between button detection maybe for this?)
-* Fix the sniper scope / zoom (currently broken, crashes on Sniper equip)
 * Investigate artificial crouch behavior (currently broken, might be disabled by the PCVR mod?)
 * Investigate the red pixel OpenXR Frame ID sync issue (currently only semi-working with odd container resolution like 646x522 or running as a shortcut)
 * Investigate why re-opening Halo in the same running container gives a black screen
@@ -54,6 +52,8 @@ Thanks to GmoLargey for testing!
 * Map the 6DOF data to the game controls
 * Fix the /vr file creation so it works before the UDP server listener starts (or find out why its not working as expected)
 * Restore the in-game HUD display without losing the red pixel overlay
+* Investigate why the pause panel UI keeps toggling on/off in-game on button press (add delay between button detection maybe for this?)
+* Fix the sniper scope / zoom (currently broken, crashes on Sniper equip)
 
 
 # Stretch-Goal(s) / Unlikely Bonus Features:
@@ -70,13 +70,13 @@ Thanks to GmoLargey for testing!
 * Right Stick Up - Switch Weapon
 * Right Stick Down - Melee Attack
 * Left Grip - Jump
-* Left Trigger - Zoom / Scope (currently broken) or ENTER for UI panels
+* Left Trigger - Zoom / Scope or ENTER for UI panels
 * Right Grip - Grenade
 * Right Trigger - Shoot
 * Left Click - Crouch (currently broken / might not be supported)
 * Right Click - NONE (WinlatorXR menu)
-* Left Menu Button - Escape / Menu (currently toggles too fast)
-* X - Switch Grenades (might not be working)
+* Left Menu Button - Escape / Menu
+* X - Switch Grenades (might not be working?)
 * Y - Flashlight
 * B - Reload
 * A - Action 
@@ -84,8 +84,6 @@ Thanks to GmoLargey for testing!
 # Known Bugs:
 
 * Screen jumps around the field of view -> Combination of low FPS + red pixel sync issues
-* Pause menu rapidly opens/closes -> Issue with detection of the button, possibly double-detected
-* Game crashes on sniper equip / scope open
 * Sometimes the menu stops responding to the windows input sent by WinlatorXR (up/down/left/right)
 * No mouse / virtual mouse support in UI (may not be fixed in future)
 

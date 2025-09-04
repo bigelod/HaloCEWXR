@@ -2,6 +2,11 @@
 
 NOTE: This is buggy, it is still in active development and only works using the Debug version of the DLLS (including VC++ and DirectX9) on actual Quest Winlator containers as of September 2025
 
+# Credits
+
+Thanks to Luboš for his work on [WinlatorXR](https://github.com/lvonasek/WinlatorXR) and everyone else who had contributed to Winlator / PC gaming on Android
+Thanks to GmoLargey for testing!
+
 # Current buggy way of running the game in WinlatorXR:
 
 * Build the Debug d3d9 DLL

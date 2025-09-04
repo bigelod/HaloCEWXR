@@ -148,10 +148,10 @@ void Game::OnInitDirectX()
 	scopeTextures[0] = vr->GetScopeTexture();
 
 	D3DSURFACE_DESC desc;
-	//scopeSurfaces[0]->GetDesc(&desc);
+	scopeSurfaces[0]->GetDesc(&desc);
 
-	//CreateTextureAndSurface(desc.Width, desc.Height, desc.Usage, desc.Format, &scopeSurfaces[1], &scopeTextures[1]);
-	//CreateTextureAndSurface(desc.Width / 2, desc.Height / 2, desc.Usage, desc.Format, &scopeSurfaces[2], &scopeTextures[2]);
+	CreateTextureAndSurface(desc.Width, desc.Height, desc.Usage, desc.Format, &scopeSurfaces[1], &scopeTextures[1]);
+	CreateTextureAndSurface(desc.Width / 2, desc.Height / 2, desc.Usage, desc.Format, &scopeSurfaces[2], &scopeTextures[2]);
 
 	uiRenderer = new UIRenderer();
 

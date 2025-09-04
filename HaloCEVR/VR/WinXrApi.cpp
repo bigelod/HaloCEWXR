@@ -223,6 +223,10 @@ void WinXrApi::UpdatePoses()
 
 	std::vector<bool> buttonBools;
 
+	if (buttonString.empty()) {
+		buttonString = "FFFFFFFFFFFFFFFFFFF";
+	}
+
 	for (char c : buttonString) {
 		if (c == 'F') {
 			buttonBools.push_back(false);
@@ -271,7 +275,8 @@ void WinXrApi::UpdatePoses()
 	L_Y = buttonBools[9];
 	R_A = buttonBools[10];
 	R_B = buttonBools[11];
-	L_Menu = buttonBools[1];
+	//L_Menu = buttonBools[1];
+	L_Menu = false;
 
 	R_ThumbUp = buttonBools[16];
 	R_ThumbDown = buttonBools[17];
@@ -559,10 +564,9 @@ void WinXrApi::UpdateInputs()
 	bindings[9].bHasChanged = LClick != bindings[9].bPressed;
 	bindings[9].bPressed = LClick;
 
-	//TODO: Fix the crashing when trying to zoom / use scope
 	//Zoom
-	//bindings[10].bHasChanged = LTrigger != bindings[10].bPressed;
-	//bindings[10].bPressed = LTrigger;
+	bindings[10].bHasChanged = LTrigger != bindings[10].bPressed;
+	bindings[10].bPressed = LTrigger;
 
 	//Reload
 	bindings[11].bHasChanged = R_B != bindings[11].bPressed;

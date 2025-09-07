@@ -503,10 +503,14 @@ void InGameRenderer::DrawRenderTargets(IDirect3DDevice9* pDevice)
 
 			pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 
-			pDevice->SetRenderState(D3DRS_SRGBWRITEENABLE, TRUE);
+			//pDevice->SetRenderState(D3DRS_SRGBWRITEENABLE, TRUE);
 
 			pDevice->SetTexture(0, renderTargets[i].texture);
 			pDevice->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
+
+			float OpenXRFrameIDFloat = (float)OpenXRFrameID / 255.0f;
+
+			int adjustedVal = ((int)pow(OpenXRFrameIDFloat, 1.0 / 2.2) * 255);
 
 			VertexData2D oxrVerts[4] = {
 				{ 0.0f,   0.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,OpenXRFrameID, 0, 0) }, // Top-left

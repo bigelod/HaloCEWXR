@@ -33,6 +33,7 @@ protected:
 	void Draw3DLines(struct IDirect3DDevice9* pDevice);
 	void DrawRenderTargets(struct IDirect3DDevice9* pDevice);
 	void DrawPolygons(struct IDirect3DDevice9* pDevice);
+	int SrgbToLinear(float srgb);
 
 	static constexpr int MAX_LINES = 32;
 	static constexpr int MAX_RECTS = 16;

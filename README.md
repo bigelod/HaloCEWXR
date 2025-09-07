@@ -23,7 +23,10 @@ Thanks to GmoLargey for testing!
 * Install Halo CE on WinlatorXR, make sure it works first
 * Copy the VR, fonts, chimera / strings.dll, and d3d9.dll DEBUG version to the Halo install directory on Quest WinlatorXR (don't install the modified large memory EXEs, they don't seem to work)
 * Install Wine MONO
-* Run Halo CE WXR
+* Right-click and make a shortcut to halo.exe
+* Close the container and open the shortcut for Halo CE WXR instead
+
+  Current ideal settings are at least 800x600, DXVK 1.10.3 async (async ON) 30 FPS limit, audio settings set to LOW for both, video at max resolution option in-game
 
 # Optional: Run/debug the game on your development PC:
 We now have two was to do this

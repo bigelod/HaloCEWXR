@@ -22,24 +22,29 @@ Thanks to GmoLargey for testing!
 *  -> ws2help.dll
 * Install Halo CE on WinlatorXR, make sure it works first
 * Copy the VR, fonts, chimera / strings.dll, and d3d9.dll DEBUG version to the Halo install directory on Quest WinlatorXR (don't install the modified large memory EXEs, they don't seem to work)
-* Install Wine MONO / MSVC++ runtimes / DirectX offline runtimes ETC (exact ones needed to be determined)
-* Edit the Wine configuration to make halo.exe run as a Windows 10 program
-* Also edit the libraries for this so d3d9.dll runs native first then built-in
+* Install Wine MONO
 * Run Halo CE WXR
 
 # Optional: Run/debug the game on your development PC:
+We now have two was to do this
 
+1.) Using the XrAPI UDP Test program:
+* Extract it from the ZIP and run it
+* Enable sending UDP data to localhost
+* Run the project on PC, 6DOF data emulation will stream to it from the UDP Test program
+
+2.) Using a Quest/Pico with a debug version of WinlatorXR:
 * Download the WinlatorXR source code and make your own build with the UDP debugging enabled, run it on your device
 * Create the udp_debug folder in your Downloads directory on Quest/Pico, and put a file in named after the IP of your dev server
 * Run a VR experience like SixDOFinator or create a file named "vr" manually in Z:/tmp/xr/ to enable data sending
 * Run the project on PC, 6DOF data will stream to it from the Quest/Pico device
 
+NOTE: If you start this on a PC or other device and it doesn't get past the loading HALO screen, it's not receiving the UDP data expected from WinlatorXR or the UDP Test app!
+
 # To-Do - BUG FIXES:
 
 * Fix the DLL injection failing on actual WinlatorXR container on Quest/Pic with Release versions of the DLL (Debug working)
 * Investigate why the UI flys down-right off screen on the title screen over time
-* Investigate artificial crouch behavior (currently broken, might be disabled by the PCVR mod?)
-* Investigate the red pixel OpenXR Frame ID sync issue (currently only semi-working with odd container resolution like 646x522 or running as a shortcut)
 * Investigate why re-opening Halo in the same running container gives a black screen
 
 # Done:
@@ -87,7 +92,6 @@ Thanks to GmoLargey for testing!
 
 * Screen jumps around the field of view -> Combination of low FPS + red pixel sync issues
 * Sometimes the menu stops responding to the windows input sent by WinlatorXR (up/down/left/right)
-* No mouse / virtual mouse support in UI (may not be fixed in future)
 
 # Original ReadMe:
 

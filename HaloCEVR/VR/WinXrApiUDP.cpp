@@ -1,4 +1,5 @@
 #include "WinXrApiUDP.h"
+#include "../Game.h"
 #include "../Logger.h"
 #include <Winsock2.h>
 #include <iostream>
@@ -7,6 +8,8 @@
 #include <io.h>
 #include <mutex>
 #include <condition_variable>
+#include <sstream>
+#include <vector>
 
 WinXrApiUDP::WinXrApiUDP()
 {
@@ -42,6 +45,25 @@ void WinXrApiUDP::ReceiveData()
 			{
 				buffer[bytesReceived] = '\0';
 				std::string returnData(buffer);
+
+				std::istringstream iss(returnData);
+				std::string client;
+				std::vector<float> floats(28);
+				int openXRFrameID;
+
+				iss >> client;
+				for (auto& f : floats) {
+					iss >> f;
+				}
+				iss >> openXRFrameID;
+
+				if (Game::instance.OpenXRFrameID == openXRFrameID) {
+					Game::instance.OpenXRFrameWait = 1;
+					continue;
+				}
+				else {
+					Game::instance.OpenXRFrameWait = 0;
+				}
 
 				//Logger::log << "UDP DATA " + returnData << std::endl;
 

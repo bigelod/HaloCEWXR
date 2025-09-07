@@ -405,6 +405,22 @@ void InGameRenderer::Draw3DLines(IDirect3DDevice9* pDevice)
 
 void InGameRenderer::DrawRenderTargets(IDirect3DDevice9* pDevice)
 {
+	if (renderTargets.size() == 1) {
+
+		if (!firstClear) {
+			//Clear yaw and position offsets
+			IVR* vr = Game::instance.GetVR();
+
+			vr->SetYawOffset(0.0f);
+			vr->SetLocationOffset(Vector3(0.0f, 0.0f, 0.0f));
+
+			firstClear = true;
+		}
+	}
+	else {
+		firstClear = false;
+	}
+
 	// Normal blending, assumes texture actually has an alpha value
 	//*
 	pDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
@@ -468,7 +484,7 @@ void InGameRenderer::DrawRenderTargets(IDirect3DDevice9* pDevice)
 		pDevice->DrawIndexedPrimitiveUP(D3DPT_TRIANGLELIST, 0, 4, 2, indices, D3DFMT_INDEX16, vertices, sizeof(VertexDataTex));
 
 		//WinlatorXR Change
-		if (i == 1) {
+		if (i == renderTargets.size() - 1) {
 			IDirect3DStateBlock9* stateBlock;
 			pDevice->BeginStateBlock();
 			pDevice->EndStateBlock(&stateBlock);

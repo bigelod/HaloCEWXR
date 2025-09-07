@@ -68,6 +68,8 @@ Vector2 RotateVector2(const Vector2& v, float angle)
 
 void InputHandler::UpdateInputs(bool bInVehicle)
 {
+	if (Game::instance.OpenXRFrameWait == 1) return;
+
 	IVR* vr = Game::instance.GetVR();
 
 	vr->UpdateInputs();
@@ -298,6 +300,8 @@ void InputHandler::UpdateInputs(bool bInVehicle)
 
 void InputHandler::UpdateCamera(float& yaw, float& pitch)
 {
+	if (Game::instance.OpenXRFrameWait == 1) return;
+
 	IVR* vr = Game::instance.GetVR();
 
 	Vector2 lookInput = vr->GetVector2Input(Look);

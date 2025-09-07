@@ -46,6 +46,9 @@ void Game::Init()
 	vr = new VREmulator();
 #else
 	vr = new WinXrApi();
+
+	SetCursorPos(0, 0);
+	ShowCursor(FALSE);
 #endif
 
 	vr->Init();
@@ -119,6 +122,19 @@ void Game::OnInitDirectX()
 	RECT rc;
 	GetWindowRect(window, &rc);
 
+	bool fullScreenDisplay = true;
+
+
+	if (fullScreenDisplay) {
+		rc.left -= rc.left;
+		rc.top -= rc.top;
+
+		int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+		int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+		rc.right = screenWidth;
+		rc.bottom = screenHeight;
+	}
+	
 	// Modify window style
 	LONG_PTR style = GetWindowLongPtr(window, GWL_STYLE);
 	style &= ~(WS_THICKFRAME | WS_BORDER | WS_CAPTION);
@@ -882,6 +898,9 @@ void Game::SetMousePosition(int& x, int& y)
 
 void Game::UpdateMouseInfo(MouseInfo* mouseInfo)
 {
+	SetCursorPos(0, 0);
+	ShowCursor(FALSE);
+
 	VR_PROFILE_SCOPE(Game_UpdateMouseInfo);
 
 	static char realLeftClickValue = 0;
@@ -890,6 +909,7 @@ void Game::UpdateMouseInfo(MouseInfo* mouseInfo)
 #ifndef EMULATE_VR
 	inputHandler.UpdateMouseInfo(mouseInfo);
 #endif
+
 	if (Helpers::IsMouseVisible() && mouseInfo->buttonState[0] == 1)
 	{
 		uiRenderer->Click();

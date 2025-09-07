@@ -111,6 +111,7 @@ public:
 	UINT overlayHeight = 640;
 
 	int OpenXRFrameID = 0;
+	int OpenXRFrameWait = 0;
 
 #if USE_PROFILER
 	Profiler profiler;

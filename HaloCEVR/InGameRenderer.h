@@ -25,6 +25,7 @@ public:
 
 	//WinlatorXR Change
 	int OpenXRFrameID = 0;
+	bool firstClear = false;
 protected:
 
 	void Draw2DLines(struct IDirect3DDevice9* pDevice);

@@ -191,13 +191,14 @@ void WinXrApi::UpdatePoses()
 	
 	//Example return data:
 	//[Game] WinXrApi Getting Data...
-	//client0 0.213 0.287 -0.933 0.035 0.0 0.0 -0.008 -0.229 -0.173 0.095 -0.296 0.947 -0.077 0.0 0.0 0.154 -0.240 -0.140 0.146 -0.072 0.048 0.985 0.037 0.006 -0.017 0.0678 99.00 103.40 224 TFFFFFFFFFTTTFFFFFT
+	//client0 0.213 0.287 -0.933 0.035 0.0 0.0 -0.008 -0.229 -0.173 0.095 -0.296 0.947 -0.077 0.0 0.0 0.154 -0.240 -0.140 0.146 -0.072 0.048 0.985 0.037 0.006 -0.017 0.0678 99.00 103.40 224 TFFFFFFFFFTTTFFFFFT META
 
 	std::istringstream iss(txt);
 	std::string client;
 	std::vector<float> floats(28);
 	int openXRFrameID;
 	std::string buttonString;
+	std::string hmdString;
 
 	// Parse client string
 	iss >> client;
@@ -208,7 +209,7 @@ void WinXrApi::UpdatePoses()
 	}
 
 	// Parse integer value and last string
-	iss >> openXRFrameID >> buttonString;
+	iss >> openXRFrameID >> buttonString >> hmdString;
 
 	Game::instance.OpenXRFrameID = openXRFrameID;
 
@@ -280,6 +281,21 @@ void WinXrApi::UpdatePoses()
 
 	R_ThumbUp = buttonBools[16];
 	R_ThumbDown = buttonBools[17];
+
+	if (hmdString.empty()) {
+		hmdString = "META";
+	}
+	else {
+		if (hmdString == "pico" || hmdString == "Pico") hmdString = "PICO";
+	}
+
+	//For now only PICO will get an upside down hands fix
+	if (hmdString == "PICO") {
+		UpsideDownHandsFix = true;
+	}
+	else {
+		UpsideDownHandsFix = false;
+	}
 
 }
 
@@ -377,6 +393,7 @@ Matrix4 WinXrApi::GetControllerTransform(ControllerRole role, bool bRenderPose)
 	boneMatrixGame.rotate(180.0f, boneMatrixGame * Vector3(0.0f, 0.0f, 1.0f));
 	boneMatrixGame.rotate(180.0f, boneMatrixGame * Vector3(0.0f, 1.0f, 0.0f));
 	boneMatrixGame.rotate(180.0f, boneMatrixGame * Vector3(1.0f, 0.0f, 0.0f));
+	if (UpsideDownHandsFix) boneMatrixGame.rotate(180.0f, boneMatrixGame * Vector3(1.0f, 0.0f, 0.0f));
 	boneMatrixGame.translate(pos).translate(-positionOffset).rotateZ(-yawOffset);;
 
 	outMatrix = outMatrix * boneMatrixGame;

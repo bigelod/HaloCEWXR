@@ -83,6 +83,7 @@ public:
 	bool L_Menu = false;
 	bool R_ThumbDown = false;
 	bool R_ThumbUp = false;
+	bool UpsideDownHandsFix = false;
 	// End Interface IVR
 	~WinXrApi();
 

@@ -38,6 +38,10 @@ Thanks to GmoLargey for testing!
 
 -> Use this config [alsoft.ini](https://github.com/bigelod/HaloCEWXR/blob/master/ThirdParty/alsoft.ini) with the dsoal mod
 
+-> Use this config [chimera.ini](https://github.com/bigelod/HaloCEWXR/blob/master/ThirdParty/chimera.ini) with the chimera mod
+
+-> Place this [config.txt](https://github.com/bigelod/HaloCEWXR/blob/master/ThirdParty/config.txt) in the VR folder
+
 # Optional: Run/debug the game on your development PC:
 We now have two was to do this
 

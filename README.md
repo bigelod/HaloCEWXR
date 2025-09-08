@@ -29,8 +29,11 @@ Thanks to GmoLargey for testing!
 * Close the container and open the shortcut for Halo CE WXR instead
 
 -> Current ideal settings for the Halo shortcut are 1400x1400, DXVK 1.10.3 async (async ON) 30 FPS limit, Direct3D and Visual C++ 2010 uses Native (Windows), rest stay Builtin (Wine), Box64 Preset: Intermediate
+
 -> In-game audio settings set to LOW for both variety and quality
+
 -> Do not touch the video resolution setting in-game (breaks the red pixel otherwise)
+
 -> If using the dsoal mod (recommended for audio latency issues) you will likely need another MSVC++ runtime but I am unsure which one, you can just install the [All-In-One](https://github.com/abbodi1406/vcredist) on your container
 
 # Optional: Run/debug the game on your development PC:

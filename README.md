@@ -36,6 +36,8 @@ Thanks to GmoLargey for testing!
 
 -> If using the dsoal mod (recommended for audio latency issues) you will likely need another MSVC++ runtime but I am unsure which one, you can just install the [All-In-One](https://github.com/abbodi1406/vcredist) on your container
 
+-> Use this config [alsoft.ini](https://github.com/bigelod/HaloCEWXR/blob/master/ThirdParty/alsoft.ini) with the dsoal mod
+
 # Optional: Run/debug the game on your development PC:
 We now have two was to do this
 

@@ -2,7 +2,7 @@
 
 NOTE: This is buggy, it is still in active development and only works using the Debug version of the DLLS (including VC++ and DirectX9) on actual Quest Winlator containers as of September 2025
 
-The parent project this is based on, HaloCEVR by LivingFray, does not appear to have a license, but the code added or modified in this fork/port to WinlatorXR's XrApi is subject to the [LGPLv3 license](https://www.gnu.org/licenses/lgpl-3.0.en.html)
+The parent project this is based on, [HaloCEVR by LivingFray](https://github.com/LivingFray/HaloCEVR), does not appear to have a license, but the code added or modified in this fork/port to WinlatorXR's XrApi is subject to the [LGPLv3 license](https://www.gnu.org/licenses/lgpl-3.0.en.html)
 
 # Credits
 

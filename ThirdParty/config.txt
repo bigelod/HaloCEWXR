@@ -1,0 +1,153 @@
+//[Bool] Create a console window at launch for debugging purposes (Default Value: false)
+ShowConsole = false
+
+//[Bool] Update the desktop window display to show the current game view, rather than leaving it on the splash screen (Default Value: true)
+DrawMirror = true
+
+//[Int] Index of the eye to use for the mirror view  (0 = left, 1 = right) (Default Value: 0)
+MirrorEye = 0
+
+//[Float] Distance in metres in front of the weapon to display the crosshair (Default Value: 15)
+CrosshairDistance = 15
+
+//[Float] Distance in metres in front of the HMD to display the menu (Default Value: 15)
+MenuOverlayDistance = 15
+
+//[Float] Distance in metres in front of the HMD to display the UI (Default Value: 15)
+UIOverlayDistance = 15
+
+//[Float] Width of the UI overlay in metres (Default Value: 10)
+UIOverlayScale = 10
+
+//[Float] Width of the menu overlay in metres (Default Value: 10)
+MenuOverlayScale = 10
+
+//[Float] Width of the crosshair overlay in metres (Default Value: 10)
+CrosshairScale = 10
+
+//[Float] Curvature of the UI Overlay, on a scale of 0 to 1 (Default Value: 0.1)
+UIOverlayCurvature = 0.1
+
+//[Float] Resolution of the UI overlay, expressed as a proportion of the headset's render scale (e.g. 0.5 = half resolution), low values default to 640px (Default Value: 0.5)
+UIOverlayRenderScale = 0.5
+
+//[Bool] Display a floating crosshair in the world at the location you are aiming (Default Value: true)
+ShowCrosshair = true
+
+//[Bool] Make the left hand the dominant hand by default. This swaps the button bindings but doesn't swap the sticks. Left handed bindings with the sticks swapped can be found in the SteamVR overlay (Default Value: false)
+LeftHanded = false
+
+//[Bool] The look input will instantly rotate the view by a fixed amount, rather than smoothly rotating (Default Value: true)
+SnapTurn = false
+
+//[Float] Rotation in degrees a single snap turn will rotate the view by (Default Value: 45)
+SnapTurnAmount = 45
+
+//[Float] Rotation in degrees per second the view will turn at when not using snap turning (Default Value: 90)
+SmoothTurnAmount = 120
+
+//[Int] Movement is relative to hand orientation, rather than head, 0 = off, 1 = left, 2 = right (Default Value: 0)
+HandRelativeMovement = 0
+
+//[Float] Hand direction rotational offset in degrees used for hand-relative movement (Default Value: -20)
+HandRelativeOffsetRotation = -20
+
+//[Float] Rotation in degrees per second the view will turn horizontally when in vehicles (<0 to invert) (Default Value: 90)
+HorizontalVehicleTurnAmount = 120
+
+//[Float] Rotation in degrees per second the view will turn vertically when in vehicles (<0 to invert) (Default Value: 45)
+VerticalVehicleTurnAmount = 45
+
+//[Bool] When true releasing two handed weapons requires pressing the grip action again (Default Value: false)
+ToggleGrip = false
+
+//[Float] Maximum distance between both hands where the off hand grip action will enable two handed aiming (<0 for any distance) (Default Value: 0.8)
+TwoHandDistance = 0.8
+
+//[Float] Maximum distance between both hands where the swap weapon hand grip action will swap your weapon into the opposite hand (<0 to disable) (Default Value: 0.2)
+SwapHandDistance = 0.2
+
+//[Bool] Use your offhand for toggling the flashlight, your offhand hand is the hand not holding a weapon (Default Value: true)
+OffhandHandFlashlight = true
+
+//[Float] Bringing the left hand within this distance of the head will toggle the flashlight (<0 to disable) (Default Value: 0.2)
+LeftHandFlashlight = 0.2
+
+//[Float] Bringing the right hand within this distance of the head will toggle the flashlight (<0 to disable) (Default Value: 0.2)
+RightHandFlashlight = 0.2
+
+//[Float] Minimum vertical velocity of left hand required to initiate a melee attack in m/s (<0 to disable) (Default Value: 2.5)
+LeftHandMeleeSwingSpeed = 2.5
+
+//[Float] Minimum vertical velocity of right hand required to initiate a melee attack in m/s (<0 to disable) (Default Value: 2.5)
+RightHandMeleeSwingSpeed = 2.5
+
+//[Float] Minimum height to duck by in metres to automatically trigger the crouch input in game (<0 to disable) (Default Value: 0.15)
+CrouchHeight = 0.15
+
+//[Vector3] Offset from the controller's position used when calculating the in game hand position (Default Value: "(0, 0, 0)")
+ControllerOffset = (0, 0, 0)
+
+//[Vector3] Rotation added to the controller when calculating the in game hand rotation (Default Value: "(0, 0, 0)")
+ControllerRotation = (0, 0, 0)
+
+//[Float] Size of the scope render target, expressed as a proportion of the headset's render scale (e.g. 0.5 = half resolution) (Default Value: 1)
+ScopeRenderScale = 1
+
+//[Float] Width of the scope view in metres (Default Value: 0.05)
+ScopeScale = 0.05
+
+//[Bool] Set to true to keep the horizon level at all times in scopes. Leaving as false causes the scope view to rotate with the gun (pre-v1.3.0 behaviour) (Default Value: true)
+LockScopeRoll = true
+
+//[Vector3] Offset of the scope view relative to the pistol's location (Default Value: "(-0.1, 0, 0.15)")
+ScopeOffsetPistol = (-0.1, 0, 0.15)
+
+//[Vector3] Offset of the scope view relative to the pistol's location (Default Value: "(-0.15, 0, 0.15)")
+ScopeOffsetSniper = (-0.15, 0, 0.15)
+
+//[Vector3] Offset of the scope view relative to the pistol's location (Default Value: "(0.1, 0.2, 0.1)")
+ScopeOffsetRocket = (0.1, 0.2, 0.1)
+
+//[Float] Amount of smoothing applied to weapon movement when not zoomed in (0 is disabled, 2.0 is maximum, recommended around 0-0.7) (Default Value: 0)
+UnzoomedWeaponSmoothingAmount = 0
+
+//[Float] Amount of smoothing applied to weapon movement when zoomed in once, eg zooming on the pistol (0 is disabled, 2.0 is maximum, recommended around 0.3-1.0) (Default Value: 0.4)
+Zoom1WeaponSmoothingAmount = 0.4
+
+//[Float] Amount of smoothing applied to weapon movement when zoomed in twice, eg second zoom on sniper (0 is disabled, 2.0 is maximum, recommended around 0.6-1.25) (Default Value: 0.6)
+Zoom2WeaponSmoothingAmount = 0.6
+
+//[Bool] When enabled Weapons can only be switched by using the 'SwitchWeapons' binding while the dominant hand is within distance of a holster (Default Value: true)
+EnableWeaponHolsters = false
+
+//[Float] The 'size' of the left shoulder holster. This is the distance that the dominant hand needs to be from the holster to change weapons (<0 to disable) (Default Value: 0.3)
+LeftShoulderHolsterDistance = 0.3
+
+//[Vector3] The (foward, left, up) Offset of the left shoulder holster relative to the headset's location (Default Value: "(-0.15, 0.25, -0.25)")
+LeftShoulderHolsterOffset = (-0.15, 0.25, -0.25)
+
+//[Float] The 'size' of the right shoulder holster. This is the distance that the dominant hand needs to be from the holster to change weapons (<0 to disable) (Default Value: 0.3)
+RightShoulderHolsterDistance = 0.3
+
+//[Vector3] The (foward, left, up) Offset of the right shoulder holster relative to the headset's location (Default Value: "(-0.15, -0.25, -0.25)")
+RightShoulderHolsterOffset = (-0.15, -0.25, -0.25)
+
+//[Bool] Draw an indicator at your feet to show where the player character is actually positioned (Default Value: true)
+ShowRoomCentre = true
+
+//[String] If set first try to load d3d9.dll from the specified path instead of from system32 (Default Value: "")
+CustomD3D9Path = 
+
+//[Float] Some headsets experience warping when turning, as a workaround the viewport scaling has been exposed so users can adjust them until the warping stops (Default Value: -1)
+TEMP_ViewportLeft = -1
+
+//[Float] Some headsets experience warping when turning, as a workaround the viewport scaling has been exposed so users can adjust them until the warping stops (Default Value: 1)
+TEMP_ViewportRight = 1
+
+//[Float] Some headsets experience warping when turning, as a workaround the viewport scaling has been exposed so users can adjust them until the warping stops (Default Value: -1)
+TEMP_ViewportTop = -1
+
+//[Float] Some headsets experience warping when turning, as a workaround the viewport scaling has been exposed so users can adjust them until the warping stops (Default Value: 1)
+TEMP_ViewportBottom = 1
+

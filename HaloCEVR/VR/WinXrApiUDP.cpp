@@ -10,6 +10,7 @@
 #include <condition_variable>
 #include <sstream>
 #include <vector>
+#include <locale>
 
 WinXrApiUDP::WinXrApiUDP()
 {
@@ -50,6 +51,9 @@ void WinXrApiUDP::ReceiveData()
 				std::string client;
 				std::vector<float> floats(28);
 				int openXRFrameID;
+
+				std::locale c_locale("C");
+				iss.imbue(c_locale);
 
 				iss >> client;
 				for (auto& f : floats) {

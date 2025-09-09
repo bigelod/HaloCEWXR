@@ -13,6 +13,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <locale>
 
 template<typename T, std::size_t N>
 constexpr std::size_t arraySize(T(&)[N]) {
@@ -199,6 +200,9 @@ void WinXrApi::UpdatePoses()
 	int openXRFrameID;
 	std::string buttonString;
 	std::string hmdString;
+
+	std::locale c_locale("C");
+	iss.imbue(c_locale);
 
 	// Parse client string
 	iss >> client;

@@ -25,6 +25,10 @@ namespace XrAPITestUDP
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            this.WindowState = FormWindowState.Minimized;
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+
             tbOXRFrameId.ValueChanged += tbOXRFrameId_ValueChanged;
 
             chkLGRIP.MouseLeave += chkLGRIP_MouseLeave;
@@ -512,22 +516,22 @@ namespace XrAPITestUDP
 
         private void txtLPos_TextChanged(object sender, EventArgs e)
         {
-            chkAutoSendUDP.Checked = false;
+            if (txtLPos.Text.Split(' ').Length != 3) chkAutoSendUDP.Checked = false;
         }
 
         private void txtRPos_TextChanged(object sender, EventArgs e)
         {
-            chkAutoSendUDP.Checked = false;
+            if (txtRPos.Text.Split(' ').Length != 3) chkAutoSendUDP.Checked = false;
         }
 
         private void txtHPos_TextChanged(object sender, EventArgs e)
         {
-            chkAutoSendUDP.Checked = false;
+            if (txtHPos.Text.Split(' ').Length != 3) chkAutoSendUDP.Checked = false;
         }
 
         private void txtIPDFOV_TextChanged(object sender, EventArgs e)
         {
-            chkAutoSendUDP.Checked = false;
+            if (txtIPDFOV.Text.Split(' ').Length != 3) chkAutoSendUDP.Checked = false;
         }
 
         private void chkZeroThumbs_CheckedChanged(object sender, EventArgs e)

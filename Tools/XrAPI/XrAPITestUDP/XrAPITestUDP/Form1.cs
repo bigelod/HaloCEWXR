@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using System.Text;
+using System.Threading;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace XrAPITestUDP
 {
@@ -12,6 +13,8 @@ namespace XrAPITestUDP
     {
         string IPTarget = "127.0.0.1";
         int TransmitPort = 7872;
+
+        private string inUDP;
 
         UdpClient _TransmitClient;
 
@@ -530,6 +533,158 @@ namespace XrAPITestUDP
         private void chkZeroThumbs_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        public void SetInputUDP(string data = "")
+        {
+            inUDP = data;
+        }
+
+        private void btnImportUDP_Click(object sender, EventArgs e)
+        {
+            inUDP = "";
+
+            Form2 inputUDP = new Form2();
+            inputUDP.SetReturnDataAction(SetInputUDP);
+            inputUDP.ShowDialog(this);
+            inputUDP.Dispose();
+
+            if (inUDP == null || inUDP == "") return;
+
+            string[] parts = inUDP.Split(' ');
+
+            string btnbools = "";
+
+            int i = 1;
+            int maxParts = parts.Length - 1;
+
+            if (maxParts >= i) tbLQX.Value = (int)Math.Round(100.0f * TryParseStr(parts[i]));
+            i++;
+            if (maxParts >= i) tbLQY.Value = (int)Math.Round(100.0f * TryParseStr(parts[i]));
+            i++;
+            if (maxParts >= i) tbLQZ.Value = (int)Math.Round(100.0f * TryParseStr(parts[i]));
+            i++;
+            if (maxParts >= i) tbLQW.Value = (int)Math.Round(100.0f * TryParseStr(parts[i]));
+            i++;
+            if (maxParts >= i) tbLTX.Value = (int)Math.Round(100.0f * TryParseStr(parts[i]));
+            i++;
+            if (maxParts >= i) tbLTY.Value = (int)Math.Round(100.0f * TryParseStr(parts[i]));
+
+            txtLPos.Text = "";
+
+            i++;
+            if (maxParts >= i) txtLPos.Text = parts[i];
+            i++;
+            if (maxParts >= i) txtLPos.Text += " " + parts[i];
+            i++;
+            if (maxParts >= i) txtLPos.Text += " " + parts[i];
+
+            i++;
+            if (maxParts >= i) tbRQX.Value = (int)Math.Round(100.0f * TryParseStr(parts[i]));
+            i++;
+            if (maxParts >= i) tbRQY.Value = (int)Math.Round(100.0f * TryParseStr(parts[i]));
+            i++;
+            if (maxParts >= i) tbRQZ.Value = (int)Math.Round(100.0f * TryParseStr(parts[i]));
+            i++;
+            if (maxParts >= i) tbRQW.Value = (int)Math.Round(100.0f * TryParseStr(parts[i]));
+            i++;
+            if (maxParts >= i) tbRTX.Value = (int)Math.Round(100.0f * TryParseStr(parts[i]));
+            i++;
+            if (maxParts >= i) tbRTY.Value = (int)Math.Round(100.0f * TryParseStr(parts[i]));
+
+
+            txtRPos.Text = "";
+
+            i++;
+            if (maxParts >= i) txtRPos.Text = parts[i];
+            i++;
+            if (maxParts >= i) txtRPos.Text += " " + parts[i];
+            i++;
+            if (maxParts >= i) txtRPos.Text += " " + parts[i];
+
+            i++;
+            if (maxParts >= i) tbHQX.Value = (int)Math.Round(100.0f * TryParseStr(parts[i]));
+            i++;
+            if (maxParts >= i) tbHQY.Value = (int)Math.Round(100.0f * TryParseStr(parts[i]));
+            i++;
+            if (maxParts >= i) tbHQZ.Value = (int)Math.Round(100.0f * TryParseStr(parts[i]));
+            i++;
+            if (maxParts >= i) tbHQW.Value = (int)Math.Round(100.0f * TryParseStr(parts[i]));
+
+            txtHPos.Text = "";
+            
+            i++;
+            if (maxParts >= i) txtHPos.Text = parts[i];
+            i++;
+            if (maxParts >= i) txtHPos.Text += " " + parts[i];
+            i++;
+            if (maxParts >= i) txtHPos.Text += " " + parts[i];
+
+            txtIPDFOV.Text = "";
+
+            i++;
+            if (maxParts >= i) txtIPDFOV.Text = parts[i];
+            i++;
+            if (maxParts >= i) txtIPDFOV.Text += " " + parts[i];
+            i++;
+            if (maxParts >= i) txtIPDFOV.Text += " " + parts[i];
+            i++;
+            if (maxParts >= i) tbOXRFrameId.Value = TryParseStrToInt(parts[i]);
+            i++;
+            if (maxParts >= i) btnbools = parts[i];
+            i++;
+            if (maxParts >= i) txtHMD.Text = parts[i];
+
+            if (btnbools != "")
+            {
+                chkLGRIP.Checked = ParseBtnBool(btnbools, 0);
+                chkLMENU.Checked = ParseBtnBool(btnbools, 1);
+                chkLTHUMBCLICK.Checked = ParseBtnBool(btnbools, 2);
+                chkLTHUMBLEFT.Checked = ParseBtnBool(btnbools, 3);
+                chkLTHUMBRIGHT.Checked = ParseBtnBool(btnbools, 4);
+                chkLTHUMBUP.Checked = ParseBtnBool(btnbools, 5);
+                chkLTHUMBDOWN.Checked = ParseBtnBool(btnbools, 6);
+                chkLTRIGGER.Checked = ParseBtnBool(btnbools, 7);
+                chkLX.Checked = ParseBtnBool(btnbools, 8);
+                chkLY.Checked = ParseBtnBool(btnbools, 9);
+                chkRA.Checked = ParseBtnBool(btnbools, 10);
+                chkRB.Checked = ParseBtnBool(btnbools, 11);
+                chkRGRIP.Checked = ParseBtnBool(btnbools, 12);
+                chkRTHUMBCLICK.Checked = ParseBtnBool(btnbools, 13);
+                chkRTHUMBLEFT.Checked = ParseBtnBool(btnbools, 14);
+                chkRTHUMBRIGHT.Checked = ParseBtnBool(btnbools, 15);
+                chkRTHUMBUP.Checked = ParseBtnBool(btnbools, 16);
+                chkRTHUMBDOWN.Checked = ParseBtnBool(btnbools, 17);
+                chkRTRIGGER.Checked = ParseBtnBool(btnbools, 18);
+            }
+        }
+
+        private float TryParseStr(string str)
+        {
+            float ans = 0f;
+
+            float.TryParse(str, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out ans);
+
+            return ans;
+        }
+
+        private int TryParseStrToInt(string str)
+        {
+            int ans = 0;
+
+            int.TryParse(str, out ans);
+
+            return ans;
+        }
+
+        private bool ParseBtnBool(string boolstring, int index)
+        {
+            if (boolstring.Length > index && boolstring.ToUpper().Substring(index, 1) == "T")
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

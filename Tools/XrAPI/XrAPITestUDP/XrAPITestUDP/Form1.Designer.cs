@@ -108,6 +108,7 @@
             tbHQX = new TrackBar();
             chkZeroThumbs = new CheckBox();
             chkReleaseBtnOnMouseUp = new CheckBox();
+            btnImportUDP = new Button();
             ((System.ComponentModel.ISupportInitialize)tbOXRFrameId).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbRQX).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbRQY).BeginInit();
@@ -860,12 +861,23 @@
             chkReleaseBtnOnMouseUp.Text = "Release On\r\n:MouseOut";
             chkReleaseBtnOnMouseUp.UseVisualStyleBackColor = true;
             // 
+            // btnImportUDP
+            // 
+            btnImportUDP.Location = new Point(872, 123);
+            btnImportUDP.Name = "btnImportUDP";
+            btnImportUDP.Size = new Size(84, 44);
+            btnImportUDP.TabIndex = 92;
+            btnImportUDP.Text = "Import UDP Data";
+            btnImportUDP.UseVisualStyleBackColor = true;
+            btnImportUDP.Click += btnImportUDP_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
-            ClientSize = new Size(1508, 237);
+            ClientSize = new Size(1508, 233);
+            Controls.Add(btnImportUDP);
             Controls.Add(chkReleaseBtnOnMouseUp);
             Controls.Add(chkZeroThumbs);
             Controls.Add(lblHMDQW);
@@ -1047,5 +1059,6 @@
         private TrackBar tbHQX;
         private CheckBox chkZeroThumbs;
         private CheckBox chkReleaseBtnOnMouseUp;
+        private Button btnImportUDP;
     }
 }

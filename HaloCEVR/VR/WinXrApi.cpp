@@ -265,8 +265,8 @@ void WinXrApi::UpdatePoses()
 	HMDPos = Vector3(floats[22], floats[23], floats[24]);
 
 	IPDVal = floats[25];
-	FOVH = floats[26];
-	FOVV = floats[27];
+	FOVH = floats[26] + 30.0f;
+	FOVV = floats[27] - 20.0f;
 
 	FOVTotal = FOVH / FOVV;
 

@@ -268,7 +268,6 @@
     <ClCompile Include="UI\UIRenderer.cpp" />
     <ClCompile Include="UI\UITabPanel.cpp" />
     <ClCompile Include="UI\UITextButton.cpp" />
-    <ClCompile Include="VR\VREmulator.cpp" />
     <ClCompile Include="VR\WinXrApi.cpp" />
     <ClCompile Include="VR\WinXrApiUDP.cpp" />
     <ClCompile Include="WeaponHandler.cpp" />
@@ -314,7 +313,6 @@
     <ClInclude Include="UI\UITabPanel.h" />
     <ClInclude Include="UI\UITextButton.h" />
     <ClInclude Include="Maths\Vectors.h" />
-    <ClInclude Include="VR\VREmulator.h" />
     <ClInclude Include="VR\IVR.h" />
     <ClInclude Include="VR\WinXrApi.h" />
     <ClInclude Include="VR\WinXrApiUDP.h" />

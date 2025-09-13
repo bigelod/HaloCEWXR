@@ -11,7 +11,7 @@
 #include "Helpers/Maths.h"
 
 #ifdef EMULATE_VR
-#include "VR/VREmulator.h"
+//#include "VR/VREmulator.h"
 #else
 #include "VR/WinXrApi.h"
 #endif
@@ -43,7 +43,7 @@ void Game::Init()
 	bIsCustom = std::strcmp("halor", Helpers::GetGameTypeString()) != 0;
 
 #ifdef EMULATE_VR
-	vr = new VREmulator();
+	//vr = new VREmulator();
 #else
 	vr = new WinXrApi();
 
@@ -124,7 +124,6 @@ void Game::OnInitDirectX()
 
 	bool fullScreenDisplay = true;
 
-
 	if (fullScreenDisplay) {
 		rc.left -= rc.left;
 		rc.top -= rc.top;
@@ -134,7 +133,7 @@ void Game::OnInitDirectX()
 		rc.right = screenWidth;
 		rc.bottom = screenHeight;
 	}
-	
+
 	// Modify window style
 	LONG_PTR style = GetWindowLongPtr(window, GWL_STYLE);
 	style &= ~(WS_THICKFRAME | WS_BORDER | WS_CAPTION);
@@ -151,7 +150,7 @@ void Game::OnInitDirectX()
 	// Ideally these values would be in a 4:3 ratio, but this causes the mouse position to stop aligning correctly
 	overlayWidth = static_cast<UINT>(max(vr->GetViewHeight(), vr->GetViewWidth()) * c_UIOverlayRenderScale->Value());
 	if (overlayWidth < 640) { // Clamp low to 640px so user can't degrade/break the config UI 
-		overlayWidth = 640; 
+		overlayWidth = 640;
 	}
 	overlayHeight = overlayWidth;
 
@@ -167,7 +166,9 @@ void Game::OnInitDirectX()
 	scopeSurfaces[0]->GetDesc(&desc);
 
 	CreateTextureAndSurface(desc.Width, desc.Height, desc.Usage, desc.Format, &scopeSurfaces[1], &scopeTextures[1]);
-	CreateTextureAndSurface(desc.Width / 2, desc.Height / 2, desc.Usage, desc.Format, &scopeSurfaces[2], &scopeTextures[2]);
+	//WinlatorXR get rid of second zoom
+	CreateTextureAndSurface(desc.Width, desc.Height, desc.Usage, desc.Format, &scopeSurfaces[2], &scopeTextures[2]);
+	//CreateTextureAndSurface(desc.Width / 2, desc.Height / 2, desc.Usage, desc.Format, &scopeSurfaces[2], &scopeTextures[2]);
 
 	uiRenderer = new UIRenderer();
 
@@ -197,7 +198,8 @@ void Game::PreDrawFrame(struct Renderer* renderer, float deltaTime)
 
 	//CalcFPS(deltaTime);
 
-	vr->SetMouseVisibility(Helpers::IsMouseVisible());
+	//WinlatorXR change
+	vr->SetMouseVisibility(false); //Helpers::IsMouseVisible());
 	vr->UpdatePoses();
 
 	UpdateCrosshairAndScope();
@@ -387,8 +389,8 @@ bool Game::PreDrawScope(Renderer* renderer, float deltaTime)
 	primaryRenderTarget[1].height = vr->GetScopeHeight();
 	primaryRenderTarget[2].renderSurface = scopeSurfaces[2];
 	primaryRenderTarget[2].renderTexture = scopeTextures[2];
-	primaryRenderTarget[2].width = vr->GetScopeWidth() / 2;
-	primaryRenderTarget[2].height = vr->GetScopeHeight() / 2;
+	primaryRenderTarget[2].width = vr->GetScopeWidth();// / 2;
+	primaryRenderTarget[2].height = vr->GetScopeHeight();// / 2;
 
 
 	sRect* windowMain = Helpers::GetWindowRect();
@@ -430,13 +432,13 @@ void Game::PostDrawScope(Renderer* renderer, float deltaTime)
 	scopeRenderer.ExtractMatrices(renderer);
 
 	// Sniper scope is a rounded square, so we need to separate the quadrants and change the radius
-	if (weaponHandler.IsSniperScope())
+	/*if (weaponHandler.IsSniperScope())
 	{
 		radius = size.y * 0.03125f;
 		const float scopeWidth = 0.605f * size.x - radius * 2.0f;
 		const float scopeHeight = 0.505f * size.y - radius * 2.0f;
 		innerSize = Vector2(scopeWidth, scopeHeight);
-	}
+	}*/
 
 	scopeRenderer.DrawInvertedShape2D(centre, innerSize, size, sides, radius, color);
 
@@ -663,6 +665,36 @@ void Game::PostDrawMenu()
 
 	Helpers::GetRenderTargets()[1].renderSurface = uiRealSurface;
 	Helpers::GetDirect3DDevice9()->SetRenderTarget(0, uiRealSurface);
+
+	if (Helpers::IsMouseVisible()) {
+		HWND window = GetActiveWindow();
+
+		RECT rc;
+		GetWindowRect(window, &rc);
+
+		bool fullScreenDisplay = true;
+
+		if (fullScreenDisplay) {
+			rc.left -= rc.left;
+			rc.top -= rc.top;
+
+			int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+			int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+			rc.right = screenWidth;
+			rc.bottom = screenHeight;
+		}
+
+		// Modify window style
+		LONG_PTR style = GetWindowLongPtr(window, GWL_STYLE);
+		style &= ~(WS_THICKFRAME | WS_BORDER | WS_CAPTION);
+		SetWindowLongPtr(window, GWL_STYLE, style);
+
+		// Update window position and size
+		SetWindowPos(window, HWND_TOP,
+			rc.left, rc.top,
+			rc.right - rc.left, rc.bottom - rc.top,
+			SWP_FRAMECHANGED);
+	}
 }
 
 D3DVIEWPORT9 currentViewport;
@@ -1071,7 +1103,10 @@ void Game::SetupConfigs()
 	weaponHandler.localOffset = Vector3(c_ControllerOffset->Value().x, c_ControllerOffset->Value().y, c_ControllerOffset->Value().z);
 	weaponHandler.localRotation = Vector3(c_ControllerRotation->Value().x, c_ControllerRotation->Value().y, c_ControllerRotation->Value().z);
 
-	if (c_MirrorEye->Value() == 0)
+	//WinlatorXR forced
+	mirrorSource = ERenderState::LEFT_EYE;
+
+	/*if (c_MirrorEye->Value() == 0)
 	{
 		mirrorSource = ERenderState::LEFT_EYE;
 	}
@@ -1088,7 +1123,7 @@ void Game::SetupConfigs()
 	{
 		Logger::log << "[Config] Invalid value for MirrorEye, defaulting to left eye" << std::endl;
 		mirrorSource = ERenderState::LEFT_EYE;
-	}
+	}*/
 
 	//Logger::log << "[Config] Loaded configs" << std::endl;
 }

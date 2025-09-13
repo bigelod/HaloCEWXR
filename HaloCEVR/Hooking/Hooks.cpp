@@ -374,15 +374,17 @@ void Hooks::H_DrawFrame(Renderer* param1, short param2, short* param3, float tic
 	reinterpret_cast<IDirect3DDevice9ExWrapper*>(Helpers::GetDirect3DDevice9())->bIgnoreNextStart = true;
 	reinterpret_cast<IDirect3DDevice9ExWrapper*>(Helpers::GetDirect3DDevice9())->bIgnoreNextEnd = bDrawMirror;
 
+	//Removed for now - WinlatorXR
 	// Draw right eye
-	Game::instance.PreDrawEye(param1, deltaTime, 1);
+	/*Game::instance.PreDrawEye(param1, deltaTime, 1);
 	VR_PROFILE_START(Hooks_DrawFrame_DrawRightEye);
 	DrawFrame.Original(param1, param2, param3, tickProgress, deltaTime);
 	VR_PROFILE_STOP(Hooks_DrawFrame_DrawRightEye);
-	Game::instance.PostDrawEye(param1, deltaTime, 1);
+	Game::instance.PostDrawEye(param1, deltaTime, 1);*/
 
+	//Removed for now - WinlatorXR
 	// Draw Mirror view, but only if the secret mirror mode is set in settings due to performance cost
-	if (bDrawMirror)
+	/*if (bDrawMirror)
 	{
 		reinterpret_cast<IDirect3DDevice9ExWrapper*>(Helpers::GetDirect3DDevice9())->bIgnoreNextStart = true;
 
@@ -391,7 +393,7 @@ void Hooks::H_DrawFrame(Renderer* param1, short param2, short* param3, float tic
 		DrawFrame.Original(param1, param2, param3, tickProgress, deltaTime);
 		VR_PROFILE_STOP(Hooks_DrawFrame_DrawMirror);
 		Game::instance.PostDrawMirror(param1, deltaTime);
-	}
+	}*/
 	Game::instance.PostDrawFrame(param1, deltaTime);
 
 	if (Game::instance.bDetectedChimera)

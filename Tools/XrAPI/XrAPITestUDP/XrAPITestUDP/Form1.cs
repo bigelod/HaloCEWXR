@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
 using System.Net;
 using System.Net.Sockets;
@@ -38,7 +39,20 @@ namespace XrAPITestUDP
         bool key9Down = false;
         bool key0Down = false;
         bool keyYDown = false;
+        bool keyNum8Down = false;
+        bool keyNum4Down = false;
+        bool keyNum5Down = false;
+        bool keyNum6Down = false;
+        bool keyNum7Down = false;
+        bool keyNum9Down = false;
+        bool keyQDown = false;
+        bool keyEDown = false;
+        bool keyZDown = false;
+        bool keyXDown = false;
+        bool keyCDown = false;
         bool readKeysWasChecked = false;
+
+        private float moveSpd = 1.0f / 72.0f;
 
 
         public Form1()
@@ -129,8 +143,11 @@ namespace XrAPITestUDP
             {
                 chkReadKeys.Checked = !chkReadKeys.Checked;
             }
-
-            if (chkReadKeys.Checked)
+            else if (e.KeyCode == Keys.OemOpenBrackets)
+            {
+                chkAlwaysOnTop.Checked = !chkAlwaysOnTop.Checked;
+            }
+            else if (chkReadKeys.Checked)
             {
                 if (e.KeyCode == Keys.W)
                 {
@@ -207,6 +224,50 @@ namespace XrAPITestUDP
                 else if (e.KeyCode == Keys.Y)
                 {
                     keyYDown = false;
+                }
+                else if (e.KeyCode == Keys.NumPad8)
+                {
+                    keyNum8Down = false;
+                }
+                else if (e.KeyCode == Keys.NumPad4)
+                {
+                    keyNum4Down = false;
+                }
+                else if (e.KeyCode == Keys.NumPad5)
+                {
+                    keyNum5Down = false;
+                }
+                else if (e.KeyCode == Keys.NumPad6)
+                {
+                    keyNum6Down = false;
+                }
+                else if (e.KeyCode == Keys.NumPad7)
+                {
+                    keyNum7Down = false;
+                }
+                else if (e.KeyCode == Keys.NumPad9)
+                {
+                    keyNum9Down = false;
+                }
+                else if (e.KeyCode == Keys.E)
+                {
+                    keyEDown = false;
+                }
+                else if (e.KeyCode == Keys.Q)
+                {
+                    keyQDown = false;
+                }
+                else if (e.KeyCode == Keys.Z)
+                {
+                    keyZDown = false;
+                }
+                else if (e.KeyCode == Keys.X)
+                {
+                    keyXDown = false;
+                }
+                else if (e.KeyCode == Keys.C)
+                {
+                    keyCDown = false;
                 }
             }
         }
@@ -290,6 +351,50 @@ namespace XrAPITestUDP
                 else if (e.KeyCode == Keys.Y)
                 {
                     keyYDown = true;
+                }
+                else if (e.KeyCode == Keys.NumPad8)
+                {
+                    keyNum8Down = true;
+                }
+                else if (e.KeyCode == Keys.NumPad4)
+                {
+                    keyNum4Down = true;
+                }
+                else if (e.KeyCode == Keys.NumPad5)
+                {
+                    keyNum5Down = true;
+                }
+                else if (e.KeyCode == Keys.NumPad6)
+                {
+                    keyNum6Down = true;
+                }
+                else if (e.KeyCode == Keys.NumPad7)
+                {
+                    keyNum7Down = true;
+                }
+                else if (e.KeyCode == Keys.NumPad9)
+                {
+                    keyNum9Down = true;
+                }
+                else if (e.KeyCode == Keys.E)
+                {
+                    keyEDown = true;
+                }
+                else if (e.KeyCode == Keys.Q)
+                {
+                    keyQDown = true;
+                }
+                else if (e.KeyCode == Keys.Z)
+                {
+                    keyZDown = true;
+                }
+                else if (e.KeyCode == Keys.X)
+                {
+                    keyXDown = true;
+                }
+                else if (e.KeyCode == Keys.C)
+                {
+                    keyCDown = true;
                 }
             }
         }
@@ -639,6 +744,181 @@ namespace XrAPITestUDP
                     chkRTHUMBRIGHT.Checked = false;
                 }
 
+                if (keyEDown)
+                {
+                    if (keyNum8Down)
+                    {
+                        if (tbHQX.Value < tbHQX.Maximum) tbHQX.Value += 1;
+                    }
+                    else if (keyNum5Down)
+                    {
+                        if (tbHQX.Value > tbHQX.Minimum) tbHQX.Value -= 1;
+                    }
+
+                    if (keyNum4Down)
+                    {
+                        if (tbHQY.Value < tbHQY.Maximum) tbHQY.Value += 1;
+                    }
+                    else if (keyNum6Down)
+                    {
+                        if (tbHQY.Value > tbHQY.Minimum) tbHQY.Value -= 1;
+                    }
+
+                    if (keyNum7Down)
+                    {
+                        if (tbHQZ.Value < tbHQZ.Maximum) tbHQZ.Value += 1;
+                    }
+                    else if (keyNum9Down)
+                    {
+                        if (tbHQZ.Value > tbHQZ.Minimum) tbHQZ.Value -= 1;
+                    }
+                }
+                else if (keyQDown)
+                {
+                    if (keyNum8Down)
+                    {
+                        if (tbLQY.Value < tbLQY.Maximum) tbLQY.Value += 1;
+                    }
+                    else if (keyNum5Down)
+                    {
+                        if (tbLQY.Value > tbLQY.Minimum) tbLQY.Value -= 1;
+                    }
+
+                    if (keyNum4Down)
+                    {
+                        if (tbLQX.Value > tbLQX.Minimum) tbLQX.Value -= 1;
+                    }
+                    else if (keyNum6Down)
+                    {
+                        if (tbLQX.Value < tbLQX.Maximum) tbLQX.Value += 1;
+                    }
+
+                    if (keyNum7Down)
+                    {
+                        if (tbLQW.Value < tbLQW.Maximum) tbLQW.Value += 1;
+                    }
+                    else if (keyNum9Down)
+                    {
+                        if (tbLQW.Value > tbLQW.Minimum) tbLQW.Value -= 1;
+                    }
+                }
+                else if (keyZDown)
+                {
+                    if (keyNum8Down)
+                    {
+                        txtRPos.Text = ModifyPosString(txtRPos.Text, 2, -1.0f);
+                    }
+                    else if (keyNum5Down)
+                    {
+                        txtRPos.Text = ModifyPosString(txtRPos.Text, 2, 1.0f);
+                    }
+
+                    if (keyNum4Down)
+                    {
+                        txtRPos.Text = ModifyPosString(txtRPos.Text, 0, -1.0f);
+                    }
+                    else if (keyNum6Down)
+                    {
+                        txtRPos.Text = ModifyPosString(txtRPos.Text, 0, 1.0f);
+                    }
+
+                    if (keyNum7Down)
+                    {
+                        txtRPos.Text = ModifyPosString(txtRPos.Text, 1, -1.0f);
+                    }
+                    else if (keyNum9Down)
+                    {
+                        txtRPos.Text = ModifyPosString(txtRPos.Text, 1, 1.0f);
+                    }
+                }
+                else if (keyXDown)
+                {
+                    if (keyNum8Down)
+                    {
+                        txtLPos.Text = ModifyPosString(txtLPos.Text, 2, -1.0f);
+                    }
+                    else if (keyNum5Down)
+                    {
+                        txtLPos.Text = ModifyPosString(txtLPos.Text, 2, 1.0f);
+                    }
+
+                    if (keyNum4Down)
+                    {
+                        txtLPos.Text = ModifyPosString(txtLPos.Text, 0, -1.0f);
+                    }
+                    else if (keyNum6Down)
+                    {
+                        txtLPos.Text = ModifyPosString(txtLPos.Text, 0, 1.0f);
+                    }
+
+                    if (keyNum7Down)
+                    {
+                        txtLPos.Text = ModifyPosString(txtLPos.Text, 1, -1.0f);
+                    }
+                    else if (keyNum9Down)
+                    {
+                        txtLPos.Text = ModifyPosString(txtLPos.Text, 1, 1.0f);
+                    }
+                }
+                else if (keyCDown)
+                {
+                    if (keyNum8Down)
+                    {
+                        txtHPos.Text = ModifyPosString(txtHPos.Text, 2, -1.0f);
+                    }
+                    else if (keyNum5Down)
+                    {
+                        txtHPos.Text = ModifyPosString(txtHPos.Text, 2, 1.0f);
+                    }
+
+                    if (keyNum4Down)
+                    {
+                        txtHPos.Text = ModifyPosString(txtHPos.Text, 0, -1.0f);
+                    }
+                    else if (keyNum6Down)
+                    {
+                        txtHPos.Text = ModifyPosString(txtHPos.Text, 0, 1.0f);
+                    }
+
+                    if (keyNum7Down)
+                    {
+                        txtHPos.Text = ModifyPosString(txtHPos.Text, 1, -1.0f);
+                    }
+                    else if (keyNum9Down)
+                    {
+                        txtHPos.Text = ModifyPosString(txtHPos.Text, 1, 1.0f);
+                    }
+                }
+                else
+                {
+                    if (keyNum8Down)
+                    {
+                        if (tbRQY.Value > tbRQY.Minimum) tbRQY.Value -= 1;
+                    }
+                    else if (keyNum5Down)
+                    {
+                        if (tbRQY.Value < tbRQY.Maximum) tbRQY.Value += 1;
+                    }
+
+                    if (keyNum4Down)
+                    {
+                        if (tbRQX.Value < tbRQX.Maximum) tbRQX.Value += 1;
+                    }
+                    else if (keyNum6Down)
+                    {
+                        if (tbRQX.Value > tbRQX.Minimum) tbRQX.Value -= 1;
+                    }
+
+                    if (keyNum7Down)
+                    {
+                        if (tbRQW.Value > tbRQW.Minimum) tbRQW.Value -= 1;
+                    }
+                    else if (keyNum9Down)
+                    {
+                        if (tbRQW.Value < tbRQW.Maximum) tbRQW.Value += 1;
+                    }
+                }
+
                 chkLTRIGGER.Checked = key1Down;
                 chkLGRIP.Checked = key2Down;
                 chkRTRIGGER.Checked = key3Down;
@@ -677,6 +957,17 @@ namespace XrAPITestUDP
                 key9Down = false;
                 key0Down = false;
                 keyYDown = false;
+                keyNum8Down = false;
+                keyNum4Down = false;
+                keyNum5Down = false;
+                keyNum6Down = false;
+                keyNum7Down = false;
+                keyNum9Down = false;
+                keyEDown = false;
+                keyQDown = false;
+                keyZDown = false;
+                keyXDown = false;
+                keyZDown = false;
 
                 if (readKeysWasChecked)
                 {
@@ -716,6 +1007,36 @@ namespace XrAPITestUDP
             {
                 SendUDPFrame();
             }
+        }
+
+        private string ModifyPosString(string posString, int axis, float dir)
+        {
+            string ans = "";
+
+            string[] parts = posString.Split(" ");
+
+            if (parts.Length != 3) return posString;
+
+            float modPart = 0f;
+
+            float.TryParse(parts[axis], System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out modPart);
+
+            modPart += dir * moveSpd;
+
+            switch (axis)
+            {
+                case 0:
+                    ans = modPart.ToString() + " " + parts[1] + " " + parts[2];
+                    break;
+                case 1:
+                    ans = parts[0] + " " + modPart.ToString() + " " + parts[2];
+                    break;
+                case 2:
+                    ans = parts[0] + " " + parts[1] + " " + modPart.ToString();
+                    break;
+            }
+
+            return ans;
         }
 
         private void BuildDataPacket()
@@ -1049,6 +1370,16 @@ namespace XrAPITestUDP
             }
 
             return false;
+        }
+
+        private void chkReadKeys_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnKeyEmulationControls_Click(object sender, EventArgs e)
+        {
+            Process.Start("explorer.exe", Path.Combine(Application.StartupPath, "XrAPITestUDPEmulatedControls.png"));
         }
     }
 }

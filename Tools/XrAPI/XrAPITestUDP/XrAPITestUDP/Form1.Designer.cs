@@ -111,6 +111,7 @@
             btnImportUDP = new Button();
             chkAlwaysOnTop = new CheckBox();
             chkReadKeys = new CheckBox();
+            btnKeyEmulationControls = new Button();
             ((System.ComponentModel.ISupportInitialize)tbOXRFrameId).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbRQX).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbRQY).BeginInit();
@@ -143,6 +144,8 @@
             // chkAutoSendUDP
             // 
             chkAutoSendUDP.AutoSize = true;
+            chkAutoSendUDP.Checked = true;
+            chkAutoSendUDP.CheckState = CheckState.Checked;
             chkAutoSendUDP.Location = new Point(1317, 172);
             chkAutoSendUDP.Name = "chkAutoSendUDP";
             chkAutoSendUDP.Size = new Size(179, 19);
@@ -876,6 +879,8 @@
             // chkAlwaysOnTop
             // 
             chkAlwaysOnTop.AutoSize = true;
+            chkAlwaysOnTop.Checked = true;
+            chkAlwaysOnTop.CheckState = CheckState.Checked;
             chkAlwaysOnTop.Location = new Point(1056, 172);
             chkAlwaysOnTop.Name = "chkAlwaysOnTop";
             chkAlwaysOnTop.Size = new Size(104, 19);
@@ -892,6 +897,17 @@
             chkReadKeys.TabIndex = 94;
             chkReadKeys.Text = "Read Key Input";
             chkReadKeys.UseVisualStyleBackColor = true;
+            chkReadKeys.CheckedChanged += chkReadKeys_CheckedChanged;
+            // 
+            // btnKeyEmulationControls
+            // 
+            btnKeyEmulationControls.Location = new Point(1341, 298);
+            btnKeyEmulationControls.Name = "btnKeyEmulationControls";
+            btnKeyEmulationControls.Size = new Size(157, 36);
+            btnKeyEmulationControls.TabIndex = 95;
+            btnKeyEmulationControls.Text = "Key Emulation Controls";
+            btnKeyEmulationControls.UseVisualStyleBackColor = true;
+            btnKeyEmulationControls.Click += btnKeyEmulationControls_Click;
             // 
             // Form1
             // 
@@ -899,6 +915,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
             ClientSize = new Size(1508, 234);
+            Controls.Add(btnKeyEmulationControls);
             Controls.Add(chkReadKeys);
             Controls.Add(chkAlwaysOnTop);
             Controls.Add(btnImportUDP);
@@ -1087,5 +1104,6 @@
         private Button btnImportUDP;
         private CheckBox chkAlwaysOnTop;
         private CheckBox chkReadKeys;
+        private Button btnKeyEmulationControls;
     }
 }

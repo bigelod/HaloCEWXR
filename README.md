@@ -4,7 +4,7 @@
 
 # WinlatorXR port of Halo: Combat Evolved VR
 
-NOTE: This is buggy, it is still in active development and only works using the Debug version of the DLLS (including VC++ and DirectX9) on actual Quest Winlator containers as of September 2025
+NOTE: This still has a few bugs, it is in active development and only works using the Debug version of the DLLS (including VC++ and DirectX9) on actual Quest and Pico WinlatorXR containers as of September 2025
 
 The parent project this is based on, [HaloCEVR by LivingFray](https://github.com/LivingFray/HaloCEVR), does not appear to have a license, but the code added or modified in this fork/port to WinlatorXR's XrApi is subject to the [LGPLv3 license](https://www.gnu.org/licenses/lgpl-3.0.en.html)
 
@@ -18,7 +18,7 @@ Thanks to Luboš for his work on [WinlatorXR](https://github.com/lvonasek/Winlat
 
 Thanks to GmoLargey for testing!
 
-# Current buggy way of running the game in WinlatorXR:
+# Current way of running the game in WinlatorXR:
 
 * Build the Debug d3d9 DLL
 * Copy these DLLs from PC to System32 and SysWow64 directory for their 32/64 bit versions (not sure if required yet):
@@ -28,17 +28,15 @@ Thanks to GmoLargey for testing!
 *  -> webservices.dll
 *  -> ws2_32.dll
 *  -> ws2help.dll
-* Install Halo CE on WinlatorXR, make sure it works first
+* Install Halo CE on WinlatorXR, make sure it works first without the VR mod
 * Copy the VR, fonts, chimera / strings.dll, and d3d9.dll DEBUG version to the Halo install directory on Quest WinlatorXR (don't install the modified large memory EXEs, they don't seem to work)
 * Install Wine MONO
 * Right-click and make a shortcut to halo.exe
 * Close the container and open the shortcut for Halo CE WXR instead
 
--> Current ideal settings for the Halo shortcut are 1400x1400, DXVK 1.10.3 async (async ON) 30 FPS limit, Direct3D and Visual C++ 2010 uses Native (Windows), rest stay Builtin (Wine), Box64 Preset: Intermediate
+-> Current ideal settings for the Halo shortcut are 1400x1400, DXVK 1.10.1 async (async ON), Direct3D and Visual C++ 2010 uses Native (Windows), rest stay Builtin (Wine), Box64 Preset: Intermediate
 
 -> In-game audio settings set to LOW for both variety and quality
-
--> Do not touch the video resolution setting in-game (breaks the red pixel otherwise)
 
 -> If using the dsoal mod (recommended for audio latency issues) you will likely need another MSVC++ runtime but I am unsure which one, you can just install the [All-In-One](https://github.com/abbodi1406/vcredist) on your container
 

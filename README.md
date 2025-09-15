@@ -101,7 +101,7 @@ NOTE: If you start this on a PC or other device and it doesn't get past the load
 * Left Trigger - Zoom / Scope or ENTER for UI panels
 * Right Grip - Grenade
 * Right Trigger - Shoot
-* Left Click - Crouch (currently broken / might not be supported)
+* Left Click - Crouch (does not move the camera position)
 * Right Click - NONE (WinlatorXR menu)
 * Left Menu Button - Escape / Menu
 * X - Switch Grenades (might not be working?)

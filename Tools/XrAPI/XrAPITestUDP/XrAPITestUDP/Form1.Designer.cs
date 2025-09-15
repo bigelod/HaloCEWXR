@@ -109,6 +109,8 @@
             chkZeroThumbs = new CheckBox();
             chkReleaseBtnOnMouseUp = new CheckBox();
             btnImportUDP = new Button();
+            chkAlwaysOnTop = new CheckBox();
+            chkReadKeys = new CheckBox();
             ((System.ComponentModel.ISupportInitialize)tbOXRFrameId).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbRQX).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbRQY).BeginInit();
@@ -871,12 +873,34 @@
             btnImportUDP.UseVisualStyleBackColor = true;
             btnImportUDP.Click += btnImportUDP_Click;
             // 
+            // chkAlwaysOnTop
+            // 
+            chkAlwaysOnTop.AutoSize = true;
+            chkAlwaysOnTop.Location = new Point(1056, 172);
+            chkAlwaysOnTop.Name = "chkAlwaysOnTop";
+            chkAlwaysOnTop.Size = new Size(104, 19);
+            chkAlwaysOnTop.TabIndex = 93;
+            chkAlwaysOnTop.Text = "Always On Top";
+            chkAlwaysOnTop.UseVisualStyleBackColor = true;
+            // 
+            // chkReadKeys
+            // 
+            chkReadKeys.AutoSize = true;
+            chkReadKeys.Location = new Point(1393, 273);
+            chkReadKeys.Name = "chkReadKeys";
+            chkReadKeys.Size = new Size(105, 19);
+            chkReadKeys.TabIndex = 94;
+            chkReadKeys.Text = "Read Key Input";
+            chkReadKeys.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
-            ClientSize = new Size(1508, 233);
+            ClientSize = new Size(1508, 234);
+            Controls.Add(chkReadKeys);
+            Controls.Add(chkAlwaysOnTop);
             Controls.Add(btnImportUDP);
             Controls.Add(chkReleaseBtnOnMouseUp);
             Controls.Add(chkZeroThumbs);
@@ -954,6 +978,7 @@
             Controls.Add(txtTargetIP);
             Controls.Add(chkAutoSendUDP);
             Controls.Add(btnSendFrame);
+            KeyPreview = true;
             MaximizeBox = false;
             Name = "Form1";
             Text = "XrAPI - UDP Tester";
@@ -1060,5 +1085,7 @@
         private CheckBox chkZeroThumbs;
         private CheckBox chkReleaseBtnOnMouseUp;
         private Button btnImportUDP;
+        private CheckBox chkAlwaysOnTop;
+        private CheckBox chkReadKeys;
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -18,6 +19,28 @@ namespace XrAPITestUDP
 
         UdpClient _TransmitClient;
 
+        bool keyWDown = false;
+        bool keyADown = false;
+        bool keySDown = false;
+        bool keyDDown = false;
+        bool keyIDown = false;
+        bool keyJDown = false;
+        bool keyKDown = false;
+        bool keyLDown = false;
+        bool key1Down = false;
+        bool key2Down = false;
+        bool key3Down = false;
+        bool key4Down = false;
+        bool key5Down = false;
+        bool key6Down = false;
+        bool key7Down = false;
+        bool key8Down = false;
+        bool key9Down = false;
+        bool key0Down = false;
+        bool keyYDown = false;
+        bool readKeysWasChecked = false;
+
+
         public Form1()
         {
             InitializeComponent();
@@ -28,6 +51,9 @@ namespace XrAPITestUDP
             this.WindowState = FormWindowState.Minimized;
             this.Show();
             this.WindowState = FormWindowState.Normal;
+
+            this.KeyDown += Form1_KeyDown;
+            this.KeyUp += Form1_KeyUp;
 
             tbOXRFrameId.ValueChanged += tbOXRFrameId_ValueChanged;
 
@@ -95,6 +121,177 @@ namespace XrAPITestUDP
             tbHQY.Value = -7;
             tbHQZ.Value = 5;
             tbHQW.Value = 99;
+        }
+
+        private void Form1_KeyUp(object? sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.OemCloseBrackets)
+            {
+                chkReadKeys.Checked = !chkReadKeys.Checked;
+            }
+
+            if (chkReadKeys.Checked)
+            {
+                if (e.KeyCode == Keys.W)
+                {
+                    keyWDown = false;
+                }
+                else if (e.KeyCode == Keys.A)
+                {
+                    keyADown = false;
+                }
+                else if (e.KeyCode == Keys.S)
+                {
+                    keySDown = false;
+                }
+                else if (e.KeyCode == Keys.D)
+                {
+                    keyDDown = false;
+                }
+                else if (e.KeyCode == Keys.I)
+                {
+                    keyIDown = false;
+                }
+                else if (e.KeyCode == Keys.J)
+                {
+                    keyJDown = false;
+                }
+                else if (e.KeyCode == Keys.K)
+                {
+                    keyKDown = false;
+                }
+                else if (e.KeyCode == Keys.L)
+                {
+                    keyLDown = false;
+                }
+                else if (e.KeyCode == Keys.D1)
+                {
+                    key1Down = false;
+                }
+                else if (e.KeyCode == Keys.D2)
+                {
+                    key2Down = false;
+                }
+                else if (e.KeyCode == Keys.D3)
+                {
+                    key3Down = false;
+                }
+                else if (e.KeyCode == Keys.D4)
+                {
+                    key4Down = false;
+                }
+                else if (e.KeyCode == Keys.D5)
+                {
+                    key5Down = false;
+                }
+                else if (e.KeyCode == Keys.D6)
+                {
+                    key6Down = false;
+                }
+                else if (e.KeyCode == Keys.D7)
+                {
+                    key7Down = false;
+                }
+                else if (e.KeyCode == Keys.D8)
+                {
+                    key8Down = false;
+                }
+                else if (e.KeyCode == Keys.D9)
+                {
+                    key9Down = false;
+                }
+                else if (e.KeyCode == Keys.D0)
+                {
+                    key0Down = false;
+                }
+                else if (e.KeyCode == Keys.Y)
+                {
+                    keyYDown = false;
+                }
+            }
+        }
+
+        private void Form1_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (chkReadKeys.Checked)
+            {
+                if (e.KeyCode == Keys.W)
+                {
+                    keyWDown = true;
+                }
+                else if (e.KeyCode == Keys.A)
+                {
+                    keyADown = true;
+                }
+                else if (e.KeyCode == Keys.S)
+                {
+                    keySDown = true;
+                }
+                else if (e.KeyCode == Keys.D)
+                {
+                    keyDDown = true;
+                }
+                else if (e.KeyCode == Keys.I)
+                {
+                    keyIDown = true;
+                }
+                else if (e.KeyCode == Keys.J)
+                {
+                    keyJDown = true;
+                }
+                else if (e.KeyCode == Keys.K)
+                {
+                    keyKDown = true;
+                }
+                else if (e.KeyCode == Keys.L)
+                {
+                    keyLDown = true;
+                }
+                else if (e.KeyCode == Keys.D1)
+                {
+                    key1Down = true;
+                }
+                else if (e.KeyCode == Keys.D2)
+                {
+                    key2Down = true;
+                }
+                else if (e.KeyCode == Keys.D3)
+                {
+                    key3Down = true;
+                }
+                else if (e.KeyCode == Keys.D4)
+                {
+                    key4Down = true;
+                }
+                else if (e.KeyCode == Keys.D5)
+                {
+                    key5Down = true;
+                }
+                else if (e.KeyCode == Keys.D6)
+                {
+                    key6Down = true;
+                }
+                else if (e.KeyCode == Keys.D7)
+                {
+                    key7Down = true;
+                }
+                else if (e.KeyCode == Keys.D8)
+                {
+                    key8Down = true;
+                }
+                else if (e.KeyCode == Keys.D9)
+                {
+                    key9Down = true;
+                }
+                else if (e.KeyCode == Keys.D0)
+                {
+                    key0Down = true;
+                }
+                else if (e.KeyCode == Keys.Y)
+                {
+                    keyYDown = true;
+                }
+            }
         }
 
         private void chkRTRIGGER_MouseLeave(object? sender, EventArgs e)
@@ -338,6 +535,8 @@ namespace XrAPITestUDP
 
         private void timSendInterval_Tick(object sender, EventArgs e)
         {
+            this.TopMost = chkAlwaysOnTop.Checked;
+
             if (chkAutoIncrementFrameId.Checked)
             {
                 if (tbOXRFrameId.Value < 255)
@@ -347,6 +546,167 @@ namespace XrAPITestUDP
                 else
                 {
                     tbOXRFrameId.Value = 0;
+                }
+            }
+
+            if (chkReadKeys.Checked)
+            {
+                if (keyWDown)
+                {
+                    tbLTY.Value = tbLTY.Maximum;
+
+                    chkLTHUMBUP.Checked = true;
+                    chkLTHUMBDOWN.Checked = false;
+                }
+                else if (keySDown)
+                {
+                    tbLTY.Value = tbLTY.Minimum;
+
+                    chkLTHUMBUP.Checked = false;
+                    chkLTHUMBDOWN.Checked = true;
+                }
+                else
+                {
+                    tbLTY.Value = 0;
+
+                    chkLTHUMBUP.Checked = false;
+                    chkLTHUMBDOWN.Checked = false;
+                }
+
+                if (keyADown)
+                {
+                    tbLTX.Value = tbLTX.Minimum;
+
+                    chkLTHUMBLEFT.Checked = true;
+                    chkLTHUMBRIGHT.Checked = false;
+                }
+                else if (keyDDown)
+                {
+                    tbLTX.Value = tbLTX.Maximum;
+
+                    chkLTHUMBLEFT.Checked = false;
+                    chkLTHUMBRIGHT.Checked = true;
+                }
+                else
+                {
+                    tbLTX.Value = 0;
+
+                    chkLTHUMBLEFT.Checked = false;
+                    chkLTHUMBRIGHT.Checked = false;
+                }
+
+                if (keyIDown)
+                {
+                    tbRTY.Value = tbRTY.Maximum;
+
+                    chkRTHUMBUP.Checked = true;
+                    chkRTHUMBDOWN.Checked = false;
+                }
+                else if (keyKDown)
+                {
+                    tbRTY.Value = tbRTY.Minimum;
+
+                    chkRTHUMBUP.Checked = false;
+                    chkRTHUMBDOWN.Checked = true;
+                }
+                else
+                {
+                    tbRTY.Value = 0;
+
+                    chkRTHUMBUP.Checked = false;
+                    chkRTHUMBDOWN.Checked = false;
+                }
+
+                if (keyJDown)
+                {
+                    tbRTX.Value = tbRTX.Minimum;
+
+                    chkRTHUMBLEFT.Checked = true;
+                    chkRTHUMBRIGHT.Checked = false;
+                }
+                else if (keyLDown)
+                {
+                    tbRTX.Value = tbRTX.Maximum;
+
+                    chkRTHUMBLEFT.Checked = false;
+                    chkRTHUMBRIGHT.Checked = true;
+                }
+                else
+                {
+                    tbRTX.Value = 0;
+
+                    chkRTHUMBLEFT.Checked = false;
+                    chkRTHUMBRIGHT.Checked = false;
+                }
+
+                chkLTRIGGER.Checked = key1Down;
+                chkLGRIP.Checked = key2Down;
+                chkRTRIGGER.Checked = key3Down;
+                chkRGRIP.Checked = key4Down;
+
+                chkLTHUMBCLICK.Checked = key5Down;
+                chkRTHUMBCLICK.Checked = key6Down;
+
+                chkLX.Checked = key7Down;
+                chkLY.Checked = key8Down;
+                chkRB.Checked = key9Down;
+                chkRA.Checked = key0Down;
+
+                chkLMENU.Checked = keyYDown;
+
+                readKeysWasChecked = true;
+            }
+            else
+            {
+                keyWDown = false;
+                keyADown = false;
+                keySDown = false;
+                keyDDown = false;
+                keyIDown = false;
+                keyJDown = false;
+                keyKDown = false;
+                keyLDown = false;
+                key1Down = false;
+                key2Down = false;
+                key3Down = false;
+                key4Down = false;
+                key5Down = false;
+                key6Down = false;
+                key7Down = false;
+                key8Down = false;
+                key9Down = false;
+                key0Down = false;
+                keyYDown = false;
+
+                if (readKeysWasChecked)
+                {
+                    chkLTRIGGER.Checked = false;
+                    chkLGRIP.Checked = false;
+                    chkRTRIGGER.Checked = false;
+                    chkRGRIP.Checked = false;
+                    chkLX.Checked = false;
+                    chkLY.Checked = false;
+                    chkRB.Checked = false;
+                    chkRA.Checked = false;
+                    chkLTHUMBCLICK.Checked = false;
+                    chkRTHUMBCLICK.Checked = false;
+
+                    chkLTHUMBUP.Checked = false;
+                    chkLTHUMBLEFT.Checked = false;
+                    chkLTHUMBDOWN.Checked = false;
+                    chkLTHUMBRIGHT.Checked = false;
+                    chkRTHUMBUP.Checked = false;
+                    chkRTHUMBLEFT.Checked = false;
+                    chkRTHUMBDOWN.Checked = false;
+                    chkRTHUMBRIGHT.Checked = false;
+
+                    chkLMENU.Checked = false;
+
+                    tbLTX.Value = 0;
+                    tbLTY.Value = 0;
+                    tbRTX.Value = 0;
+                    tbRTY.Value = 0;
+                    readKeysWasChecked = false;
                 }
             }
 
@@ -616,7 +976,7 @@ namespace XrAPITestUDP
             if (maxParts >= i) tbHQW.Value = (int)Math.Round(100.0f * TryParseStr(parts[i]));
 
             txtHPos.Text = "";
-            
+
             i++;
             if (maxParts >= i) txtHPos.Text = parts[i];
             i++;

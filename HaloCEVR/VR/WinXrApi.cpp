@@ -11,6 +11,8 @@
 #include "../Game.h"
 #include <filesystem>
 #include <iostream>
+#include <fstream>
+#include <string>
 #include <sstream>
 #include <vector>
 #include <locale>
@@ -48,7 +50,52 @@ void WinXrApi::Init()
 
 	HMDQuat = Vector4(0, 0, 0, 0);
 	HMDPos = Vector3(0, 0, 0);
+	
+	//Kiosk mode
+	std::filesystem::path saveResetCheck = std::filesystem::current_path() / "VR" / "istr.txt";
+	std::filesystem::path replaceSave = std::filesystem::current_path() / "VR" / "New001";
+	std::filesystem::path docsSaveDir;
 
+	if (std::filesystem::exists(saveResetCheck) && std::filesystem::is_regular_file(saveResetCheck)) {
+		try {
+			std::ifstream savegamesPath(saveResetCheck);
+
+			if (savegamesPath.is_open()) {
+				std::string outpathStr;
+				std::getline(savegamesPath, outpathStr);
+				savegamesPath.close();
+
+				docsSaveDir = std::filesystem::path(outpathStr);
+			}
+
+			if (docsSaveDir.empty()) {
+
+			}
+			else if (std::filesystem::exists(docsSaveDir) && std::filesystem::is_directory(docsSaveDir)) {
+				if (std::filesystem::exists(replaceSave) && std::filesystem::is_directory(replaceSave)) {
+					for (const auto& entry : std::filesystem::directory_iterator(docsSaveDir)) {
+						if (entry.is_directory()) {
+							std::filesystem::remove_all(entry.path());
+						}
+					}
+
+					std::filesystem::path newSaveData = docsSaveDir / "New001";
+					std::filesystem::create_directories(newSaveData);
+
+					std::filesystem::copy(replaceSave, newSaveData, std::filesystem::copy_options::recursive | std::filesystem::copy_options::overwrite_existing);
+				}
+			}
+		}
+		catch (const std::filesystem::filesystem_error& e) {
+
+		}
+		catch (const std::exception& e) {
+
+		}
+
+	}
+
+	//Now we initialize VR mode
 	Logger::log << "[WinXrApi] Initialising WinlatorXR VR mode..." << std::endl;
 
 	std::filesystem::path tmpPath = "Z:/";
@@ -78,7 +125,7 @@ void WinXrApi::Init()
 				file.close();
 			}
 			else {
-				
+
 			}
 		}
 		catch (const std::exception& e) {
@@ -189,7 +236,7 @@ void WinXrApi::UpdatePoses()
 	std::string txt = udpReader->GetRetData();
 
 	//Logger::log << txt << std::endl;	 
-	
+
 	//Example return data:
 	//[Game] WinXrApi Getting Data...
 	//client0 0.213 0.287 -0.933 0.035 0.0 0.0 -0.008 -0.229 -0.173 0.095 -0.296 0.947 -0.077 0.0 0.0 0.154 -0.240 -0.140 0.146 -0.072 0.048 0.985 0.037 0.006 -0.017 0.0678 99.00 103.40 224 TFFFFFFFFFTTTFFFFFT META
@@ -256,7 +303,7 @@ void WinXrApi::UpdatePoses()
 	LHandQuat = Vector4(floats[0], floats[1], floats[2], floats[3]);
 	LHandPos = Vector3(floats[6], floats[7], floats[8]);
 	LThumbstick = Vector2(floats[4], floats[5]);
-	
+
 	RHandQuat = Vector4(floats[9], floats[10], floats[11], floats[12]);
 	RHandPos = Vector3(floats[15], floats[16], floats[17]);
 	RThumbstick = Vector2(floats[13], floats[14]);
@@ -354,7 +401,7 @@ Matrix4 WinXrApi::GetControllerTransform(ControllerRole role, bool bRenderPose)
 		else {
 			bonePos = Vector3(RHandPos.x, RHandPos.y, RHandPos.z);
 			quat = Vector4(RHandQuat.x, RHandQuat.y, -RHandQuat.z, RHandQuat.w);
-		}		
+		}
 	}
 	else {
 		if (!Game::instance.bLeftHanded) {

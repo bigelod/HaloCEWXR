@@ -89,7 +89,6 @@ NOTE: If you start this on a PC or other device and it doesn't get past the load
 
 # Stretch-Goal(s) / Unlikely Bonus Features:
 
-* Investigate ways to improve native render resolution without performance drops
 * Restore the mirror window or show that instead of the main game window, and enable SBS with it via creation of the /sbs file
 * Support left/right hand flipping for the movement and turn sticks
 
@@ -110,12 +109,9 @@ NOTE: If you start this on a PC or other device and it doesn't get past the load
 * X - Switch Grenades (might not be working?)
 * Y - Flashlight
 * B - Reload
-* A - Action 
+* A - Action
 
-# Known Bugs:
-
-* Screen jumps around the field of view -> Combination of low FPS + red pixel sync issues
-* Sometimes the menu stops responding to the windows input sent by WinlatorXR (up/down/left/right)
+<br/><br/><br/>
 
 # Original ReadMe:
 

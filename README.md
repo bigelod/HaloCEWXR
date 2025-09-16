@@ -4,7 +4,7 @@
 
 # WinlatorXR port of Halo: Combat Evolved VR
 
-NOTE: This still has a few bugs, it is in active development and only works using the Debug version of the DLLS (including VC++ and DirectX9) on actual Quest and Pico WinlatorXR containers as of September 2025
+NOTE: This still has a few bugs, it is in active development and only works using the Debug version of the DLLS (including VC++ and DirectX9) on actual Quest and Pico WinlatorXR containers as of September 2025. Known bugs either have no solution or temporary workaround solutions that are non-optimal.
 
 The parent project this is based on, [HaloCEVR by LivingFray](https://github.com/LivingFray/HaloCEVR), does not appear to have a license, but the code added or modified in this fork/port to WinlatorXR's XrApi is subject to the [LGPLv3 license](https://www.gnu.org/licenses/lgpl-3.0.en.html)
 
@@ -65,9 +65,7 @@ NOTE: If you start this on a PC or other device and it doesn't get past the load
 # To-Do - BUG FIXES:
 
 * Fix the DLL injection failing on actual WinlatorXR container on Quest/Pic with Release versions of the DLL (Debug working)
-* Investigate why the UI flys down-right off screen on the title screen over time
 * Investigate why re-opening Halo in the same running container gives a black screen
-* Fix sniper scope not appearing
 
 # Done:
 
@@ -83,6 +81,8 @@ NOTE: If you start this on a PC or other device and it doesn't get past the load
 * Restore the in-game HUD display without losing the red pixel overlay
 * Investigate why the pause panel UI keeps toggling on/off in-game on button press (add delay between button detection maybe for this?)
 * Fix the sniper pickup / regular weapon zoom (currently broken, crashes on Sniper equip)
+* Investigate why the UI flys down-right off screen on the title screen over time
+* Fix sniper scope not appearing
 
 
 # Stretch-Goal(s) / Unlikely Bonus Features:
@@ -101,10 +101,10 @@ NOTE: If you start this on a PC or other device and it doesn't get past the load
 * Left Trigger - Zoom / Scope or ENTER for UI panels
 * Right Grip - Grenade
 * Right Trigger - Shoot
-* Left Click - Crouch (does not move the camera position)
+* Left Click - Crouch (does not move the camera vertical position)
 * Right Click - NONE (WinlatorXR menu)
-* Left Menu Button - Escape / Menu
-* X - Switch Grenades (might not be working?)
+* Left Menu Button - Escape / Menu (hold to recenter)
+* X - Switch Grenades
 * Y - Flashlight
 * B - Reload
 * A - Action

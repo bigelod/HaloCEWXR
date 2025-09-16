@@ -109,6 +109,8 @@ NOTE: If you start this on a PC or other device and it doesn't get past the load
 * B - Reload
 * A - Action
 
+  ![Controls](WinXR_HaloCE_Controls.png)
+
 <br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 # Original ReadMe:

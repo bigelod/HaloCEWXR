@@ -6,6 +6,7 @@
 #include "../Helpers/Camera.h"
 #include "../Helpers/Renderer.h"
 #include "../Helpers/Cutscene.h"
+#include "../Helpers/Menus.h"
 #include "../Logger.h"
 #include "../DirectXWrappers/IDirect3DDevice9ExWrapper.h"
 #include "../Game.h"
@@ -50,7 +51,9 @@ void WinXrApi::Init()
 
 	HMDQuat = Vector4(0, 0, 0, 0);
 	HMDPos = Vector3(0, 0, 0);
-	
+
+	hmdOffset = Vector3(0, 0, 0);
+
 	//Kiosk mode
 	std::filesystem::path saveResetCheck = std::filesystem::current_path() / "VR" / "istr.txt";
 	std::filesystem::path replaceSave = std::filesystem::current_path() / "VR" / "New001";
@@ -327,8 +330,8 @@ void WinXrApi::UpdatePoses()
 	L_Y = buttonBools[9];
 	R_A = buttonBools[10];
 	R_B = buttonBools[11];
-	//L_Menu = buttonBools[1];
-	L_Menu = false;
+	L_Menu = buttonBools[1];
+	//L_Menu = false;
 
 	R_ThumbUp = buttonBools[16];
 	R_ThumbDown = buttonBools[17];
@@ -361,8 +364,10 @@ void WinXrApi::UpdateCameraFrustum(CameraFrustum* frustum, int eye)
 
 	if (cutscene->bInCutscene)
 	{
-		float cameraYaw = atan2(frustum->facingDirection.y, frustum->facingDirection.x) * (180.0f / 3.1415926f);
-		headMatrix.rotateZ(cameraYaw);
+		//float cameraYaw = atan2(frustum->facingDirection.y, frustum->facingDirection.x) * (180.0f / 3.1415926f);
+		//headMatrix.rotateZ(cameraYaw);
+		//headMatrix = headMatrix * RotationFromDirection(frustum->facingDirection);
+		yawOffset = 0.0f;
 	}
 
 	Matrix4 viewMatrix = (headMatrix).scale(Game::instance.MetresToWorld(1.0f));
@@ -461,11 +466,33 @@ Vector4 WinXrApi::QuaternionMultiply(const Vector4& q1, const Vector4& q2) {
 	);
 }
 
+Matrix4 WinXrApi::RotationFromDirection(Vector3 direction) {
+	direction = direction.normalize();
+
+	Vector3 up = Vector3(0, 1, 0);
+	if (fabs(direction.dot(up)) > 0.99f) {
+
+		up = Vector3(1, 0, 0);
+	}
+
+	Vector3 right = direction.cross(up).normalize();
+	Vector3 newUp = right.cross(direction).normalize();
+
+	Matrix4 rotation(
+		right.x, right.y, right.z, 0,
+		newUp.x, newUp.y, newUp.z, 0,
+		-direction.x, -direction.y, -direction.z, 0,
+		0, 0, 0, 1
+	);
+
+	return rotation;
+}
+
 Matrix4 WinXrApi::GetHMDTransform(bool bRenderPose)
 {
 	Matrix4 outMatrix;
 
-	Vector3 bonePos = Vector3(HMDPos.x, HMDPos.y, HMDPos.z);
+	Vector3 bonePos = Vector3(HMDPos.x - hmdOffset.x, HMDPos.y - hmdOffset.y, HMDPos.z - hmdOffset.z);
 	Vector4 quat = Vector4(HMDQuat.x, HMDQuat.y, -HMDQuat.z, HMDQuat.w);
 
 	Vector4 rollInversion = Vector4(0.0f, 0.0f, 1.0f, 0.0f); // Quaternion for 180-degree rotation around Z-axis
@@ -498,6 +525,7 @@ Matrix4 WinXrApi::GetHMDTransform(bool bRenderPose)
 	boneMatrixGame.rotate(180.0f, boneMatrixGame * Vector3(0.0f, 0.0f, 1.0f));
 	boneMatrixGame.rotate(180.0f, boneMatrixGame * Vector3(0.0f, 1.0f, 0.0f));
 	boneMatrixGame.rotate(180.0f, boneMatrixGame * Vector3(1.0f, 0.0f, 0.0f));
+
 	boneMatrixGame.translate(pos).translate(-positionOffset).rotateZ(-yawOffset);
 
 	outMatrix = outMatrix * boneMatrixGame;
@@ -651,7 +679,10 @@ void WinXrApi::UpdateInputs()
 
 void WinXrApi::Recentre()
 {
+	//SetLocationOffset(GetHMDTransform(true) * Vector3(0.0f, 0.0f, 0.0f));
 	SetLocationOffset(Vector3(0.0f, 0.0f, 0.0f));
+
+	hmdOffset = Vector3(HMDPos.x, HMDPos.y, HMDPos.z);
 }
 
 void WinXrApi::SetLocationOffset(Vector3 newOffset)
@@ -766,28 +797,71 @@ void WinXrApi::PreDrawFrame(struct Renderer* renderer, float deltaTime)
 		Logger::log << "Failed to call mirror begin scene: " << result << std::endl;
 	}*/
 
-	Vector3 camPos = Helpers::GetCamera().position;
+	auto fixupRotation = [](Matrix4& m, Vector3& pos) {
+		m.translate(-pos);
+		m.rotate(90.0f, m.getUpAxis());
+		m.rotate(-90.0f, m.getLeftAxis());
+		m.translate(pos);
+		};
 
-	Vector3 pos = Helpers::GetCamera().position + Helpers::GetCamera().lookDir * Game::instance.MetresToWorld(3.0f);
+	CutsceneData* cutscene = Helpers::GetCutsceneData();
 
-	Matrix3 rot;
-	Vector2 size(1.33f, 1.0f);
-	size *= Game::instance.MetresToWorld(2.0f);
-
-	Matrix4 overlayTransform;
-	overlayTransform.translate(pos);
-	overlayTransform.lookAt(camPos, Vector3(0.0f, 0.0f, 1.0f));
-
-	overlayTransform.translate(-pos);
-	overlayTransform.rotate(-90.0f, overlayTransform.getLeftAxis());
-	overlayTransform.translate(camPos);
-
-	for (int i = 0; i < 3; i++)
+	if (cutscene->bInCutscene || Helpers::IsMouseVisible())
 	{
-		rot.setColumn(i, &overlayTransform.get()[i * 4]);
+		Matrix4 overlayTransform;
+
+		Vector3 targetPos = GetHMDTransform(true).getLeftAxis() * Game::instance.WorldToMetres(6.0f); //GetHMDTransform(true).getAngle().normalize() * Game::instance.WorldToMetres(3.0f);
+
+		Vector3 hmdPos = GetHMDTransform(true) * Vector3(0.0f, 0.0f, 0.0f);
+
+		overlayTransform.translate(targetPos);
+		overlayTransform.lookAt(hmdPos, Vector3(0.0f, 0.0f, 1.0f));
+
+		fixupRotation(overlayTransform, targetPos);
+
+		Vector3 pos = (overlayTransform * Vector3(0.0f, 0.0f, 0.0f)) * Game::instance.MetresToWorld(1.0f) + Helpers::GetCamera().position;
+		Matrix3 rot;
+		Vector2 size(1.33f, 1.0f);
+		size *= Game::instance.MetresToWorld(15.0f);
+
+		overlayTransform.translate(-pos);
+		overlayTransform.rotate(90.0f, overlayTransform.getLeftAxis());
+		overlayTransform.rotate(-90.0f, overlayTransform.getUpAxis());
+		overlayTransform.rotate(-90.0f, overlayTransform.getLeftAxis());
+
+		for (int i = 0; i < 3; i++)
+		{
+			rot.setColumn(i, &overlayTransform.get()[i * 4]);
+		}
+
+		Game::instance.inGameRenderer.DrawRenderTarget(uiTexture, pos, rot, size, false);
+	}
+	else {
+		Vector3 camPos = Helpers::GetCamera().position;
+
+		Vector3 pos = Helpers::GetCamera().position + Helpers::GetCamera().lookDir * Game::instance.MetresToWorld(3.0f);
+
+		Matrix3 rot;
+		Vector2 size(1.33f, 1.0f);
+		size *= Game::instance.MetresToWorld(2.0f);
+
+		Matrix4 overlayTransform;
+
+		overlayTransform.translate(pos);
+		overlayTransform.lookAt(camPos, Vector3(0.0f, 0.0f, 1.0f));
+
+		overlayTransform.translate(-pos);
+		overlayTransform.rotate(-90.0f, overlayTransform.getLeftAxis());
+		overlayTransform.translate(camPos);
+
+		for (int i = 0; i < 3; i++)
+		{
+			rot.setColumn(i, &overlayTransform.get()[i * 4]);
+		}
+
+		Game::instance.inGameRenderer.DrawRenderTarget(uiTexture, pos, rot, size, false);
 	}
 
-	Game::instance.inGameRenderer.DrawRenderTarget(uiTexture, pos, rot, size, false);
 	//Game::instance.inGameRenderer.DrawCoordinate(pos, rot, 0.05f, false);
 }
 

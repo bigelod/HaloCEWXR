@@ -222,11 +222,11 @@ void InputHandler::UpdateInputs(bool bInVehicle)
 		}
 		else
 		{
-			INPUT input{};
-			input.type = INPUT_KEYBOARD;
-			input.ki.dwFlags = KEYEVENTF_SCANCODE; // DirectInput only detects scancodes
-			input.ki.wScan = 01; // Escape
-			SendInput(1, &input, sizeof(INPUT));
+			//INPUT input{};
+			//input.type = INPUT_KEYBOARD;
+			//input.ki.dwFlags = KEYEVENTF_SCANCODE; // DirectInput only detects scancodes
+			//input.ki.wScan = 01; // Escape
+			//SendInput(1, &input, sizeof(INPUT));
 
 			bHoldingMenu = true;
 		}
@@ -235,12 +235,12 @@ void InputHandler::UpdateInputs(bool bInVehicle)
 	{
 		bHoldingMenu = false;
 
-		INPUT input{};
-		input.type = INPUT_KEYBOARD;
-		input.ki.dwFlags = KEYEVENTF_SCANCODE; // DirectInput only detects scancodes
-		input.ki.wScan = 01; // Escape
-		input.ki.dwFlags |= KEYEVENTF_KEYUP;
-		SendInput(1, &input, sizeof(INPUT));
+		//INPUT input{};
+		//input.type = INPUT_KEYBOARD;
+		//input.ki.dwFlags = KEYEVENTF_SCANCODE; // DirectInput only detects scancodes
+		//input.ki.wScan = 01; // Escape
+		//input.ki.dwFlags |= KEYEVENTF_KEYUP;
+		//SendInput(1, &input, sizeof(INPUT));
 	}
 
 	UpdateHandsProximity();

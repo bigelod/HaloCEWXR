@@ -62,6 +62,7 @@ public:
 	float FOVV;
 	float FOVTotal = 1.0472f;
 	Vector4 QuaternionMultiply(const Vector4& q1, const Vector4& q2);
+	Matrix4 RotationFromDirection(Vector3 direction);
 	Vector3 HMDPos;
 	Vector3 LHandPos;
 	Vector3 RHandPos;
@@ -176,6 +177,8 @@ protected:
 	InputBindingID inputMoveHandVert = 0;
 	InputBindingID inputMoveHandSwap = 0;
 	bool bMoveHand = true;
+
+	Vector3 hmdOffset;
 
 	Vector3 mainHandOffset;
 	Vector3 mainHandRot;

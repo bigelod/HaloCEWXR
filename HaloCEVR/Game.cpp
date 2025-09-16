@@ -300,9 +300,6 @@ void Game::PreDrawFrame(struct Renderer* renderer, float deltaTime)
 	inGameRenderer.DrawCoordinate(controller * Vector3(0.0f, 0.0f, 0.0f) * MetresToWorld(1.0f) + worldPos, handRotation3, 0.05f, false);
 #endif
 
-	// !!! WinlatorXR specific code change !!!
-	//inGameRenderer.DrawRect(0.0f, 0.0f, 5.0f, 5.0f, D3DCOLOR_ARGB(255, 255, 0, 0));
-
 	vr->PreDrawFrame(renderer, deltaTime);
 }
 

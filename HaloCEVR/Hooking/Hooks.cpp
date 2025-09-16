@@ -407,6 +407,7 @@ void Hooks::H_DrawHUD()
 	VR_PROFILE_SCOPE(Hooks_DrawHUD);
 	if (Game::instance.PreDrawHUD())
 	{
+		bool fallback = false;
 
 		__try {
 			DrawHUD.Original();
@@ -415,6 +416,16 @@ void Hooks::H_DrawHUD()
 		__except (EXCEPTION_EXECUTE_HANDLER) {
 			//Brute force avoiding crashing from the scopes / zoom sniper rifles
 			//"it ain't stupid if it works!" (and you know you're running in a sandboxed Windows container that gets RAM wiped every time the game starts anyway)
+			fallback = true;
+		}
+
+		if (fallback) {
+			__try {
+				Game::instance.PostDrawHUD();
+			}
+			__except (EXCEPTION_EXECUTE_HANDLER) {
+				//This shouldn't crash like we know the other part can but just in case...
+			}
 		}
 	}
 }

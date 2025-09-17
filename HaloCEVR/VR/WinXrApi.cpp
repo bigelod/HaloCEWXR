@@ -681,8 +681,9 @@ void WinXrApi::Recentre()
 {
 	//SetLocationOffset(GetHMDTransform(true) * Vector3(0.0f, 0.0f, 0.0f));
 	SetLocationOffset(Vector3(0.0f, 0.0f, 0.0f));
+	hmdOffset = Vector3(0.0f, 0.0f, 0.0f);
 
-	hmdOffset = Vector3(HMDPos.x, HMDPos.y, HMDPos.z);
+	//hmdOffset = Vector3(HMDPos.x, HMDPos.y, HMDPos.z);
 }
 
 void WinXrApi::SetLocationOffset(Vector3 newOffset)

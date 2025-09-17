@@ -810,7 +810,7 @@ void WinXrApi::PreDrawFrame(struct Renderer* renderer, float deltaTime)
 	{
 		Matrix4 overlayTransform;
 
-		Vector3 targetPos = GetHMDTransform(true).getLeftAxis() * Game::instance.WorldToMetres(6.0f); //GetHMDTransform(true).getAngle().normalize() * Game::instance.WorldToMetres(3.0f);
+		Vector3 targetPos = GetHMDTransform(true).getLeftAxis() * Game::instance.WorldToMetres(8.0f); //GetHMDTransform(true).getAngle().normalize() * Game::instance.WorldToMetres(3.0f);
 
 		Vector3 hmdPos = GetHMDTransform(true) * Vector3(0.0f, 0.0f, 0.0f);
 

@@ -6,7 +6,7 @@
 
 NOTE: This is in active development, and while it *is* still a PC VR mod for Halo CE, it is designed to run within WinlatorXR containers on portable devices, or when receiving 6DOF UDP tracking/sync data on a regular Windows desktop PC. Known bugs are listed below.
 
-Code added or modified from the parent project in this fork/port to WinlatorXR's XrApi is subject to the [LGPLv3 license](https://www.gnu.org/licenses/lgpl-3.0.en.html) so that others may adapt it for their own C++ PCVR games and mods as well!
+Code added or modified from the parent project in this fork/port to WinlatorXR's XrApi is subject to the [LGPLv3 license](https://www.gnu.org/licenses/lgpl-3.0.en.html) so that others may adapt it for their own C++ PC VR games and mods as well!
 
 **Note: This is a Halo CE PC VR mod being made based on (but entirely separate) from the [PCVR mod by LivingFray](https://github.com/LivingFray/HaloCEVR), please do not spam that developer with requests or issues related to this conversion!**
 

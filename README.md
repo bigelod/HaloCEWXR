@@ -108,12 +108,6 @@ NOTE: If you start this on a PC or other device and it doesn't get past the load
 * A - Action
 
   ![Controls](WinXR_HaloCE_Controls.png)
-  
-<br/><br/><br/>
-
-# Known Bugs:
-
-* Sniper rifle breaks some of the HUD
 
 <br/><br/><br/><br/><br/><br/><br/><br/><br/>
 

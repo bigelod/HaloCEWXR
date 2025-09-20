@@ -8,7 +8,7 @@ NOTE: This is in active development, and while it *is* still a PC VR mod for Hal
 
 Code added or modified from the parent project in this fork/port to WinlatorXR's XrApi is subject to the [LGPLv3 license](https://www.gnu.org/licenses/lgpl-3.0.en.html) so that others may adapt it for their own C++ PC VR games and mods as well!
 
-**Note: This is a Halo CE PC VR mod being made based on (but entirely separate) from the [PCVR mod by LivingFray](https://github.com/LivingFray/HaloCEVR), please do not spam that developer with requests or issues related to this conversion!**
+**Note: This is a Halo CE PC VR mod that makes breaking changes from the parent mod it's based on: [HaloCEVR mod by LivingFray](https://github.com/LivingFray/HaloCEVR), please do not spam that developer with requests or issues related to this conversion!**
 
 # Credits
 

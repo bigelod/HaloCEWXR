@@ -109,7 +109,7 @@ NOTE: If you start this on a PC or other device and it doesn't get past the load
 
   ![Controls](WinXR_HaloCE_Controls.png)
   
-<br/><br/>
+<br/><br/><br/>
 
 # Known Bugs:
 
@@ -119,7 +119,7 @@ NOTE: If you start this on a PC or other device and it doesn't get past the load
 
 # Original ReadMe Below:
 
-<br/><br/><br/>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 <p align="center">
   <img width="460" height="215" src="./Extras/Bindings/icon.png">

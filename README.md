@@ -33,7 +33,7 @@ Thanks to GmoLargey for testing!
 * Right-click and make a shortcut to halo.exe (if one does not exist yet)
 * Close the container and open the shortcut for Halo CE WXR instead
 
--> Current ideal settings for the Halo shortcut are 1400x1400, DXVK 1.10.1, Box64 Preset: Intermediate
+-> Current ideal settings for the Halo shortcut are 1400x1400, DXVK 1.10.1, Box64 Preset: Performance
 
 -> In-game audio settings set to LOW for both variety and quality
 

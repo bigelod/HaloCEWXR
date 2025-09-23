@@ -80,6 +80,7 @@ NOTE: If you start this on a PC or other device and it doesn't get past the load
 * Fix the DLL injection failing on actual WinlatorXR container on Quest/Pic with Release versions of the DLL (Debug working)
 * Rumble support
 * Melee via physical gesture (new implementation based on positional data only)
+* Campaign is 100% playable tested on device
 
 
 # Stretch-Goal(s) / Unlikely Bonus Features:

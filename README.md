@@ -12,7 +12,7 @@ Code added or modified from the parent project in this fork/port to WinlatorXR's
 
 # Credits
 
-Thanks to LivingFray for the awesome open source Halo CE VR mod
+Thanks to LivingFray for the awesome open source Halo CE VR mod, and everyone else who has contributed to it
 
 Thanks to Luboš for his work on [WinlatorXR](https://github.com/lvonasek/WinlatorXR) and everyone else who had contributed to portable PC gaming via Winlator
 

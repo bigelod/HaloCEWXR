@@ -79,7 +79,7 @@ NOTE: If you start this on a PC or other device and it doesn't get past the load
 * Fix sniper scope not appearing
 * Fix the DLL injection failing on actual WinlatorXR container on Quest/Pic with Release versions of the DLL (Debug working)
 * Rumble support
-* Melee via physical gesture
+* Melee via physical gesture (new implementation based on positional data only)
 
 
 # Stretch-Goal(s) / Unlikely Bonus Features:

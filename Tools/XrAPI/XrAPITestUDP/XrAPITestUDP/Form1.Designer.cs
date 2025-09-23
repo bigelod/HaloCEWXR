@@ -112,6 +112,8 @@
             chkAlwaysOnTop = new CheckBox();
             chkReadKeys = new CheckBox();
             btnKeyEmulationControls = new Button();
+            label2 = new Label();
+            txtRumbleData = new TextBox();
             ((System.ComponentModel.ISupportInitialize)tbOXRFrameId).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbRQX).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbRQY).BeginInit();
@@ -133,9 +135,9 @@
             // 
             // btnSendFrame
             // 
-            btnSendFrame.Location = new Point(572, 41);
+            btnSendFrame.Location = new Point(596, 40);
             btnSendFrame.Name = "btnSendFrame";
-            btnSendFrame.Size = new Size(191, 23);
+            btnSendFrame.Size = new Size(151, 23);
             btnSendFrame.TabIndex = 0;
             btnSendFrame.Text = "Send Single UDP Frame";
             btnSendFrame.UseVisualStyleBackColor = true;
@@ -146,11 +148,13 @@
             chkAutoSendUDP.AutoSize = true;
             chkAutoSendUDP.Checked = true;
             chkAutoSendUDP.CheckState = CheckState.Checked;
-            chkAutoSendUDP.Location = new Point(1317, 172);
+            chkAutoSendUDP.Font = new Font("Segoe UI", 9F, FontStyle.Bold | FontStyle.Italic);
+            chkAutoSendUDP.Location = new Point(1381, 43);
             chkAutoSendUDP.Name = "chkAutoSendUDP";
-            chkAutoSendUDP.Size = new Size(179, 19);
+            chkAutoSendUDP.RightToLeft = RightToLeft.Yes;
+            chkAutoSendUDP.Size = new Size(124, 19);
             chkAutoSendUDP.TabIndex = 1;
-            chkAutoSendUDP.Text = "Auto Send UDP Data (72 FPS)";
+            chkAutoSendUDP.Text = ":Send UDP (72Hz)";
             chkAutoSendUDP.UseVisualStyleBackColor = true;
             chkAutoSendUDP.CheckedChanged += chkAutoSendUDP_CheckedChanged;
             // 
@@ -162,7 +166,7 @@
             // 
             // txtTargetIP
             // 
-            txtTargetIP.Location = new Point(73, 6);
+            txtTargetIP.Location = new Point(75, 274);
             txtTargetIP.Name = "txtTargetIP";
             txtTargetIP.Size = new Size(100, 23);
             txtTargetIP.TabIndex = 2;
@@ -172,7 +176,7 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(12, 9);
+            label1.Location = new Point(14, 277);
             label1.Name = "label1";
             label1.Size = new Size(55, 15);
             label1.TabIndex = 3;
@@ -181,7 +185,7 @@
             // btnApplyIP
             // 
             btnApplyIP.Enabled = false;
-            btnApplyIP.Location = new Point(179, 6);
+            btnApplyIP.Location = new Point(181, 274);
             btnApplyIP.Name = "btnApplyIP";
             btnApplyIP.Size = new Size(56, 23);
             btnApplyIP.TabIndex = 4;
@@ -192,7 +196,7 @@
             // lblDataSending
             // 
             lblDataSending.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
-            lblDataSending.Location = new Point(1193, 249);
+            lblDataSending.Location = new Point(884, 278);
             lblDataSending.Name = "lblDataSending";
             lblDataSending.RightToLeft = RightToLeft.Yes;
             lblDataSending.Size = new Size(303, 15);
@@ -214,11 +218,12 @@
             chkAutoIncrementFrameId.AutoSize = true;
             chkAutoIncrementFrameId.Checked = true;
             chkAutoIncrementFrameId.CheckState = CheckState.Checked;
-            chkAutoIncrementFrameId.Location = new Point(1166, 172);
+            chkAutoIncrementFrameId.Font = new Font("Segoe UI", 9F, FontStyle.Bold | FontStyle.Italic);
+            chkAutoIncrementFrameId.Location = new Point(1290, 172);
             chkAutoIncrementFrameId.Name = "chkAutoIncrementFrameId";
-            chkAutoIncrementFrameId.Size = new Size(145, 19);
+            chkAutoIncrementFrameId.Size = new Size(215, 19);
             chkAutoIncrementFrameId.TabIndex = 8;
-            chkAutoIncrementFrameId.Text = "Auto Increment Frame";
+            chkAutoIncrementFrameId.Text = "Auto Increment OpenXR Frame ID";
             chkAutoIncrementFrameId.UseVisualStyleBackColor = true;
             chkAutoIncrementFrameId.CheckedChanged += chkAutoIncrementFrameId_CheckedChanged;
             // 
@@ -243,9 +248,9 @@
             // 
             // btnCopyUDPData
             // 
-            btnCopyUDPData.Location = new Point(769, 41);
+            btnCopyUDPData.Location = new Point(753, 40);
             btnCopyUDPData.Name = "btnCopyUDPData";
-            btnCopyUDPData.Size = new Size(84, 44);
+            btnCopyUDPData.Size = new Size(97, 23);
             btnCopyUDPData.TabIndex = 11;
             btnCopyUDPData.Text = "Copy UDP Data";
             btnCopyUDPData.UseVisualStyleBackColor = true;
@@ -259,16 +264,16 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(241, 10);
+            label3.Location = new Point(243, 278);
             label3.Name = "label3";
-            label3.Size = new Size(94, 15);
+            label3.Size = new Size(59, 15);
             label3.TabIndex = 12;
-            label3.Text = "Target Port: 7872";
+            label3.Text = "Port: 7872";
             // 
             // chkLGRIP
             // 
             chkLGRIP.AutoSize = true;
-            chkLGRIP.Location = new Point(970, 91);
+            chkLGRIP.Location = new Point(940, 93);
             chkLGRIP.Name = "chkLGRIP";
             chkLGRIP.Size = new Size(62, 19);
             chkLGRIP.TabIndex = 13;
@@ -279,7 +284,7 @@
             // 
             label4.AutoSize = true;
             label4.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label4.Location = new Point(902, 40);
+            label4.Location = new Point(880, 44);
             label4.Name = "label4";
             label4.Size = new Size(54, 15);
             label4.TabIndex = 14;
@@ -288,7 +293,7 @@
             // chkLMENU
             // 
             chkLMENU.AutoSize = true;
-            chkLMENU.Location = new Point(970, 116);
+            chkLMENU.Location = new Point(1117, 68);
             chkLMENU.Name = "chkLMENU";
             chkLMENU.Size = new Size(71, 19);
             chkLMENU.TabIndex = 16;
@@ -298,7 +303,7 @@
             // chkLTRIGGER
             // 
             chkLTRIGGER.AutoSize = true;
-            chkLTRIGGER.Location = new Point(970, 66);
+            chkLTRIGGER.Location = new Point(940, 68);
             chkLTRIGGER.Name = "chkLTRIGGER";
             chkLTRIGGER.Size = new Size(82, 19);
             chkLTRIGGER.TabIndex = 17;
@@ -308,7 +313,7 @@
             // chkLTHUMBCLICK
             // 
             chkLTHUMBCLICK.AutoSize = true;
-            chkLTHUMBCLICK.Location = new Point(970, 141);
+            chkLTHUMBCLICK.Location = new Point(1117, 93);
             chkLTHUMBCLICK.Name = "chkLTHUMBCLICK";
             chkLTHUMBCLICK.Size = new Size(115, 19);
             chkLTHUMBCLICK.TabIndex = 18;
@@ -318,7 +323,7 @@
             // chkLTHUMBUP
             // 
             chkLTHUMBUP.AutoSize = true;
-            chkLTHUMBUP.Location = new Point(1102, 66);
+            chkLTHUMBUP.Location = new Point(1238, 68);
             chkLTHUMBUP.Name = "chkLTHUMBUP";
             chkLTHUMBUP.Size = new Size(98, 19);
             chkLTHUMBUP.TabIndex = 19;
@@ -328,7 +333,7 @@
             // chkLTHUMBDOWN
             // 
             chkLTHUMBDOWN.AutoSize = true;
-            chkLTHUMBDOWN.Location = new Point(1102, 91);
+            chkLTHUMBDOWN.Location = new Point(1238, 93);
             chkLTHUMBDOWN.Name = "chkLTHUMBDOWN";
             chkLTHUMBDOWN.Size = new Size(120, 19);
             chkLTHUMBDOWN.TabIndex = 20;
@@ -338,7 +343,7 @@
             // chkLTHUMBRIGHT
             // 
             chkLTHUMBRIGHT.AutoSize = true;
-            chkLTHUMBRIGHT.Location = new Point(1102, 141);
+            chkLTHUMBRIGHT.Location = new Point(1238, 143);
             chkLTHUMBRIGHT.Name = "chkLTHUMBRIGHT";
             chkLTHUMBRIGHT.Size = new Size(116, 19);
             chkLTHUMBRIGHT.TabIndex = 22;
@@ -348,7 +353,7 @@
             // chkLTHUMBLEFT
             // 
             chkLTHUMBLEFT.AutoSize = true;
-            chkLTHUMBLEFT.Location = new Point(1102, 116);
+            chkLTHUMBLEFT.Location = new Point(1238, 118);
             chkLTHUMBLEFT.Name = "chkLTHUMBLEFT";
             chkLTHUMBLEFT.Size = new Size(107, 19);
             chkLTHUMBLEFT.TabIndex = 21;
@@ -358,7 +363,7 @@
             // chkLX
             // 
             chkLX.AutoSize = true;
-            chkLX.Location = new Point(970, 41);
+            chkLX.Location = new Point(940, 118);
             chkLX.Name = "chkLX";
             chkLX.Size = new Size(44, 19);
             chkLX.TabIndex = 23;
@@ -368,7 +373,7 @@
             // chkLY
             // 
             chkLY.AutoSize = true;
-            chkLY.Location = new Point(1102, 41);
+            chkLY.Location = new Point(940, 143);
             chkLY.Name = "chkLY";
             chkLY.Size = new Size(44, 19);
             chkLY.TabIndex = 24;
@@ -378,7 +383,7 @@
             // chkRB
             // 
             chkRB.AutoSize = true;
-            chkRB.Location = new Point(1367, 40);
+            chkRB.Location = new Point(1028, 143);
             chkRB.Name = "chkRB";
             chkRB.Size = new Size(45, 19);
             chkRB.TabIndex = 34;
@@ -388,7 +393,7 @@
             // chkRA
             // 
             chkRA.AutoSize = true;
-            chkRA.Location = new Point(1238, 40);
+            chkRA.Location = new Point(1028, 118);
             chkRA.Name = "chkRA";
             chkRA.Size = new Size(46, 19);
             chkRA.TabIndex = 33;
@@ -398,7 +403,7 @@
             // chkRTHUMBRIGHT
             // 
             chkRTHUMBRIGHT.AutoSize = true;
-            chkRTHUMBRIGHT.Location = new Point(1367, 140);
+            chkRTHUMBRIGHT.Location = new Point(1360, 143);
             chkRTHUMBRIGHT.Name = "chkRTHUMBRIGHT";
             chkRTHUMBRIGHT.Size = new Size(117, 19);
             chkRTHUMBRIGHT.TabIndex = 32;
@@ -408,7 +413,7 @@
             // chkRTHUMBLEFT
             // 
             chkRTHUMBLEFT.AutoSize = true;
-            chkRTHUMBLEFT.Location = new Point(1367, 115);
+            chkRTHUMBLEFT.Location = new Point(1360, 118);
             chkRTHUMBLEFT.Name = "chkRTHUMBLEFT";
             chkRTHUMBLEFT.Size = new Size(108, 19);
             chkRTHUMBLEFT.TabIndex = 31;
@@ -418,7 +423,7 @@
             // chkRTHUMBDOWN
             // 
             chkRTHUMBDOWN.AutoSize = true;
-            chkRTHUMBDOWN.Location = new Point(1367, 90);
+            chkRTHUMBDOWN.Location = new Point(1360, 93);
             chkRTHUMBDOWN.Name = "chkRTHUMBDOWN";
             chkRTHUMBDOWN.Size = new Size(121, 19);
             chkRTHUMBDOWN.TabIndex = 30;
@@ -428,7 +433,7 @@
             // chkRTHUMBUP
             // 
             chkRTHUMBUP.AutoSize = true;
-            chkRTHUMBUP.Location = new Point(1367, 65);
+            chkRTHUMBUP.Location = new Point(1360, 68);
             chkRTHUMBUP.Name = "chkRTHUMBUP";
             chkRTHUMBUP.Size = new Size(99, 19);
             chkRTHUMBUP.TabIndex = 29;
@@ -438,7 +443,7 @@
             // chkRTHUMBCLICK
             // 
             chkRTHUMBCLICK.AutoSize = true;
-            chkRTHUMBCLICK.Location = new Point(1238, 140);
+            chkRTHUMBCLICK.Location = new Point(1117, 118);
             chkRTHUMBCLICK.Name = "chkRTHUMBCLICK";
             chkRTHUMBCLICK.Size = new Size(116, 19);
             chkRTHUMBCLICK.TabIndex = 28;
@@ -448,7 +453,7 @@
             // chkRTRIGGER
             // 
             chkRTRIGGER.AutoSize = true;
-            chkRTRIGGER.Location = new Point(1238, 65);
+            chkRTRIGGER.Location = new Point(1028, 68);
             chkRTRIGGER.Name = "chkRTRIGGER";
             chkRTRIGGER.Size = new Size(83, 19);
             chkRTRIGGER.TabIndex = 27;
@@ -458,7 +463,7 @@
             // chkRGRIP
             // 
             chkRGRIP.AutoSize = true;
-            chkRGRIP.Location = new Point(1238, 90);
+            chkRGRIP.Location = new Point(1028, 93);
             chkRGRIP.Name = "chkRGRIP";
             chkRGRIP.Size = new Size(63, 19);
             chkRGRIP.TabIndex = 25;
@@ -468,7 +473,7 @@
             // label6
             // 
             label6.AutoSize = true;
-            label6.Location = new Point(1036, 10);
+            label6.Location = new Point(929, 9);
             label6.Name = "label6";
             label6.Size = new Size(38, 15);
             label6.TabIndex = 36;
@@ -476,7 +481,7 @@
             // 
             // txtHMD
             // 
-            txtHMD.Location = new Point(1080, 7);
+            txtHMD.Location = new Point(973, 6);
             txtHMD.Name = "txtHMD";
             txtHMD.Size = new Size(87, 23);
             txtHMD.TabIndex = 35;
@@ -484,9 +489,9 @@
             // 
             // txtIPDFOV
             // 
-            txtIPDFOV.Location = new Point(1347, 7);
+            txtIPDFOV.Location = new Point(1240, 7);
             txtIPDFOV.Name = "txtIPDFOV";
-            txtIPDFOV.Size = new Size(150, 23);
+            txtIPDFOV.Size = new Size(135, 23);
             txtIPDFOV.TabIndex = 38;
             txtIPDFOV.Text = "0.0678 99.00 103.40";
             txtIPDFOV.TextChanged += txtIPDFOV_TextChanged;
@@ -494,7 +499,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(1173, 10);
+            label7.Location = new Point(1066, 10);
             label7.Name = "label7";
             label7.Size = new Size(168, 15);
             label7.TabIndex = 39;
@@ -718,7 +723,7 @@
             // 
             // txtLPos
             // 
-            txtLPos.Location = new Point(409, 6);
+            txtLPos.Location = new Point(302, 5);
             txtLPos.Name = "txtLPos";
             txtLPos.Size = new Size(150, 23);
             txtLPos.TabIndex = 76;
@@ -728,7 +733,7 @@
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(341, 10);
+            label8.Location = new Point(234, 8);
             label8.Name = "label8";
             label8.Size = new Size(62, 15);
             label8.TabIndex = 77;
@@ -737,7 +742,7 @@
             // label9
             // 
             label9.AutoSize = true;
-            label9.Location = new Point(565, 10);
+            label9.Location = new Point(458, 9);
             label9.Name = "label9";
             label9.Size = new Size(63, 15);
             label9.TabIndex = 79;
@@ -745,7 +750,7 @@
             // 
             // txtRPos
             // 
-            txtRPos.Location = new Point(634, 7);
+            txtRPos.Location = new Point(527, 6);
             txtRPos.Name = "txtRPos";
             txtRPos.Size = new Size(150, 23);
             txtRPos.TabIndex = 78;
@@ -755,7 +760,7 @@
             // label12
             // 
             label12.AutoSize = true;
-            label12.Location = new Point(790, 10);
+            label12.Location = new Point(683, 9);
             label12.Name = "label12";
             label12.Size = new Size(84, 15);
             label12.TabIndex = 81;
@@ -763,7 +768,7 @@
             // 
             // txtHPos
             // 
-            txtHPos.Location = new Point(880, 6);
+            txtHPos.Location = new Point(773, 5);
             txtHPos.Name = "txtHPos";
             txtHPos.Size = new Size(150, 23);
             txtHPos.TabIndex = 80;
@@ -847,30 +852,31 @@
             chkZeroThumbs.AutoSize = true;
             chkZeroThumbs.Checked = true;
             chkZeroThumbs.CheckState = CheckState.Checked;
-            chkZeroThumbs.Location = new Point(572, 70);
+            chkZeroThumbs.Font = new Font("Segoe UI", 9F, FontStyle.Bold | FontStyle.Italic);
+            chkZeroThumbs.Location = new Point(6, 8);
             chkZeroThumbs.Name = "chkZeroThumbs";
-            chkZeroThumbs.Size = new Size(184, 19);
+            chkZeroThumbs.Size = new Size(215, 19);
             chkZeroThumbs.TabIndex = 90;
-            chkZeroThumbs.Text = "Release Thumbs On MouseUp";
+            chkZeroThumbs.Text = "Release Thumbsticks On MouseUp";
             chkZeroThumbs.UseVisualStyleBackColor = true;
             chkZeroThumbs.CheckedChanged += chkZeroThumbs_CheckedChanged;
             // 
             // chkReleaseBtnOnMouseUp
             // 
             chkReleaseBtnOnMouseUp.AutoSize = true;
-            chkReleaseBtnOnMouseUp.Location = new Point(872, 58);
+            chkReleaseBtnOnMouseUp.Font = new Font("Segoe UI", 9F, FontStyle.Bold | FontStyle.Italic);
+            chkReleaseBtnOnMouseUp.Location = new Point(940, 43);
             chkReleaseBtnOnMouseUp.Name = "chkReleaseBtnOnMouseUp";
-            chkReleaseBtnOnMouseUp.RightToLeft = RightToLeft.Yes;
-            chkReleaseBtnOnMouseUp.Size = new Size(85, 34);
+            chkReleaseBtnOnMouseUp.Size = new Size(146, 19);
             chkReleaseBtnOnMouseUp.TabIndex = 91;
-            chkReleaseBtnOnMouseUp.Text = "Release On\r\n:MouseOut";
+            chkReleaseBtnOnMouseUp.Text = "Release On MouseOut";
             chkReleaseBtnOnMouseUp.UseVisualStyleBackColor = true;
             // 
             // btnImportUDP
             // 
-            btnImportUDP.Location = new Point(872, 123);
+            btnImportUDP.Location = new Point(596, 69);
             btnImportUDP.Name = "btnImportUDP";
-            btnImportUDP.Size = new Size(84, 44);
+            btnImportUDP.Size = new Size(254, 22);
             btnImportUDP.TabIndex = 92;
             btnImportUDP.Text = "Import UDP Data";
             btnImportUDP.UseVisualStyleBackColor = true;
@@ -881,19 +887,22 @@
             chkAlwaysOnTop.AutoSize = true;
             chkAlwaysOnTop.Checked = true;
             chkAlwaysOnTop.CheckState = CheckState.Checked;
-            chkAlwaysOnTop.Location = new Point(1056, 172);
+            chkAlwaysOnTop.Font = new Font("Segoe UI", 9F, FontStyle.Bold | FontStyle.Italic);
+            chkAlwaysOnTop.Location = new Point(1393, 9);
             chkAlwaysOnTop.Name = "chkAlwaysOnTop";
-            chkAlwaysOnTop.Size = new Size(104, 19);
+            chkAlwaysOnTop.RightToLeft = RightToLeft.Yes;
+            chkAlwaysOnTop.Size = new Size(112, 19);
             chkAlwaysOnTop.TabIndex = 93;
-            chkAlwaysOnTop.Text = "Always On Top";
+            chkAlwaysOnTop.Text = ":Always On Top";
             chkAlwaysOnTop.UseVisualStyleBackColor = true;
             // 
             // chkReadKeys
             // 
             chkReadKeys.AutoSize = true;
-            chkReadKeys.Location = new Point(1393, 273);
+            chkReadKeys.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+            chkReadKeys.Location = new Point(1383, 279);
             chkReadKeys.Name = "chkReadKeys";
-            chkReadKeys.Size = new Size(105, 19);
+            chkReadKeys.Size = new Size(106, 19);
             chkReadKeys.TabIndex = 94;
             chkReadKeys.Text = "Read Key Input";
             chkReadKeys.UseVisualStyleBackColor = true;
@@ -901,7 +910,7 @@
             // 
             // btnKeyEmulationControls
             // 
-            btnKeyEmulationControls.Location = new Point(1341, 298);
+            btnKeyEmulationControls.Location = new Point(1331, 237);
             btnKeyEmulationControls.Name = "btnKeyEmulationControls";
             btnKeyEmulationControls.Size = new Size(157, 36);
             btnKeyEmulationControls.TabIndex = 95;
@@ -909,12 +918,33 @@
             btnKeyEmulationControls.UseVisualStyleBackColor = true;
             btnKeyEmulationControls.Click += btnKeyEmulationControls_Click;
             // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(1092, 44);
+            label2.Name = "label2";
+            label2.Size = new Size(159, 15);
+            label2.TabIndex = 96;
+            label2.Text = "Incoming Rumble Data (L R):";
+            // 
+            // txtRumbleData
+            // 
+            txtRumbleData.BackColor = Color.FromArgb(224, 224, 224);
+            txtRumbleData.Location = new Point(1257, 41);
+            txtRumbleData.Name = "txtRumbleData";
+            txtRumbleData.ReadOnly = true;
+            txtRumbleData.Size = new Size(118, 23);
+            txtRumbleData.TabIndex = 97;
+            txtRumbleData.Text = "0.000 0.000";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
             ClientSize = new Size(1508, 234);
+            Controls.Add(txtRumbleData);
+            Controls.Add(label2);
             Controls.Add(btnKeyEmulationControls);
             Controls.Add(chkReadKeys);
             Controls.Add(chkAlwaysOnTop);
@@ -1105,5 +1135,7 @@
         private CheckBox chkAlwaysOnTop;
         private CheckBox chkReadKeys;
         private Button btnKeyEmulationControls;
+        private Label label2;
+        private TextBox txtRumbleData;
     }
 }

@@ -52,7 +52,28 @@ void WinXrApi::Init()
 	HMDQuat = Vector4(0, 0, 0, 0);
 	HMDPos = Vector3(0, 0, 0);
 
-	hmdOffset = Vector3(0, 0, 0);
+	hmdVirtualOffset = Vector3(0, 0, 0);
+
+	playerCoords = Vector3(0, 0, 0);
+	lastPlayerCoords = playerCoords;
+
+	hmdCenterPos = Vector3(0, 0, 0);
+	usingVirtualLocomotion = false;
+
+	lastCenterGameCoords = Vector3(0, 0, 0);
+
+	prevLHandPos[0] = Vector3(0, 0, 0);
+	prevLHandPos[1] = Vector3(0, 0, 0);
+	prevLHandPos[2] = Vector3(0, 0, 0);
+	prevLHandPos[3] = Vector3(0, 0, 0);
+	prevLHandPos[4] = Vector3(0, 0, 0);
+
+	prevRHandPos[0] = Vector3(0, 0, 0);
+	prevRHandPos[1] = Vector3(0, 0, 0);
+	prevRHandPos[2] = Vector3(0, 0, 0);
+	prevRHandPos[3] = Vector3(0, 0, 0);
+	prevRHandPos[4] = Vector3(0, 0, 0);
+	lastPosFrame = 0;
 
 	//Kiosk mode
 	std::filesystem::path saveResetCheck = std::filesystem::current_path() / "VR" / "istr.txt";
@@ -95,7 +116,6 @@ void WinXrApi::Init()
 		catch (const std::exception& e) {
 
 		}
-
 	}
 
 	//Now we initialize VR mode
@@ -103,7 +123,7 @@ void WinXrApi::Init()
 
 	std::filesystem::path tmpPath = "Z:/";
 	std::filesystem::path dirPath = "Z:/tmp/xr";
-	std::filesystem::path fallbackDir = "D:/";
+	std::filesystem::path fallbackDir = "D:/xrtemp";
 	std::filesystem::path filePath = dirPath / "vr";
 	std::filesystem::path fallbackFile = fallbackDir / "vr";
 
@@ -230,127 +250,185 @@ void WinXrApi::OnGameFinishInit()
 
 void WinXrApi::Shutdown()
 {
+	if (udpReader) {
+		udpReader->KillReceiver();
+		udpReader = nullptr;
+	}
+
+	Logger::log << "[WinXrApi] ending WinlatorXR VR mode..." << std::endl;
+
+	std::filesystem::path dirPath = "Z:/tmp/xr";
+	std::filesystem::path fallbackDir = "D:/xrtemp";
+	std::filesystem::path filePath = dirPath / "vr";
+	std::filesystem::path fallbackFile = fallbackDir / "vr";
+
+	if (std::filesystem::exists(filePath) && std::filesystem::is_regular_file(filePath)) {
+		try {
+			std::filesystem::remove(filePath);
+		}
+		catch (const std::exception& e) {
+			Logger::log << "Error deleting file: " << e.what() << std::endl;
+		}
+	}
+	else {
+		try {
+			std::filesystem::remove(fallbackFile);
+		}
+		catch (const std::exception& e) {
+			Logger::log << "Error deleting file: " << e.what() << std::endl;
+		}
+	}
+}
+
+void WinXrApi::SendHapticVibration(float lControllerStrength, float rControllerStrength) {
+	bool sendHaptics = Game::instance.c_EnableHaptics->Value();
+	
+	if (udpReader && sendHaptics) {
+		udpReader->SendData(std::to_string(lControllerStrength) + " " + std::to_string(rControllerStrength));
+	}
 }
 
 void WinXrApi::UpdatePoses()
 {
-	//Logger::log << "[WinXrApi] Getting UDP Data..." << std::endl;
+	if (udpReader) {
+		//Logger::log << "[WinXrApi] Getting UDP Data..." << std::endl;
 
-	std::string txt = udpReader->GetRetData();
+		std::string txt = udpReader->GetRetData();
 
-	//Logger::log << txt << std::endl;	 
+		//Logger::log << txt << std::endl;	 
 
-	//Example return data:
-	//[Game] WinXrApi Getting Data...
-	//client0 0.213 0.287 -0.933 0.035 0.0 0.0 -0.008 -0.229 -0.173 0.095 -0.296 0.947 -0.077 0.0 0.0 0.154 -0.240 -0.140 0.146 -0.072 0.048 0.985 0.037 0.006 -0.017 0.0678 99.00 103.40 224 TFFFFFFFFFTTTFFFFFT META
+		//Example return data:
+		//[Game] WinXrApi Getting Data...
+		//client0 0.213 0.287 -0.933 0.035 0.0 0.0 -0.008 -0.229 -0.173 0.095 -0.296 0.947 -0.077 0.0 0.0 0.154 -0.240 -0.140 0.146 -0.072 0.048 0.985 0.037 0.006 -0.017 0.0678 99.00 103.40 224 TFFFFFFFFFTTTFFFFFT META
 
-	std::istringstream iss(txt);
-	std::string client;
-	std::vector<float> floats(28);
-	int openXRFrameID;
-	std::string buttonString;
-	std::string hmdString;
+		std::istringstream iss(txt);
+		std::string client;
+		std::vector<float> floats(28);
+		int openXRFrameID;
+		std::string buttonString;
+		std::string hmdString;
 
-	std::locale c_locale("C");
-	iss.imbue(c_locale);
+		std::locale c_locale("C");
+		iss.imbue(c_locale);
 
-	// Parse client string
-	iss >> client;
+		// Parse client string
+		iss >> client;
 
-	// Parse float values
-	for (auto& f : floats) {
-		iss >> f;
-	}
-
-	// Parse integer value and last string
-	iss >> openXRFrameID >> buttonString >> hmdString;
-
-	Game::instance.OpenXRFrameID = openXRFrameID;
-
-	//Logger::log << "Client: " << client << std::endl;
-	//Logger::log << "Floats: ";
-	//for (float val : floats) {
-	//	Logger::log << val << " ";
-	//}
-	//Logger::log << std::endl;
-	//Logger::log << "Open XR FrameID: " << openXRFrameID << std::endl;
-	//Logger::log << "Button String: " << buttonString << std::endl;
-
-	std::vector<bool> buttonBools;
-
-	if (buttonString.empty()) {
-		buttonString = "FFFFFFFFFFFFFFFFFFF";
-	}
-
-	for (char c : buttonString) {
-		if (c == 'F') {
-			buttonBools.push_back(false);
+		// Parse float values
+		for (auto& f : floats) {
+			iss >> f;
 		}
-		else if (c == 'T') {
-			buttonBools.push_back(true);
+
+		// Parse integer value and last string
+		iss >> openXRFrameID >> buttonString >> hmdString;
+
+		Game::instance.OpenXRFrameID = openXRFrameID;
+
+		//Logger::log << "Client: " << client << std::endl;
+		//Logger::log << "Floats: ";
+		//for (float val : floats) {
+		//	Logger::log << val << " ";
+		//}
+		//Logger::log << std::endl;
+		//Logger::log << "Open XR FrameID: " << openXRFrameID << std::endl;
+		//Logger::log << "Button String: " << buttonString << std::endl;
+
+		std::vector<bool> buttonBools;
+
+		if (buttonString.empty()) {
+			buttonString = "FFFFFFFFFFFFFFFFFFF";
+		}
+
+		for (char c : buttonString) {
+			if (c == 'F') {
+				buttonBools.push_back(false);
+			}
+			else if (c == 'T') {
+				buttonBools.push_back(true);
+			}
+		}
+
+		//FLOATS:
+		//Left Hand Quaternion X, Left Hand Quaternion Y, Left Hand Quaternion Z, Left Hand Quaternion W, Left Hand Thumbstick X, Left Hand Thumbstick Y, 
+		//Left Hand X Position, Left Hand Y Position, Left Hand Z Position,
+		//Right Hand Quaternion X, Right Hand Quaternion Y, Right Hand Quaternion Z, Right Hand Quaternion W, Right Hand Thumbstick X, Right Hand Thumbstick Y, 
+		//Right Hand X Position, Right Hand Y Position, Right Hand Z Position,
+		//HMD Quaternion X, HMD Quaternion Y, HMD Quaternion Z, HMD Quaternion W, HMD X Position, HMD Y position, HMD Z Position, 
+		//Current IPD, Current FOV Horizontal, Current FOV Vertical, XR Frame ID, Button String
+
+		//BUTTONS:
+		//L_GRIP, L_MENU, L_THUMBSTICK_PRESS, L_THUMBSTICK_LEFT, L_THUMBSTICK_RIGHT, L_THUMBSTICK_UP, L_THUMBSTICK_DOWN, L_TRIGGER, L_X, L_Y, 
+		//R_A, R_B, R_GRIP, R_THUMBSTICK_PRESS, R_THUMBSTICK_LEFT, R_THUMBSTICK_RIGHT, R_THUMBSTICK_UP, R_THUMBSTICK_DOWN, R_TRIGGER
+
+		LHandQuat = Vector4(floats[0], floats[1], floats[2], floats[3]);
+		LHandPos = Vector3(floats[6], floats[7], floats[8]);
+		LThumbstick = Vector2(floats[4], floats[5]);
+
+		if (LThumbstick.x != 0 || LThumbstick.y != 0) {
+			usingVirtualLocomotion = true;
+		}
+		else {
+			usingVirtualLocomotion = false;
+		}
+
+		RHandQuat = Vector4(floats[9], floats[10], floats[11], floats[12]);
+		RHandPos = Vector3(floats[15], floats[16], floats[17]);
+		RThumbstick = Vector2(floats[13], floats[14]);
+
+		HMDQuat = Vector4(floats[18], floats[19], floats[20], floats[21]);
+		HMDPos = Vector3(floats[22], floats[23], floats[24]);
+
+		IPDVal = floats[25];
+		FOVH = floats[26] + 30.0f;
+		FOVV = floats[27] - 20.0f;
+
+		FOVTotal = FOVH / FOVV;
+
+		LTrigger = buttonBools[7];
+		LGrip = buttonBools[0];
+		LClick = buttonBools[2];
+		RTrigger = buttonBools[18];
+		RGrip = buttonBools[12];
+		RClick = buttonBools[13];
+		L_X = buttonBools[8];
+		L_Y = buttonBools[9];
+		R_A = buttonBools[10];
+		R_B = buttonBools[11];
+		L_Menu = buttonBools[1];
+		//L_Menu = false;
+
+		R_ThumbUp = buttonBools[16];
+		R_ThumbDown = buttonBools[17];
+
+		bool enableMeleeBtn = Game::instance.c_EnableButtonMelee->Value();
+		if (!enableMeleeBtn) {
+			R_ThumbDown = false;
+		}
+
+		if (hmdString.empty()) {
+			hmdString = "META";
+		}
+		else {
+			if (hmdString == "pico" || hmdString == "Pico") hmdString = "PICO";
+		}
+
+		//For now only PICO will get an upside down hands fix
+		if (hmdString == "PICO") {
+			UpsideDownHandsFix = true;
+		}
+		else {
+			UpsideDownHandsFix = false;
+		}
+
+		//Brute force melee gesture logging
+		prevLHandPos[lastPosFrame] = LHandPos;
+		prevRHandPos[lastPosFrame] = RHandPos;
+
+		lastPosFrame += 1;
+		if (lastPosFrame > 4) {
+			lastPosFrame = 0;
 		}
 	}
-
-	//FLOATS:
-	//Left Hand Quaternion X, Left Hand Quaternion Y, Left Hand Quaternion Z, Left Hand Quaternion W, Left Hand Thumbstick X, Left Hand Thumbstick Y, 
-	//Left Hand X Position, Left Hand Y Position, Left Hand Z Position,
-	//Right Hand Quaternion X, Right Hand Quaternion Y, Right Hand Quaternion Z, Right Hand Quaternion W, Right Hand Thumbstick X, Right Hand Thumbstick Y, 
-	//Right Hand X Position, Right Hand Y Position, Right Hand Z Position,
-	//HMD Quaternion X, HMD Quaternion Y, HMD Quaternion Z, HMD Quaternion W, HMD X Position, HMD Y position, HMD Z Position, 
-	//Current IPD, Current FOV Horizontal, Current FOV Vertical, XR Frame ID, Button String
-
-	//BUTTONS:
-	//L_GRIP, L_MENU, L_THUMBSTICK_PRESS, L_THUMBSTICK_LEFT, L_THUMBSTICK_RIGHT, L_THUMBSTICK_UP, L_THUMBSTICK_DOWN, L_TRIGGER, L_X, L_Y, 
-	//R_A, R_B, R_GRIP, R_THUMBSTICK_PRESS, R_THUMBSTICK_LEFT, R_THUMBSTICK_RIGHT, R_THUMBSTICK_UP, R_THUMBSTICK_DOWN, R_TRIGGER
-
-	LHandQuat = Vector4(floats[0], floats[1], floats[2], floats[3]);
-	LHandPos = Vector3(floats[6], floats[7], floats[8]);
-	LThumbstick = Vector2(floats[4], floats[5]);
-
-	RHandQuat = Vector4(floats[9], floats[10], floats[11], floats[12]);
-	RHandPos = Vector3(floats[15], floats[16], floats[17]);
-	RThumbstick = Vector2(floats[13], floats[14]);
-
-	HMDQuat = Vector4(floats[18], floats[19], floats[20], floats[21]);
-	HMDPos = Vector3(floats[22], floats[23], floats[24]);
-
-	IPDVal = floats[25];
-	FOVH = floats[26] + 30.0f;
-	FOVV = floats[27] - 20.0f;
-
-	FOVTotal = FOVH / FOVV;
-
-	LTrigger = buttonBools[7];
-	LGrip = buttonBools[0];
-	LClick = buttonBools[2];
-	RTrigger = buttonBools[18];
-	RGrip = buttonBools[12];
-	RClick = buttonBools[13];
-	L_X = buttonBools[8];
-	L_Y = buttonBools[9];
-	R_A = buttonBools[10];
-	R_B = buttonBools[11];
-	L_Menu = buttonBools[1];
-	//L_Menu = false;
-
-	R_ThumbUp = buttonBools[16];
-	R_ThumbDown = buttonBools[17];
-
-	if (hmdString.empty()) {
-		hmdString = "META";
-	}
-	else {
-		if (hmdString == "pico" || hmdString == "Pico") hmdString = "PICO";
-	}
-
-	//For now only PICO will get an upside down hands fix
-	if (hmdString == "PICO") {
-		UpsideDownHandsFix = true;
-	}
-	else {
-		UpsideDownHandsFix = false;
-	}
-
 }
 
 void WinXrApi::UpdateCameraFrustum(CameraFrustum* frustum, int eye)
@@ -492,7 +570,7 @@ Matrix4 WinXrApi::GetHMDTransform(bool bRenderPose)
 {
 	Matrix4 outMatrix;
 
-	Vector3 bonePos = Vector3(HMDPos.x - hmdOffset.x, HMDPos.y - hmdOffset.y, HMDPos.z - hmdOffset.z);
+	Vector3 bonePos = Vector3(HMDPos.x - hmdVirtualOffset.x, HMDPos.y - hmdVirtualOffset.y, HMDPos.z - hmdVirtualOffset.z);
 	Vector4 quat = Vector4(HMDQuat.x, HMDQuat.y, -HMDQuat.z, HMDQuat.w);
 
 	Vector4 rollInversion = Vector4(0.0f, 0.0f, 1.0f, 0.0f); // Quaternion for 180-degree rotation around Z-axis
@@ -545,7 +623,29 @@ Matrix4 WinXrApi::GetControllerBoneTransform(ControllerRole role, int bone, bool
 
 Vector3 WinXrApi::GetControllerVelocity(ControllerRole Role, bool bRenderPose)
 {
-	return Vector3();
+	float swingSpd = 0.0f;
+
+	int newestFrame = lastPosFrame - 1;
+	if (newestFrame < 0) newestFrame = 4;
+
+	int oldestFrame = lastPosFrame + 1;
+	if (oldestFrame > 4) oldestFrame = 0;
+
+	float sensitivity = Game::instance.c_MeleeSwingVelocitySensitivity->Value();
+
+	if (Role == ControllerRole::Left) {
+		//Check left hand controller speed
+		Vector3 displacement = prevLHandPos[newestFrame] - prevLHandPos[oldestFrame];
+		swingSpd = sqrtf(displacement.x * displacement.x + displacement.y * displacement.y + displacement.z * displacement.z) * sensitivity;
+	}
+	else
+	{
+		//Check right hand controller speed
+		Vector3 displacement = prevRHandPos[newestFrame] - prevRHandPos[oldestFrame];
+		swingSpd = sqrtf(displacement.x * displacement.x + displacement.y * displacement.y + displacement.z * displacement.z) * sensitivity;
+	}
+
+	return Vector3(0.0f, 0.0f, swingSpd);
 }
 
 bool WinXrApi::TryGetControllerFacing(ControllerRole role, Vector3& outDirection)
@@ -668,9 +768,32 @@ void WinXrApi::UpdateInputs()
 	bindings[11].bHasChanged = R_B != bindings[11].bPressed;
 	bindings[11].bPressed = R_B;
 
-	//Movement
-	axes1D[0] = LThumbstick.x;
-	axes1D[1] = LThumbstick.y;
+	if (usingVirtualLocomotion) {
+		//Movement via thumbstick takes priority
+		axes1D[0] = LThumbstick.x;
+		axes1D[1] = LThumbstick.y;
+	}
+	else {
+		//Try to determine if the player is going to move based on 6DOF head position, and which way they will move
+		float moveX = 0.0f;
+		float moveY = 0.0f;
+
+		//TODO
+		/*
+		float hmdMoveThreshold = 0.3f; -> the distance a player must be away from center to actually move via 6DOF
+		Vector3 playerCoords; -> the current player position
+		Vector3 lastCenterGameCoords; -> the last known in-game "room center"
+		Vector3 hmdCenterPos; -> the last known center position
+
+		Vector3 hmdVirtualOffset; -> the offset applied to the headset position to make up for the game moving the body to catch up to the head
+		*/
+		//HMDPos
+
+
+
+		axes1D[0] = moveX;
+		axes1D[1] = moveY;
+	}
 
 	//Looking
 	axes1D[2] = RThumbstick.x;
@@ -681,9 +804,17 @@ void WinXrApi::Recentre()
 {
 	//SetLocationOffset(GetHMDTransform(true) * Vector3(0.0f, 0.0f, 0.0f));
 	SetLocationOffset(Vector3(0.0f, 0.0f, 0.0f));
-	hmdOffset = Vector3(0.0f, 0.0f, 0.0f);
+	hmdVirtualOffset = Vector3(0.0f, 0.0f, 0.0f);
 
-	//hmdOffset = Vector3(HMDPos.x, HMDPos.y, HMDPos.z);
+	hmdCenterPos = HMDPos;
+
+	lastCenterGameCoords = Helpers::GetCamera().position;
+	lastCenterGameCoords.z -= 0.62f;
+
+	playerCoords = Helpers::GetCamera().position;
+	lastPlayerCoords = playerCoords;
+
+	//hmdVirtualOffset = Vector3(HMDPos.x, HMDPos.y, HMDPos.z);
 }
 
 void WinXrApi::SetLocationOffset(Vector3 newOffset)
@@ -1030,7 +1161,7 @@ WinXrApi::~WinXrApi()
 	Logger::log << "[WinXrApi] ending WinlatorXR VR mode..." << std::endl;
 
 	std::filesystem::path dirPath = "Z:/tmp/xr";
-	std::filesystem::path fallbackDir = "D:/";
+	std::filesystem::path fallbackDir = "D:/xrtemp";
 	std::filesystem::path filePath = dirPath / "vr";
 	std::filesystem::path fallbackFile = fallbackDir / "vr";
 

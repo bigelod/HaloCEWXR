@@ -16,6 +16,7 @@ public:
 	void Init();
 	void ReceiveData();
 	void KillReceiver();
+	void SendData(std::string sendData);
 
 	std::string GetRetData();
 	~WinXrApiUDP();
@@ -23,6 +24,8 @@ public:
 private:
 	int udpPort = 7872;
 	int udpSocket;
+	int udpSendPort = 7278;
+	int udpSendSocket;
 	std::thread udpReadThread;
 	std::string retData;
 	std::mutex mtx;

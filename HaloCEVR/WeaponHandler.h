@@ -4,6 +4,22 @@
 #include "Helpers/Objects.h"
 #define DRAW_DEBUG_AIM 0
 
+enum class WeaponType
+{
+	Unknown,
+	Pistol,
+	AssaultRifle,
+	Shotgun,
+	RocketLauncher,
+	Sniper,
+	Flamethrower,
+	PlasmaPistol,
+	PlasmaRifle,
+	PlasmaCannon,
+	Needler,
+	FuelRod
+};
+
 enum class ScopedWeaponType
 {
 	Unknown,
@@ -16,6 +32,9 @@ class WeaponHandler
 {
 public:
 	void UpdateViewModel(struct HaloID& id, struct Vector3* pos, struct Vector3* facing, struct Vector3* up, struct TransformQuat* boneTransforms, struct Transform* outBoneTransforms);
+	
+	void HandlePlasmaPistolCharge();
+
 	void PreFireWeapon(HaloID& weaponID, short param2);
 	void PostFireWeapon(HaloID& weaponID, short param2);
 	void PreThrowGrenade(HaloID& playerID);
@@ -40,6 +59,8 @@ protected:
 	inline void MoveBoneToTransform(int boneIndex, const class Matrix4& newTransform, struct Transform* realTransforms, struct Transform* outBoneTransforms) const;
 	inline void UpdateCache(struct HaloID& id, struct AssetData_ModelAnimations* animationData);
 
+	inline void HandleWeaponHaptics() const;
+
 	inline void TransformToMatrix4(struct Transform& inTransform, class Matrix4& outMatrix) const;
 
 	inline Vector3 GetScopeLocation(ScopedWeaponType Type) const;
@@ -59,6 +80,9 @@ protected:
 		Vector3 gunOffset;
 		Matrix3 fireRotation;
 		ScopedWeaponType scopeType = ScopedWeaponType::Unknown;
+
+		WeaponType weaponType = WeaponType::Unknown;
+		float weaponVibration = 0.8f;
 	} cachedViewModel;
 
 	UnitDynamicObject* weaponFiredPlayer = nullptr;

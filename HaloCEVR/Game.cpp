@@ -261,6 +261,7 @@ void Game::PreDrawFrame(struct Renderer* renderer, float deltaTime)
 		Vector3 forwardVector(1.0f, 0.0f, 0.0f);
 
 		inGameRenderer.DrawPolygon(position, upVector, forwardVector, 8, MetresToWorld(0.25f), D3DCOLOR_ARGB(50, 85, 250, 239), false);
+
 	}
 
 #if 0
@@ -800,6 +801,17 @@ void Game::UpdateViewModel(HaloID& id, Vector3* pos, Vector3* facing, Vector3* u
 {
 	VR_PROFILE_SCOPE(Game_UpdateViewModel);
 	weaponHandler.UpdateViewModel(id, pos, facing, up, BoneTransforms, OutBoneTransforms);
+
+	//Based on code by TheKrisSodroski
+	if (Game::instance.bIsReloading || !Game::instance.bIsFiring) {
+		vr->SendHapticVibration(0.0f, 0.0f);
+	}
+
+	if (Game::instance.bIsFiring)
+	{
+		weaponHandler.HandlePlasmaPistolCharge();
+	}
+
 }
 
 void Game::PreFireWeapon(HaloID& weaponID, short param2)
@@ -860,22 +872,27 @@ bool Game::GetCalculatedHandPositions(Matrix4& controllerTransform, Vector3& dom
 void Game::ReloadStart(HaloID param1, short param2, bool param3)
 {
 	VR_PROFILE_SCOPE(Game_ReloadStart);
-	// TODO: Check if this reload was from the player (can probably be done by checking the weapon's parent ID matches the player)
 	WeaponDynamicObject* weaponObject = static_cast<WeaponDynamicObject*>((Helpers::GetDynamicObject(param1)));
 
 	Weapon& weapon = weaponObject->weaponData[param2];
 
-	// Reload function gets called whenever the player tries to reload, if reloadstate is 1 then a reload was actually triggered
-	if (weapon.reloadState == 1)
+	HaloID PlayerID;
+	if (weaponObject && Helpers::GetLocalPlayerID(PlayerID) && PlayerID == weaponObject->parent)
 	{
-		Logger::log << "Reload Start (" << param1 << ", " << param2 << ", " << param3 << ")" << std::endl;
+		// Reload function gets called whenever the player tries to reload, if reloadstate is 1 then a reload was actually triggered
+		if (weapon.reloadState == 1)
+		{
+			bIsReloading = true;
+			//Logger::log << "Reload Start (" << param1 << ", " << param2 << ", " << param3 << ")" << std::endl;
+		}
 	}
 }
 
 void Game::ReloadEnd(short param1, HaloID param2)
 {
 	VR_PROFILE_SCOPE(Game_ReloadEnd);
-	Logger::log << "Reload End" << std::endl;
+	bIsReloading = false;
+	//Logger::log << "Reload End" << std::endl;
 }
 
 Vector3 Game::GetSmoothedInput() const
@@ -1065,7 +1082,7 @@ void Game::SetupConfigs()
 	c_WeaponSmoothingAmountOneZoom = config.RegisterFloat("Zoom1WeaponSmoothingAmount", "Amount of smoothing applied to weapon movement when zoomed in once, eg zooming on the pistol (0 is disabled, 2.0 is maximum, recommended around 0.3-1.0)", 0.4f);
 	c_WeaponSmoothingAmountTwoZoom = config.RegisterFloat("Zoom2WeaponSmoothingAmount", "Amount of smoothing applied to weapon movement when zoomed in twice, eg second zoom on sniper (0 is disabled, 2.0 is maximum, recommended around 0.6-1.25)", 0.6f);
 	// Weapon holster settings
-	c_EnableWeaponHolsters = config.RegisterBool("EnableWeaponHolsters", "When enabled Weapons can only be switched by using the 'SwitchWeapons' binding while the dominant hand is within distance of a holster", true);
+	c_EnableWeaponHolsters = config.RegisterBool("EnableWeaponHolsters", "When enabled Weapons can only be switched by using the 'SwitchWeapons' binding while the dominant hand is within distance of a holster", false);
 	c_LeftShoulderHolsterActivationDistance = config.RegisterFloat("LeftShoulderHolsterDistance", "The 'size' of the left shoulder holster. This is the distance that the dominant hand needs to be from the holster to change weapons (<0 to disable)", 0.3f);
 	c_LeftShoulderHolsterOffset = config.RegisterVector3("LeftShoulderHolsterOffset", "The (foward, left, up) Offset of the left shoulder holster relative to the headset's location", Vector3(-0.15f, 0.25f, -0.25f));
 	c_RightShoulderHolsterActivationDistance = config.RegisterFloat("RightShoulderHolsterDistance", "The 'size' of the right shoulder holster. This is the distance that the dominant hand needs to be from the holster to change weapons (<0 to disable)", 0.3f);
@@ -1077,6 +1094,11 @@ void Game::SetupConfigs()
 	c_TEMPViewportRight = config.RegisterFloat("TEMP_ViewportRight", "Some headsets experience warping when turning, as a workaround the viewport scaling has been exposed so users can adjust them until the warping stops", 1.0f);
 	c_TEMPViewportTop = config.RegisterFloat("TEMP_ViewportTop", "Some headsets experience warping when turning, as a workaround the viewport scaling has been exposed so users can adjust them until the warping stops", -1.0f);
 	c_TEMPViewportBottom = config.RegisterFloat("TEMP_ViewportBottom", "Some headsets experience warping when turning, as a workaround the viewport scaling has been exposed so users can adjust them until the warping stops", 1.0f);
+	// WinlatorXR specific settings
+	c_MeleeSwingVelocitySensitivity = config.RegisterFloat("MeleeSwingVelocitySensitivity", "A custom swing velocity sensitivity adjustment for WinlatorXR", 3.00f);
+	c_NonstationaryBoundary = config.RegisterBool("NonstationaryBoundary", "For playing in big spaces via WinlatorXR", false);
+	c_EnableButtonMelee = config.RegisterBool("EnableButtonMelee", "Enable using a button for melee (R Thumb Down)", true);
+	c_EnableHaptics = config.RegisterBool("EnableHaptics", "Enable using haptics on WinlatorXR", true);
 
 	bLoadedConfig = config.LoadFromFile("VR/config.txt");
 	bSavedConfig = config.SaveToFile("VR/config.txt");

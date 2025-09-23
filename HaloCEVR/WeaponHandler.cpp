@@ -135,7 +135,7 @@ void WeaponHandler::UpdateViewModel(HaloID& id, Vector3* pos, Vector3* facing, V
 					0.0f, -1.0f, 0.0f,
 					0.0f, 0.0f, 1.0f
 				);
-				
+
 				for (int i = 0; i < 9; i++)
 				{
 					tempTransform.rotation[i] = rot[i];
@@ -231,10 +231,10 @@ void WeaponHandler::UpdateViewModel(HaloID& id, Vector3* pos, Vector3* facing, V
 					Matrix4 deltaMatrix = rightMatrix * leftMatrix;
 
 					if (Game::instance.bLeftHanded)
-					{						
+					{
 						Matrix4 flip;
 						flip.scale(1.0f, -1.0f, 1.0f);
-						
+
 						deltaMatrix = flip * deltaMatrix * flip;
 						leftMatrix = handTransform * deltaMatrix;
 					}
@@ -320,7 +320,7 @@ inline void WeaponHandler::CalculateBoneTransform(int boneIndex, Bone* boneArray
 	}
 
 	int currentIndex = boneIndex;
-	
+
 	while (true)
 	{
 		Bone& currentBone = boneArray[currentIndex];
@@ -405,6 +405,8 @@ void WeaponHandler::UpdateCache(HaloID& id, AssetData_ModelAnimations* animation
 #if DRAW_DEBUG_AIM
 	Logger::log << "[UpdateCache] Swapped weapons, recaching " << id << std::endl;
 #endif
+	Game::instance.bIsReloading = false;
+
 	cachedViewModel.currentAsset = id;
 	cachedViewModel.leftWristIndex = -1;
 	cachedViewModel.rightWristIndex = -1;
@@ -532,6 +534,70 @@ void WeaponHandler::UpdateCache(HaloID& id, AssetData_ModelAnimations* animation
 		cachedViewModel.scopeType = ScopedWeaponType::Unknown;
 	}
 
+	//Based on code by TheKrisSodroski
+	if (strstr(model->ModelPath, "\\plasma pistol\\"))
+	{
+		cachedViewModel.weaponType = WeaponType::PlasmaPistol;
+		cachedViewModel.weaponVibration = 0.6f;
+	}
+	else if (strstr(model->ModelPath, "\\sniper rifle\\"))
+	{
+		cachedViewModel.weaponType = WeaponType::Sniper;
+		cachedViewModel.weaponVibration = 1.0f;
+	}
+	else if (strstr(model->ModelPath, "\\pistol\\"))
+	{
+		cachedViewModel.weaponType = WeaponType::Pistol;
+		cachedViewModel.weaponVibration = 0.8f;
+	}
+	else if (strstr(model->ModelPath, "\\plasma rifle\\"))
+	{
+		cachedViewModel.weaponType = WeaponType::PlasmaRifle;
+		cachedViewModel.weaponVibration = 0.6f;
+	}
+	else if (strstr(model->ModelPath, "\\shotgun\\"))
+	{
+		cachedViewModel.weaponType = WeaponType::Shotgun;
+		cachedViewModel.weaponVibration = 1.0f;
+	}
+	else if (strstr(model->ModelPath, "\\assault rifle\\"))
+	{
+		cachedViewModel.weaponType = WeaponType::AssaultRifle;
+		cachedViewModel.weaponVibration = 0.7f;
+	}
+	else if (strstr(model->ModelPath, "\\rocket launcher\\"))
+	{
+		cachedViewModel.weaponType = WeaponType::RocketLauncher;
+		cachedViewModel.weaponVibration = 1.0f;
+	}
+	else if (strstr(model->ModelPath, "\\flamethrower\\"))
+	{
+		cachedViewModel.weaponType = WeaponType::Flamethrower;
+		cachedViewModel.weaponVibration = 0.5f;
+	}
+	else if (strstr(model->ModelPath, "\\plasma_cannon\\"))
+	{
+		cachedViewModel.weaponType = WeaponType::PlasmaCannon;
+		cachedViewModel.weaponVibration = 1.0f;
+	}
+	else if (strstr(model->ModelPath, "\\needler\\"))
+	{
+		cachedViewModel.weaponType = WeaponType::Needler;
+		cachedViewModel.weaponVibration = 0.6f;
+	}
+	else if (strstr(model->ModelPath, "\\fuel rod\\"))
+	{
+		cachedViewModel.weaponType = WeaponType::FuelRod;
+		cachedViewModel.weaponVibration = 1.0f;
+	}
+	else
+	{
+		cachedViewModel.weaponType = WeaponType::Unknown;
+		cachedViewModel.weaponVibration = 0.8f;
+		Logger::log << "[UpdateCache] Unknown weapon with asset " << weapon->WeaponAsset << std::endl;
+	}
+
+
 	if (!model->ModelData)
 	{
 		return;
@@ -610,7 +676,7 @@ Matrix4 WeaponHandler::GetDominantHandTransform() const
 	Matrix4 controllerTransform;
 	Vector3 actualControllerPos;
 	Vector3 toOffHand;
-	Vector3 smoothedPosition; 
+	Vector3 smoothedPosition;
 
 	if (!Game::instance.GetCalculatedHandPositions(controllerTransform, actualControllerPos, toOffHand))
 	{
@@ -833,7 +899,71 @@ void WeaponHandler::PreFireWeapon(HaloID& WeaponID, short param2)
 	HaloID PlayerID;
 	if (Object && Helpers::GetLocalPlayerID(PlayerID) && PlayerID == Object->parent)
 	{
+		HandleWeaponHaptics();
 		RelocatePlayer(PlayerID);
+	}
+}
+
+//Based on code by TheKrisSodroski
+void WeaponHandler::HandlePlasmaPistolCharge()
+{
+	HaloID PlayerID;
+	bool foundPlayer = Helpers::GetLocalPlayerID(PlayerID);
+
+	if (foundPlayer && cachedViewModel.weaponType == WeaponType::PlasmaPistol)
+	{
+		HandleWeaponHaptics();
+	}
+}
+
+inline void WeaponHandler::HandleWeaponHaptics() const
+{
+	IVR* vr = Game::instance.GetVR();
+
+	float lVibration = 0.0f;
+	float rVibration = 0.0f;
+
+	if (Game::instance.bIsReloading)
+	{
+		//No vibration
+	}
+	else
+	{
+		//We aren't picky about weapon types actually, maybe this will support vehicles
+		//if (cachedViewModel.weaponType != WeaponType::Unknown)
+		//{
+			//Logger::log << "[Weapon Haptics] triggering haptics for weapon " << haptic.Description << std::endl;
+		if (Game::instance.bUseTwoHandAim)
+		{
+			//Logger::log << "[Weapon Haptics] Gun is in two handed mode. " << haptic.Description << std::endl;
+			//Send some vibration to both
+			lVibration = cachedViewModel.weaponVibration;
+			rVibration = cachedViewModel.weaponVibration;
+		}
+		else
+		{
+			//Logger::log << "[Weapon Haptics] Gun is in one handed mode. " << haptic.Description << std::endl;
+			//Send some vibration to the dominant hand
+			if (Game::instance.c_LeftHanded->Value())
+			{
+				//Logger::log << "[Weapon Haptics] Left is hand dominant hand. " << haptic.Description << std::endl;
+				lVibration = cachedViewModel.weaponVibration;
+			}
+			else
+			{
+				//Logger::log << "[Weapon Haptics] Right is hand dominant hand. " << haptic.Description << std::endl;
+				rVibration = cachedViewModel.weaponVibration;
+			}
+		}
+		//}
+		//else
+		//{
+			//Logger::log << "[Weapon Haptics] Attempted to find gun haptics for weapon type " << static_cast<int>(cachedViewModel.weaponType) << " but vrinput was null" << std::endl;
+		//}
+	}
+
+	if (vr) {
+		vr->SendHapticVibration(lVibration, rVibration);
 	}
 }
 

@@ -90,6 +90,8 @@ public:
 
 	bool bNeedsRecentre = true;
 	bool bUseTwoHandAim = false;
+	bool bIsFiring = false;
+	bool bIsReloading = false;
 	bool bLeftHanded = false;
 
 	Config config;
@@ -242,5 +244,9 @@ public:
 	FloatProperty* c_TEMPViewportRight = nullptr;
 	FloatProperty* c_TEMPViewportTop = nullptr;
 	FloatProperty* c_TEMPViewportBottom = nullptr;
+	FloatProperty* c_MeleeSwingVelocitySensitivity = nullptr;
+	BoolProperty* c_NonstationaryBoundary = nullptr;
+	BoolProperty* c_EnableButtonMelee = nullptr;
+	BoolProperty* c_EnableHaptics = nullptr;
 };
 

@@ -7,18 +7,21 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Windows.Forms;
 
 namespace XrAPITestUDP
 {
     public partial class Form1 : Form
     {
         string IPTarget = "127.0.0.1";
-        int TransmitPort = 7872;
+        int TransmitPort = 7872; //XR
+        int ReceivePort = 7278; //RX
 
         private string inUDP;
 
         UdpClient _TransmitClient;
+        UdpClient _ReceiveClient;
+        Thread udpReadThread;
 
         bool keyWDown = false;
         bool keyADown = false;
@@ -135,6 +138,33 @@ namespace XrAPITestUDP
             tbHQY.Value = -7;
             tbHQZ.Value = 5;
             tbHQW.Value = 99;
+
+            //Setup UDP RX for rumble data
+            udpReadThread = new Thread(new ThreadStart(ReceiveData));
+            udpReadThread.IsBackground = true;
+            udpReadThread.Start();
+        }
+
+        private void ReceiveData()
+        {
+            _ReceiveClient = new UdpClient(ReceivePort);
+
+            while (true)
+            {
+                try
+                {
+                    IPEndPoint recieveFromAnyIP = new IPEndPoint(IPAddress.Any, 0);
+                    byte[] data = _ReceiveClient.Receive(ref recieveFromAnyIP);
+
+                    string returnData = Encoding.ASCII.GetString(data);
+
+                    txtRumbleData.Text = returnData;
+                }
+                catch (Exception e)
+                {
+                    
+                }
+            }
         }
 
         private void Form1_KeyUp(object? sender, KeyEventArgs e)

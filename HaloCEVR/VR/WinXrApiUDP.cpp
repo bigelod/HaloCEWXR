@@ -2,6 +2,7 @@
 #include "../Game.h"
 #include "../Logger.h"
 #include <Winsock2.h>
+#include <ws2tcpip.h>
 #include <iostream>
 #include <thread>
 #include <cstring>
@@ -14,6 +15,10 @@
 
 WinXrApiUDP::WinXrApiUDP()
 {
+	WSADATA wsaData;
+	WSAStartup(MAKEWORD(2, 2), &wsaData);
+
+	Logger::log << "[WinXrUDP] Starting UDP receiver thread..." << std::endl;
 	udpReadThread = std::thread(&WinXrApiUDP::ReceiveData, this);
 	udpReadThread.detach();
 }
@@ -31,7 +36,7 @@ void WinXrApiUDP::ReceiveData()
 		bind(udpSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr));
 	}
 	catch (const std::exception& e) {
-		Logger::log << "Error starting UDP receiver: " << e.what() << std::endl;
+		Logger::log << "[WinXrUDP] Error starting UDP receiver: " << e.what() << std::endl;
 	}	
 
 	while (true)
@@ -69,7 +74,7 @@ void WinXrApiUDP::ReceiveData()
 					Game::instance.OpenXRFrameWait = 0;
 				}
 
-				//Logger::log << "UDP DATA " + returnData << std::endl;
+				//Logger::log << "[WinXrUDP] UDP DATA " + returnData << std::endl;
 
 				{
 					std::lock_guard<std::mutex> lock(mtx);
@@ -85,22 +90,60 @@ void WinXrApiUDP::ReceiveData()
 		}
 		catch (const std::exception& e)
 		{
-			Logger::log << "Error receiving UDP data: " << e.what() << std::endl;
+			Logger::log << "[WinXrUDP] Error receiving UDP data: " << e.what() << std::endl;
 		}
 	}
 }
 
+void WinXrApiUDP::SendData(std::string sendData)
+{
+	try
+	{
+		/*WSADATA wsaData;
+		if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+			Logger::log << "[WinXrUDP] WSAStartup failed with error " << WSAGetLastError() << std::endl;
+			return;
+		}*/
+
+		struct sockaddr_in targetAddress;
+		udpSendSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+		if (udpSendSocket == INVALID_SOCKET) {
+			Logger::log << "[WinXrUDP] Error sending UDP data: socket creation failed" << std::endl;
+			return;
+		}
+
+		targetAddress.sin_family = AF_INET;
+		targetAddress.sin_port = htons(udpSendPort);
+		inet_pton(AF_INET, "127.0.0.1", &targetAddress.sin_addr);
+
+		int result = sendto(udpSendSocket, sendData.c_str(), sendData.length(), 0, (struct sockaddr*)&targetAddress, sizeof(targetAddress));
+		if (result == SOCKET_ERROR) {
+			Logger::log << "[WinXrUDP] sendto failed with error " << WSAGetLastError() << std::endl;
+		}
+
+		closesocket(udpSendSocket);
+		//WSACleanup();
+	}
+	catch (const std::exception& e)
+	{
+		Logger::log << "[WinXrUDP] Error sending UDP data: " << e.what() << std::endl;
+	}	
+}
+
 void WinXrApiUDP::KillReceiver()
 {
+	Logger::log << "[WinXrUDP] Shutting down UDP receiver..." << std::endl;
+
 	try
 	{
 		udpReadThread.~thread();
 		udpReadThread = std::thread();
-		_close(udpSocket);
+		closesocket(udpSocket);
+		WSACleanup();
 	}
 	catch (const std::exception& e)
 	{
-		Logger::log << "Error killing UDP receiver: " << e.what() << std::endl;
+		Logger::log << "[WinXrUDP] Error killing UDP receiver: " << e.what() << std::endl;
 	}
 }
 

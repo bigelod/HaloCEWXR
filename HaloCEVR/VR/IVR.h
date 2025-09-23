@@ -62,4 +62,7 @@ public:
 	virtual std::string GetKeyboardInput() = 0;
 
 	virtual std::string GetDeviceName() = 0;
+
+	//Based on code by TheKrisSodroski, modified for simpler haptics handled by WinlatorXR instead
+	virtual void SendHapticVibration(float lControllerStrength, float rControllerStrength) = 0;
 };

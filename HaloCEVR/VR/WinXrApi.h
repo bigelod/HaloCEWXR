@@ -57,6 +57,7 @@ public:
 	void HideKeyboard();
 	std::string GetKeyboardInput();
 	std::string GetDeviceName();
+	void SendHapticVibration(float lControllerStrength, float rControllerStrength);
 	float IPDVal;
 	float FOVH;
 	float FOVV;
@@ -178,7 +179,14 @@ protected:
 	InputBindingID inputMoveHandSwap = 0;
 	bool bMoveHand = true;
 
-	Vector3 hmdOffset;
+	float hmdMoveThreshold = 0.3f;
+	Vector3 lastPlayerCoords;
+	Vector3 playerCoords;
+	Vector3 lastCenterGameCoords;
+	Vector3 hmdCenterPos;
+	bool usingVirtualLocomotion = false;
+
+	Vector3 hmdVirtualOffset;
 
 	Vector3 mainHandOffset;
 	Vector3 mainHandRot;
@@ -188,5 +196,10 @@ protected:
 	bool keystate[128];
 
 	WinXrApiUDP* udpReader;
+
+	Vector3 prevLHandPos[5];
+	Vector3 prevRHandPos[5];
+	int lastPosFrame = 0;
+	int maxPosBuffer = 1;
 };
 

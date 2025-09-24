@@ -535,67 +535,70 @@ void WeaponHandler::UpdateCache(HaloID& id, AssetData_ModelAnimations* animation
 	}
 
 	//Based on code by TheKrisSodroski
+	float vibrationStrength = 0.8f;
 	if (strstr(model->ModelPath, "\\plasma pistol\\"))
 	{
 		cachedViewModel.weaponType = WeaponType::PlasmaPistol;
-		cachedViewModel.weaponVibration = 0.6f;
+		vibrationStrength = Game::instance.c_PlasmaPistolHapticStrength->Value();
 	}
 	else if (strstr(model->ModelPath, "\\sniper rifle\\"))
 	{
 		cachedViewModel.weaponType = WeaponType::Sniper;
-		cachedViewModel.weaponVibration = 1.0f;
+		vibrationStrength = Game::instance.c_SniperRifleHapticStrength->Value();
 	}
 	else if (strstr(model->ModelPath, "\\pistol\\"))
 	{
 		cachedViewModel.weaponType = WeaponType::Pistol;
-		cachedViewModel.weaponVibration = 0.8f;
+		vibrationStrength = Game::instance.c_PistolHapticStrength->Value();
 	}
 	else if (strstr(model->ModelPath, "\\plasma rifle\\"))
 	{
 		cachedViewModel.weaponType = WeaponType::PlasmaRifle;
-		cachedViewModel.weaponVibration = 0.6f;
+		vibrationStrength = Game::instance.c_PlasmaRifleHapticStrength->Value();
 	}
 	else if (strstr(model->ModelPath, "\\shotgun\\"))
 	{
 		cachedViewModel.weaponType = WeaponType::Shotgun;
-		cachedViewModel.weaponVibration = 1.0f;
+		vibrationStrength = Game::instance.c_ShotgunHapticStrength->Value();
 	}
 	else if (strstr(model->ModelPath, "\\assault rifle\\"))
 	{
 		cachedViewModel.weaponType = WeaponType::AssaultRifle;
-		cachedViewModel.weaponVibration = 0.7f;
+		vibrationStrength = Game::instance.c_AssaultRifleHapticStrength->Value();
 	}
 	else if (strstr(model->ModelPath, "\\rocket launcher\\"))
 	{
 		cachedViewModel.weaponType = WeaponType::RocketLauncher;
-		cachedViewModel.weaponVibration = 1.0f;
+		vibrationStrength = Game::instance.c_RocketLauncherHapticStrength->Value();
 	}
 	else if (strstr(model->ModelPath, "\\flamethrower\\"))
 	{
 		cachedViewModel.weaponType = WeaponType::Flamethrower;
-		cachedViewModel.weaponVibration = 0.5f;
+		vibrationStrength = Game::instance.c_FlamethrowerHapticStrength->Value();
 	}
 	else if (strstr(model->ModelPath, "\\plasma_cannon\\"))
 	{
 		cachedViewModel.weaponType = WeaponType::PlasmaCannon;
-		cachedViewModel.weaponVibration = 1.0f;
+		vibrationStrength = Game::instance.c_PlasmaCannonHapticStrength->Value();
 	}
 	else if (strstr(model->ModelPath, "\\needler\\"))
 	{
 		cachedViewModel.weaponType = WeaponType::Needler;
-		cachedViewModel.weaponVibration = 0.6f;
+		vibrationStrength = Game::instance.c_NeedlerHapticStrength->Value();
 	}
 	else if (strstr(model->ModelPath, "\\fuel rod\\"))
 	{
 		cachedViewModel.weaponType = WeaponType::FuelRod;
-		cachedViewModel.weaponVibration = 1.0f;
+		vibrationStrength = Game::instance.c_FuelRodHapticStrength->Value();
 	}
 	else
 	{
 		cachedViewModel.weaponType = WeaponType::Unknown;
-		cachedViewModel.weaponVibration = 0.8f;
+		vibrationStrength = Game::instance.c_UnknownHapticStrength->Value();
 		Logger::log << "[UpdateCache] Unknown weapon with asset " << weapon->WeaponAsset << std::endl;
 	}
+
+	cachedViewModel.weaponVibration = vibrationStrength;
 
 
 	if (!model->ModelData)

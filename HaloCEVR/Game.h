@@ -248,5 +248,19 @@ public:
 	BoolProperty* c_NonstationaryBoundary = nullptr;
 	BoolProperty* c_EnableButtonMelee = nullptr;
 	BoolProperty* c_EnableHaptics = nullptr;
+	BoolProperty* c_DisableThumbstickMovement = nullptr;
+	BoolProperty* c_DisableThumbstickRotation = nullptr;
+	FloatProperty* c_PlasmaPistolHapticStrength = nullptr;
+	FloatProperty* c_SniperRifleHapticStrength = nullptr;
+	FloatProperty* c_PistolHapticStrength = nullptr;
+	FloatProperty* c_PlasmaRifleHapticStrength = nullptr;
+	FloatProperty* c_ShotgunHapticStrength = nullptr;
+	FloatProperty* c_AssaultRifleHapticStrength = nullptr;
+	FloatProperty* c_RocketLauncherHapticStrength = nullptr;
+	FloatProperty* c_FlamethrowerHapticStrength = nullptr;
+	FloatProperty* c_PlasmaCannonHapticStrength = nullptr;
+	FloatProperty* c_NeedlerHapticStrength = nullptr;
+	FloatProperty* c_FuelRodHapticStrength = nullptr;
+	FloatProperty* c_UnknownHapticStrength = nullptr;
 };
 

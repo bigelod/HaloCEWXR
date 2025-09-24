@@ -1099,6 +1099,20 @@ void Game::SetupConfigs()
 	c_NonstationaryBoundary = config.RegisterBool("NonstationaryBoundary", "For playing in big spaces via WinlatorXR", false);
 	c_EnableButtonMelee = config.RegisterBool("EnableButtonMelee", "Enable using a button for melee (R Thumb Down)", true);
 	c_EnableHaptics = config.RegisterBool("EnableHaptics", "Enable using haptics on WinlatorXR", true);
+	c_DisableThumbstickMovement = config.RegisterBool("DisableThumbstickMovement", "Disable using thumbsticks to move, automatically enables NonstationaryBoundary", false);
+	c_DisableThumbstickRotation = config.RegisterBool("DisableThumbstickRotation", "Disable using thumbsticks to turn", false);
+	c_PlasmaPistolHapticStrength = config.RegisterFloat("PlasmaPistolHapticStrength", "Haptic vibration strength for firing or charging this weapon", 0.60f);
+	c_SniperRifleHapticStrength = config.RegisterFloat("SniperRifleHapticStrength", "Haptic vibration strength for firing this weapon", 1.00f);
+	c_PistolHapticStrength = config.RegisterFloat("PistolHapticStrength", "Haptic vibration strength for firing this weapon", 0.85f);
+	c_PlasmaRifleHapticStrength = config.RegisterFloat("PlasmaRifleHapticStrength", "Haptic vibration strength for firing this weapon", 0.60f);
+	c_ShotgunHapticStrength = config.RegisterFloat("ShotgunHapticStrength", "Haptic vibration strength for firing this weapon", 1.00f);
+	c_AssaultRifleHapticStrength = config.RegisterFloat("AssaultRifleHapticStrength", "Haptic vibration strength for firing this weapon", 0.70f);
+	c_RocketLauncherHapticStrength = config.RegisterFloat("RocketLauncherHapticStrength", "Haptic vibration strength for firing this weapon", 1.00f);
+	c_FlamethrowerHapticStrength = config.RegisterFloat("FlamethrowerHapticStrength", "Haptic vibration strength for firing this weapon", 0.50f);
+	c_PlasmaCannonHapticStrength = config.RegisterFloat("PlasmaCannonHapticStrength", "Haptic vibration strength for firing this weapon", 1.00f);
+	c_NeedlerHapticStrength = config.RegisterFloat("NeedlerHapticStrength", "Haptic vibration strength for firing this weapon", 0.70f);
+	c_FuelRodHapticStrength = config.RegisterFloat("FuelRodHapticStrength", "Haptic vibration strength for firing this weapon", 1.00f);
+	c_UnknownHapticStrength = config.RegisterFloat("UnknownHapticStrength", "Haptic vibration strength for firing any unknown weapon", 0.80f);
 
 	bLoadedConfig = config.LoadFromFile("VR/config.txt");
 	bSavedConfig = config.SaveToFile("VR/config.txt");

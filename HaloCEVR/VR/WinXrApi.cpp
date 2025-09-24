@@ -364,6 +364,16 @@ void WinXrApi::UpdatePoses()
 		LHandPos = Vector3(floats[6], floats[7], floats[8]);
 		LThumbstick = Vector2(floats[4], floats[5]);
 
+		bool disableThumbMove = Game::instance.c_DisableThumbstickMovement->Value();
+		if (disableThumbMove) {
+			LThumbstick = Vector2(0, 0);
+
+			bool enableNonStationary = Game::instance.c_NonstationaryBoundary->Value();
+			if (!enableNonStationary) {
+				Game::instance.c_NonstationaryBoundary->SetValue(true); //Must be enabled if we disable thumbstick movement
+			}
+		}
+
 		if (LThumbstick.x != 0 || LThumbstick.y != 0) {
 			usingVirtualLocomotion = true;
 		}
@@ -374,6 +384,11 @@ void WinXrApi::UpdatePoses()
 		RHandQuat = Vector4(floats[9], floats[10], floats[11], floats[12]);
 		RHandPos = Vector3(floats[15], floats[16], floats[17]);
 		RThumbstick = Vector2(floats[13], floats[14]);
+
+		bool disableThumbRotate = Game::instance.c_DisableThumbstickRotation->Value();
+		if (disableThumbRotate) {
+			RThumbstick = Vector2(0, 0);
+		}
 
 		HMDQuat = Vector4(floats[18], floats[19], floats[20], floats[21]);
 		HMDPos = Vector3(floats[22], floats[23], floats[24]);

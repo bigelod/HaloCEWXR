@@ -828,7 +828,7 @@ void WinXrApi::UpdateInputs()
 		}
 		else if (usingVirtualLocomotion) {
 			//Movement via thumbstick takes priority always
-			
+
 			if (enableNonStationary) {
 				hmdCenterPos = HMDPos;
 				lastCenterGameCoords = Vector3(playerCoords.x, playerCoords.y, playerCoords.z - 0.62f);
@@ -876,7 +876,12 @@ void WinXrApi::UpdateInputs()
 			Vector4 rollInversion = Vector4(0.0f, 0.0f, 1.0f, 0.0f); // Quaternion for 180-degree rotation around Z-axis
 			q = QuaternionMultiply(q, rollInversion);
 
-			//atan2(2.0f * (q.w * q.y - q.z * q.x), 1.0f - 2.0f * (q.y * q.y + q.z * q.z));
+			float atanY = 2.0f * (q.w * q.y - q.z * q.x);
+			float atanX = 1.0f - 2.0f * (q.y * q.y + q.z * q.z);
+
+			if (atanY != 0 || atanX != 0) {
+				realYaw = atan2(atanY, atanX);
+			}
 
 			float hm_dx = HMDPos.x - hmdCenterPos.x;
 			float hm_dz = HMDPos.z - hmdCenterPos.z;
@@ -902,8 +907,8 @@ void WinXrApi::UpdateInputs()
 
 				float yaw = yawHMD - yawGame;
 
-				float dx = offsetRight / movementScale; //hm_dx / movementScale;
-				float dy = -offsetForward / movementScale; //-hm_dz / movementScale;
+				float dx = -offsetRight / movementScale; //hm_dx / movementScale;
+				float dy = offsetForward / movementScale; //-hm_dz / movementScale;
 
 				moveX = dx * cos(yaw) - dy * sin(yaw);
 				moveY = dx * sin(yaw) + dy * cos(yaw);

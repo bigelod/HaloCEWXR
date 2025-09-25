@@ -1097,6 +1097,7 @@ void Game::SetupConfigs()
 	// WinlatorXR specific settings
 	c_MeleeSwingVelocitySensitivity = config.RegisterFloat("MeleeSwingVelocitySensitivity", "A custom swing velocity sensitivity adjustment for WinlatorXR", 3.00f);
 	c_NonstationaryBoundary = config.RegisterBool("NonstationaryBoundary", "For playing in big spaces via WinlatorXR", false);
+	c_NonstationaryWalkScale = config.RegisterFloat("NonstationaryWalkScale", "How much to multiply walk scale by in big space mode", 3);
 	c_EnableButtonMelee = config.RegisterBool("EnableButtonMelee", "Enable using a button for melee (R Thumb Down)", true);
 	c_EnableHaptics = config.RegisterBool("EnableHaptics", "Enable using haptics on WinlatorXR", true);
 	c_DisableThumbstickMovement = config.RegisterBool("DisableThumbstickMovement", "Disable using thumbsticks to move, automatically enables NonstationaryBoundary", false);
@@ -1112,7 +1113,7 @@ void Game::SetupConfigs()
 	c_PlasmaCannonHapticStrength = config.RegisterFloat("PlasmaCannonHapticStrength", "Haptic vibration strength for firing this weapon", 1.00f);
 	c_NeedlerHapticStrength = config.RegisterFloat("NeedlerHapticStrength", "Haptic vibration strength for firing this weapon", 0.70f);
 	c_FuelRodHapticStrength = config.RegisterFloat("FuelRodHapticStrength", "Haptic vibration strength for firing this weapon", 1.00f);
-	c_UnknownHapticStrength = config.RegisterFloat("UnknownHapticStrength", "Haptic vibration strength for firing any unknown weapon", 0.80f);
+	//c_UnknownHapticStrength = config.RegisterFloat("UnknownHapticStrength", "Haptic vibration strength for firing any unknown weapon", 0.80f);
 
 	bLoadedConfig = config.LoadFromFile("VR/config.txt");
 	bSavedConfig = config.SaveToFile("VR/config.txt");

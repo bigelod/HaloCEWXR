@@ -51,16 +51,15 @@ void WinXrApi::Init()
 
 	HMDQuat = Vector4(0, 0, 0, 0);
 	HMDPos = Vector3(0, 0, 0);
-
+	lastHMDPos = Vector3(0, 0, 0);
 	hmdVirtualOffset = Vector3(0, 0, 0);
-
 	playerCoords = Vector3(0, 0, 0);
-	lastPlayerCoords = playerCoords;
+	lastPlayerCoords = Vector3(0, 0, 0);
+	lastCenterGameCoords = Vector3(0, 0, 0);
 
 	hmdCenterPos = Vector3(0, 0, 0);
 	usingVirtualLocomotion = false;
-
-	lastCenterGameCoords = Vector3(0, 0, 0);
+	movingBody = false;
 
 	prevLHandPos[0] = Vector3(0, 0, 0);
 	prevLHandPos[1] = Vector3(0, 0, 0);
@@ -282,7 +281,7 @@ void WinXrApi::Shutdown()
 
 void WinXrApi::SendHapticVibration(float lControllerStrength, float rControllerStrength) {
 	bool sendHaptics = Game::instance.c_EnableHaptics->Value();
-	
+
 	if (udpReader && sendHaptics) {
 		udpReader->SendData(std::to_string(lControllerStrength) + " " + std::to_string(rControllerStrength));
 	}
@@ -487,27 +486,38 @@ Matrix4 WinXrApi::GetControllerTransform(ControllerRole role, bool bRenderPose)
 {
 	Matrix4 outMatrix;
 
-	Vector3 bonePos = Vector3(LHandPos.x, LHandPos.y, LHandPos.z);
+	float offX = 0;
+	float offZ = 0;
+
+	bool unboundedSpace = Game::instance.c_NonstationaryBoundary->Value();
+
+	if (unboundedSpace)
+	{
+		offX = hmdVirtualOffset.x;
+		offZ = hmdVirtualOffset.z;
+	}
+
+	Vector3 bonePos = Vector3(LHandPos.x - offX, LHandPos.y, LHandPos.z - offZ);
 	Vector4 quat = Vector4(LHandQuat.x, LHandQuat.y, -LHandQuat.z, LHandQuat.w);
 
 	if (role == (Game::instance.bLeftHanded ? ControllerRole::Right : ControllerRole::Left))
 	{
 		if (!Game::instance.bLeftHanded) {
-			bonePos = Vector3(LHandPos.x, LHandPos.y, LHandPos.z);
+			bonePos = Vector3(LHandPos.x - offX, LHandPos.y, LHandPos.z - offZ);
 			quat = Vector4(LHandQuat.x, LHandQuat.y, -LHandQuat.z, LHandQuat.w);
 		}
 		else {
-			bonePos = Vector3(RHandPos.x, RHandPos.y, RHandPos.z);
+			bonePos = Vector3(RHandPos.x - offX, RHandPos.y, RHandPos.z - offZ);
 			quat = Vector4(RHandQuat.x, RHandQuat.y, -RHandQuat.z, RHandQuat.w);
 		}
 	}
 	else {
 		if (!Game::instance.bLeftHanded) {
-			bonePos = Vector3(RHandPos.x, RHandPos.y, RHandPos.z);
+			bonePos = Vector3(RHandPos.x - offX, RHandPos.y, RHandPos.z - offZ);
 			quat = Vector4(RHandQuat.x, RHandQuat.y, -RHandQuat.z, RHandQuat.w);
 		}
 		else {
-			bonePos = Vector3(LHandPos.x, LHandPos.y, LHandPos.z);
+			bonePos = Vector3(LHandPos.x - offX, LHandPos.y, LHandPos.z - offZ);
 			quat = Vector4(LHandQuat.x, LHandQuat.y, -LHandQuat.z, LHandQuat.w);
 		}
 	}
@@ -584,6 +594,13 @@ Matrix4 WinXrApi::RotationFromDirection(Vector3 direction) {
 Matrix4 WinXrApi::GetHMDTransform(bool bRenderPose)
 {
 	Matrix4 outMatrix;
+
+	bool unboundedSpace = Game::instance.c_NonstationaryBoundary->Value();
+
+	if (!unboundedSpace)
+	{
+		hmdVirtualOffset = Vector3(0.0f, 0.0f, 0.0f);
+	}
 
 	Vector3 bonePos = Vector3(HMDPos.x - hmdVirtualOffset.x, HMDPos.y - hmdVirtualOffset.y, HMDPos.z - hmdVirtualOffset.z);
 	Vector4 quat = Vector4(HMDQuat.x, HMDQuat.y, -HMDQuat.z, HMDQuat.w);
@@ -783,53 +800,141 @@ void WinXrApi::UpdateInputs()
 	bindings[11].bHasChanged = R_B != bindings[11].bPressed;
 	bindings[11].bPressed = R_B;
 
-	if (usingVirtualLocomotion) {
-		//Movement via thumbstick takes priority
-		axes1D[0] = LThumbstick.x;
-		axes1D[1] = LThumbstick.y;
-	}
-	else {
-		//Try to determine if the player is going to move based on 6DOF head position, and which way they will move
-		float moveX = 0.0f;
-		float moveY = 0.0f;
-
-		//TODO
-		/*
-		float hmdMoveThreshold = 0.3f; -> the distance a player must be away from center to actually move via 6DOF
-		Vector3 playerCoords; -> the current player position
-		Vector3 lastCenterGameCoords; -> the last known in-game "room center"
-		Vector3 hmdCenterPos; -> the last known center position
-
-		Vector3 hmdVirtualOffset; -> the offset applied to the headset position to make up for the game moving the body to catch up to the head
-		*/
-		//HMDPos
-
-
-
-		axes1D[0] = moveX;
-		axes1D[1] = moveY;
-	}
-
 	//Looking
 	axes1D[2] = RThumbstick.x;
 	axes1D[3] = RThumbstick.y;
+
+	//Movement
+	axes1D[0] = LThumbstick.x;
+	axes1D[1] = LThumbstick.y;
+
+	//Extra movement tweaks
+	if (pastFirstFrame) {
+		bool enableNonStationary = Game::instance.c_NonstationaryBoundary->Value();
+
+		bool mouseVisible = Helpers::IsMouseVisible();
+
+		CutsceneData* cutscene = Helpers::GetCutsceneData();
+
+		if (cutscene->bInCutscene)
+		{
+			//Can't move during a cutscene
+			movingBody = false;
+
+			if (enableNonStationary) {
+				hmdCenterPos = HMDPos;
+				lastCenterGameCoords = Vector3(playerCoords.x, playerCoords.y, playerCoords.z - 0.62f);
+			}
+		}
+		else if (usingVirtualLocomotion) {
+			//Movement via thumbstick takes priority always
+			
+			if (enableNonStationary) {
+				hmdCenterPos = HMDPos;
+				lastCenterGameCoords = Vector3(playerCoords.x, playerCoords.y, playerCoords.z - 0.62f);
+			}
+
+			movingBody = false;
+		}
+		else if (enableNonStationary && !mouseVisible) {
+			//Try to determine if the player is going to move based on 6DOF head position, and which way they will move	
+			float moveX = 0.0f;
+			float moveY = 0.0f;
+
+			// Thanks to code by Luboš of TeamBeef and WinlatorXR!
+			// https://github.com/lvonasek/xash3d-fwgs/blob/bb7e9445534fca9ddfb58e2fe66a4bc6ed35d5ef/engine/common/host_vr.c#L835	
+			float movementScale = 0.225f; //Player moves about 2 to 2.25 units per second according to Google
+			float pMoveThreshold = 0.05f;
+
+			if (movingBody) {
+				Vector2 playerDiff = Vector2((playerCoords.x - lastPlayerCoords.x) / movementScale, (playerCoords.y - lastPlayerCoords.y) / movementScale);
+				float lerp = sqrt(powf(playerDiff.x, 2.0f) + powf(playerDiff.y, 2.0f));
+				Vector3 tryOffset = Helpers::Lerp(hmdVirtualOffset, HMDPos, lerp);
+				hmdVirtualOffset = Vector3(tryOffset.x, hmdVirtualOffset.y, tryOffset.z);
+
+				centerUpdateCounter += 1;
+
+				int walkScale = 3; //(int)
+				float confScale = Game::instance.c_NonstationaryWalkScale->Value();
+
+				walkScale = static_cast<int>(floor(confScale));
+
+				if (centerUpdateCounter > (64 * walkScale)) {
+					hmdCenterPos = lastHMDPos;
+					lastCenterGameCoords = Vector3(lastPlayerCoords.x, lastPlayerCoords.y, lastPlayerCoords.z - 0.62f);
+					centerUpdateCounter -= (64 * walkScale);
+				}
+			}
+			else {
+				centerUpdateCounter = 0;
+			}
+
+			float realYaw = 0;
+
+			Vector4 q = Vector4(HMDQuat.x, HMDQuat.y, -HMDQuat.z, HMDQuat.w);
+
+			Vector4 rollInversion = Vector4(0.0f, 0.0f, 1.0f, 0.0f); // Quaternion for 180-degree rotation around Z-axis
+			q = QuaternionMultiply(q, rollInversion);
+
+			//atan2(2.0f * (q.w * q.y - q.z * q.x), 1.0f - 2.0f * (q.y * q.y + q.z * q.z));
+
+			float hm_dx = HMDPos.x - hmdCenterPos.x;
+			float hm_dz = HMDPos.z - hmdCenterPos.z;
+			float p_dist = 0;
+
+			if (hm_dx * hm_dx + hm_dz * hm_dz != 0) {
+				p_dist = sqrt(hm_dx * hm_dx + hm_dz * hm_dz);
+			}
+
+			float offsetRight = hm_dx * cos(realYaw) - hm_dz * sin(realYaw);
+			float offsetForward = hm_dz * cos(realYaw) + hm_dx * sin(realYaw);
+
+			if (wasUsingVirtualLocomotion || (abs(lastCenterGameCoords.x) < 0.5f && abs(lastCenterGameCoords.y) < 0.5f && abs(lastCenterGameCoords.z < 0.5f))) {
+				Recentre();
+			}
+
+			if (p_dist > pMoveThreshold) {
+				//We're moving the body to catch up to the head
+				Vector3 lookHMD = GetHMDTransform().getLeftAxis();
+				Vector3 lookGame = Game::instance.bDetectedChimera ? Game::instance.LastLookDir : Helpers::GetCamera().lookDir;
+				float yawHMD = atan2(lookHMD.y, lookHMD.x);
+				float yawGame = atan2(lookGame.y, lookGame.x);
+
+				float yaw = yawHMD - yawGame;
+
+				float dx = offsetRight / movementScale; //hm_dx / movementScale;
+				float dy = -offsetForward / movementScale; //-hm_dz / movementScale;
+
+				moveX = dx * cos(yaw) - dy * sin(yaw);
+				moveY = dx * sin(yaw) + dy * cos(yaw);
+				moveX *= movementScale;
+				moveY *= movementScale;
+				movingBody = true;
+			}
+			else if (movingBody) {
+				movingBody = false;
+			}
+
+			axes1D[0] = moveX;
+			axes1D[1] = moveY;
+		}
+
+		wasUsingVirtualLocomotion = usingVirtualLocomotion;
+		lastPlayerCoords = playerCoords;
+		lastHMDPos = HMDPos;
+	}
+
+	pastFirstFrame = true;
 }
 
 void WinXrApi::Recentre()
 {
-	//SetLocationOffset(GetHMDTransform(true) * Vector3(0.0f, 0.0f, 0.0f));
 	SetLocationOffset(Vector3(0.0f, 0.0f, 0.0f));
-	hmdVirtualOffset = Vector3(0.0f, 0.0f, 0.0f);
-
+	Vector3 hmdPosWithOffset = (GetHMDTransform() * Vector3(0, 0, 0));
+	hmdVirtualOffset = HMDPos;
 	hmdCenterPos = HMDPos;
 
-	lastCenterGameCoords = Helpers::GetCamera().position;
-	lastCenterGameCoords.z -= 0.62f;
-
-	playerCoords = Helpers::GetCamera().position;
-	lastPlayerCoords = playerCoords;
-
-	//hmdVirtualOffset = Vector3(HMDPos.x, HMDPos.y, HMDPos.z);
+	lastCenterGameCoords = Vector3(playerCoords.x + hmdPosWithOffset.x, playerCoords.y + hmdPosWithOffset.z, playerCoords.z - 0.62f);
 }
 
 void WinXrApi::SetLocationOffset(Vector3 newOffset)
@@ -955,6 +1060,9 @@ void WinXrApi::PreDrawFrame(struct Renderer* renderer, float deltaTime)
 
 	if (cutscene->bInCutscene || Helpers::IsMouseVisible())
 	{
+		//Seems a good spot to snapshot playerCoords
+		playerCoords = Helpers::GetCamera().position;
+
 		Matrix4 overlayTransform;
 
 		Vector3 targetPos = GetHMDTransform(true).getLeftAxis() * Game::instance.WorldToMetres(8.0f); //GetHMDTransform(true).getAngle().normalize() * Game::instance.WorldToMetres(3.0f);
@@ -985,6 +1093,7 @@ void WinXrApi::PreDrawFrame(struct Renderer* renderer, float deltaTime)
 	}
 	else {
 		Vector3 camPos = Helpers::GetCamera().position;
+		playerCoords = camPos;
 
 		Vector3 pos = Helpers::GetCamera().position + Helpers::GetCamera().lookDir * Game::instance.MetresToWorld(3.0f);
 

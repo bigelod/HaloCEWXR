@@ -180,16 +180,22 @@ protected:
 	bool bMoveHand = true;
 
 	float hmdMoveThreshold = 0.3f;
-	Vector3 lastPlayerCoords;
 	Vector3 playerCoords;
-	Vector3 lastCenterGameCoords;
 	Vector3 hmdCenterPos;
-	bool usingVirtualLocomotion = false;
 
+	Vector3 lastHMDPos;
+	Vector3 lastPlayerCoords;
+	Vector3 lastCenterGameCoords;
+	int centerUpdateCounter = 0;
 	Vector3 hmdVirtualOffset;
+
+	bool pastFirstFrame = false;
 
 	Vector3 mainHandOffset;
 	Vector3 mainHandRot;
+	bool usingVirtualLocomotion = false;
+	bool wasUsingVirtualLocomotion = false;
+	bool movingBody = false;
 
 	bool bKeyboardActive = false;
 	std::string keyboardBuffer;

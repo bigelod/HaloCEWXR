@@ -246,6 +246,7 @@ public:
 	FloatProperty* c_TEMPViewportBottom = nullptr;
 	FloatProperty* c_MeleeSwingVelocitySensitivity = nullptr;
 	BoolProperty* c_NonstationaryBoundary = nullptr;
+	FloatProperty* c_NonstationaryWalkScale = nullptr;
 	BoolProperty* c_EnableButtonMelee = nullptr;
 	BoolProperty* c_EnableHaptics = nullptr;
 	BoolProperty* c_DisableThumbstickMovement = nullptr;
@@ -261,6 +262,6 @@ public:
 	FloatProperty* c_PlasmaCannonHapticStrength = nullptr;
 	FloatProperty* c_NeedlerHapticStrength = nullptr;
 	FloatProperty* c_FuelRodHapticStrength = nullptr;
-	FloatProperty* c_UnknownHapticStrength = nullptr;
+	//FloatProperty* c_UnknownHapticStrength = nullptr;
 };
 

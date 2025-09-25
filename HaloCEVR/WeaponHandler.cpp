@@ -594,7 +594,7 @@ void WeaponHandler::UpdateCache(HaloID& id, AssetData_ModelAnimations* animation
 	else
 	{
 		cachedViewModel.weaponType = WeaponType::Unknown;
-		vibrationStrength = Game::instance.c_UnknownHapticStrength->Value();
+		vibrationStrength = 0.8f; //Game::instance.c_UnknownHapticStrength->Value();
 		Logger::log << "[UpdateCache] Unknown weapon with asset " << weapon->WeaponAsset << std::endl;
 	}
 

@@ -78,15 +78,17 @@ NOTE: If you start this on a PC or other device and it doesn't get past the load
 * Investigate why the UI flys down-right off screen on the title screen over time
 * Fix sniper scope not appearing
 * Fix the DLL injection failing on actual WinlatorXR container on Quest/Pic with Release versions of the DLL (Debug working)
-* Rumble support
-* Melee via physical gesture (new implementation based on positional data only)
-* Campaign is 100% playable tested on device
+* Rumble support with adjustable haptics
+* Melee via physical gesture (new implementation based on positional data only, adjustable sensitivity)
+* Campaign is 100% playable (tested on device)
+* New recentre code that syncs up the player relative to the game itself (not stuck tethered to real device tracking data)
+* Support for moving freely without a boundary (virtual body move to catch up to HMD movements), with scalable walking IRL vs movement in-game, disabled by default
+* Ability to disable thumbstick move (automatically enables the above boundless mode)
+* Ability to disable thumbstick turn entirely
 
 
 # Stretch-Goal(s) / Unlikely Bonus Features:
 
-* New recentre code
-* Support for moving freely without a boundary (virtual body move to catch up to HMD movements)
 * Restore the mirror window or show that instead of the main game window, and enable SBS with it via creation of the /sbs file (for true 3D depth)
 * Support left/right hand flipping for the movement and turn sticks
 

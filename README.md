@@ -92,6 +92,10 @@ NOTE: If you start this on a PC or other device and it doesn't get past the load
 * Restore the mirror window or show that instead of the main game window, and enable SBS with it via creation of the /sbs file (for true 3D depth)
 * Support left/right hand flipping for the movement and turn sticks
 
+# Known Bugs
+
+* HUD UI glitches out temporarily when a cutscene ends and/or getting out of vehicles
+
 
 # WinlatorXR Controls:
 

@@ -168,6 +168,56 @@ void WinXrApi::Init()
 		catch (const std::exception& e) {
 			Logger::log << "[WinXrApi] Error writing test VR file: " << e.what() << std::endl;
 		}
+
+		dirPath = fallbackDir;
+	}
+
+	std::filesystem::path sysinfoPath = dirPath / "system";
+
+	if (std::filesystem::exists(dirPath) && std::filesystem::is_directory(dirPath)) {
+		if (std::filesystem::exists(sysinfoPath) && std::filesystem::is_regular_file(sysinfoPath)) {
+			try {
+				std::ifstream sysInfoFile(sysinfoPath);
+
+				std::string hmdMakeStr;
+				std::string hmdModelStr;
+
+				if (sysInfoFile.is_open()) {
+					std::getline(sysInfoFile, hmdMakeStr);
+					std::getline(sysInfoFile, hmdModelStr);
+					sysInfoFile.close();
+				}
+
+				hmdMake = hmdMakeStr;
+				hmdModel = hmdModelStr;
+			}
+			catch (const std::filesystem::filesystem_error& e) {
+
+			}
+			catch (const std::exception& e) {
+
+			}
+		}
+	}
+
+	if (hmdMake.empty()) {
+		hmdMake = "META";
+	}
+	else if (hmdMake == "OCULUS") {
+		hmdMake = "META";
+	}
+
+	if (hmdModel.empty()) {
+		hmdModel = "QUEST 3";
+	}
+	else if (hmdModel == "EUREKA" || hmdModel == "PANTHER") {
+		hmdModel = "QUEST 3";
+	}
+	else if (hmdMake == "META") {
+		//SEACLIFF - Quest Pro - Untested, assuming hands upside down
+		//HOLLYWOOD - Quest 2 - Works! Hands upside down, performance is OK
+		//MONTEREY - Quest 1 - Untested, unsupported
+		hmdModel = "QUEST 2";
 	}
 
 	Logger::log << "[WinXrApi] starting UDP listener ..." << std::endl;
@@ -305,7 +355,6 @@ void WinXrApi::UpdatePoses()
 		std::vector<float> floats(28);
 		int openXRFrameID;
 		std::string buttonString;
-		std::string hmdString;
 
 		std::locale c_locale("C");
 		iss.imbue(c_locale);
@@ -319,7 +368,7 @@ void WinXrApi::UpdatePoses()
 		}
 
 		// Parse integer value and last string
-		iss >> openXRFrameID >> buttonString >> hmdString;
+		iss >> openXRFrameID >> buttonString; //>> hmdString;
 
 		Game::instance.OpenXRFrameID = openXRFrameID;
 
@@ -419,15 +468,8 @@ void WinXrApi::UpdatePoses()
 			R_ThumbDown = false;
 		}
 
-		if (hmdString.empty()) {
-			hmdString = "META";
-		}
-		else {
-			if (hmdString == "pico" || hmdString == "Pico") hmdString = "PICO";
-		}
-
-		//For now only PICO will get an upside down hands fix
-		if (hmdString == "PICO") {
+		//PICO and Quest 2 are both tested to need the hand orientation flipped, assume the same for Quest Pro for now
+		if (hmdMake == "PICO" || hmdModel == "QUEST 2") {
 			UpsideDownHandsFix = true;
 		}
 		else {

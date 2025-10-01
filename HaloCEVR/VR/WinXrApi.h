@@ -207,5 +207,8 @@ protected:
 	Vector3 prevRHandPos[5];
 	int lastPosFrame = 0;
 	int maxPosBuffer = 1;
+
+	std::string hmdMake;
+	std::string hmdModel;
 };
 

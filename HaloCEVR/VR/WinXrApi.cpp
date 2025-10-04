@@ -215,7 +215,7 @@ void WinXrApi::Init()
 	}
 	else if (hmdMake == "META") {
 		//SEACLIFF - Quest Pro - Untested, assuming hands upside down
-		//HOLLYWOOD - Quest 2 - Works! Hands upside down, performance is OK
+		//HOLLYWOOD - Quest 2 - Works! Hands upside down, performance is OK (better with Turnip driver)
 		//MONTEREY - Quest 1 - Untested, unsupported
 		hmdModel = "QUEST 2";
 	}
@@ -442,8 +442,8 @@ void WinXrApi::UpdatePoses()
 		HMDPos = Vector3(floats[22], floats[23], floats[24]);
 
 		IPDVal = floats[25];
-		FOVH = (floats[26] + 30.0f) * 0.80f;
-		FOVV = (floats[27] - 20.0f) * 0.80f;
+		FOVH = (floats[26] + 30.0f);// *0.80f;
+		FOVV = (floats[27] - 20.0f);// *0.80f;
 
 		FOVTotal = FOVH / FOVV;
 

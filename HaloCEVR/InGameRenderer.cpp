@@ -512,12 +512,23 @@ void InGameRenderer::DrawRenderTargets(IDirect3DDevice9* pDevice)
 
 			int adjustedVal = ((int)pow(OpenXRFrameIDFloat, 1.0 / 2.2) * 255);
 
+			//Red pixel square
 			VertexData2D oxrVerts[4] = {
 				{ 0.0f,   0.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,OpenXRFrameID, 0, 0) }, // Top-left
 				{ 10.0f,  0.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,OpenXRFrameID, 0, 0) }, // Top-right
 				{ 10.0f, 10.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,OpenXRFrameID, 0, 0) }, // Bottom-right
 				{ 0.0f,  10.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,OpenXRFrameID, 0, 0) }  // Bottom-left
 			};
+
+			/*
+			//Blue pixel (solid/255) square TEST
+			VertexData2D oxrVerts[4] = {
+				{ 0.0f,   0.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,0, 0, 255) }, // Top-left
+				{ 10.0f,  0.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,0, 0, 255) }, // Top-right
+				{ 10.0f, 10.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,0, 0, 255) }, // Bottom-right
+				{ 0.0f,  10.0f, 0.0f, 1.0f, D3DCOLOR_ARGB(255,0, 0, 255) }  // Bottom-left
+			};
+			*/
 
 			// Draw the rectangle using DrawPrimitiveUP
 			pDevice->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, oxrVerts, sizeof(VertexData2D));

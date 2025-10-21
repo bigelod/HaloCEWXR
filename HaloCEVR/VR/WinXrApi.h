@@ -210,5 +210,10 @@ protected:
 
 	std::string hmdMake;
 	std::string hmdModel;
+
+	float fovVarA = 1.0f;
+	float fovVarB = 0.0f;
+	float fovVarC = 1.0f;
+	float fovVarD = 0.0f;
 };
 

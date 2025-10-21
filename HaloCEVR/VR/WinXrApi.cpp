@@ -117,6 +117,38 @@ void WinXrApi::Init()
 		}
 	}
 
+	//Load FOV offset variables for debug
+	std::filesystem::path fovFile = std::filesystem::current_path() / "VR" / "fov.txt";
+
+	if (std::filesystem::exists(fovFile) && std::filesystem::is_regular_file(fovFile)) {
+		try {
+			std::ifstream fovFilePath(fovFile);
+
+			if (fovFilePath.is_open()) {
+				std::string fovLineAStr;
+				std::string fovLineBStr;
+				std::string fovLineCStr;
+				std::string fovLineDStr;
+				std::getline(fovFilePath, fovLineAStr);
+				std::getline(fovFilePath, fovLineBStr);
+				std::getline(fovFilePath, fovLineCStr);
+				std::getline(fovFilePath, fovLineDStr);
+				fovFilePath.close();
+
+				fovVarA = std::stof(fovLineAStr);
+				fovVarB = std::stof(fovLineBStr);
+				fovVarC = std::stof(fovLineCStr);
+				fovVarD = std::stof(fovLineDStr);
+			}
+		}
+		catch (const std::filesystem::filesystem_error& e) {
+
+		}
+		catch (const std::exception& e) {
+
+		}
+	}
+
 	//Now we initialize VR mode
 	Logger::log << "[WinXrApi] Initialising WinlatorXR VR mode..." << std::endl;
 
@@ -125,6 +157,9 @@ void WinXrApi::Init()
 	std::filesystem::path fallbackDir = "D:/xrtemp";
 	std::filesystem::path filePath = dirPath / "vr";
 	std::filesystem::path fallbackFile = fallbackDir / "vr";
+
+	std::filesystem::path versionPath = dirPath / "version";
+	std::filesystem::path fallbackVersion = fallbackDir / "version";
 
 	if (std::filesystem::exists(tmpPath) && std::filesystem::is_directory(tmpPath)) {
 		if (std::filesystem::exists(dirPath) && std::filesystem::is_directory(dirPath)) {
@@ -138,6 +173,20 @@ void WinXrApi::Init()
 			catch (const std::exception& e) {
 				Logger::log << "[WinXrApi] Error creating tmp/xr directory: " << e.what() << std::endl;
 			}
+		}
+
+		try {
+			std::ofstream verFile(versionPath);
+			if (verFile.is_open()) {
+				verFile << "0.1";
+				verFile.close();
+			}
+			else {
+
+			}
+		}
+		catch (const std::exception& e) {
+			Logger::log << "[WinXrApi] Error writing VERSION file: " << e.what() << std::endl;
 		}
 
 		try {
@@ -155,6 +204,20 @@ void WinXrApi::Init()
 		}
 	}
 	else {
+		try {
+			std::ofstream verFile(fallbackVersion);
+			if (verFile.is_open()) {
+				verFile << "0.1";
+				verFile.close();
+			}
+			else {
+
+			}
+		}
+		catch (const std::exception& e) {
+			Logger::log << "[WinXrApi] Error writing test VERSION file: " << e.what() << std::endl;
+		}
+
 		try {
 			std::ofstream file(fallbackFile);
 			if (file.is_open()) {
@@ -442,8 +505,12 @@ void WinXrApi::UpdatePoses()
 		HMDPos = Vector3(floats[22], floats[23], floats[24]);
 
 		IPDVal = floats[25];
-		FOVH = (floats[26] + 30.0f);// *0.80f;
-		FOVV = (floats[27] - 20.0f);// *0.80f;
+		//FOVH = (floats[26] + 30.0f);// *0.80f;
+		//FOVV = (floats[27] - 20.0f);// *0.80f;
+
+		//Alternate attempt at FOV manipulation
+		FOVH = (fovVarA * floats[26]) + fovVarB;
+		FOVV = (fovVarC * floats[27]) + fovVarD;
 
 		FOVTotal = FOVH / FOVV;
 

@@ -211,6 +211,9 @@ protected:
 	std::string hmdMake;
 	std::string hmdModel;
 
+	//FOV Horizontal and Vertical values adjustments:
+	// FOVH = (fovVarA * xr_FOVH) + fovVarB
+	// FOVV = (fovVarC * xr_FOVV) + fovVarD
 	float fovVarA = 1.0f;
 	float fovVarB = 0.0f;
 	float fovVarC = 1.0f;

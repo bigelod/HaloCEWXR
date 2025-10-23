@@ -50,11 +50,10 @@
             this.chkDisableThumbMove = new System.Windows.Forms.CheckBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.btnMetaQuest3 = new System.Windows.Forms.Button();
-            this.btnPico4 = new System.Windows.Forms.Button();
-            this.btnPico4Eco = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.lblSavedFOV = new System.Windows.Forms.Label();
+            this.btnApplyPreset = new System.Windows.Forms.Button();
+            this.lstFOVPresets = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.tbNonStationaryScale)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tbSwingSens)).BeginInit();
             this.SuspendLayout();
@@ -73,7 +72,7 @@
             // 
             this.lblSaved.AutoSize = true;
             this.lblSaved.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSaved.Location = new System.Drawing.Point(481, 496);
+            this.lblSaved.Location = new System.Drawing.Point(685, 535);
             this.lblSaved.Name = "lblSaved";
             this.lblSaved.Size = new System.Drawing.Size(57, 17);
             this.lblSaved.TabIndex = 1;
@@ -98,9 +97,9 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(550, 468);
+            this.btnSave.Location = new System.Drawing.Point(502, 464);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(192, 72);
+            this.btnSave.Size = new System.Drawing.Size(240, 58);
             this.btnSave.TabIndex = 3;
             this.btnSave.Text = "Save Settings";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -281,36 +280,6 @@
             this.label9.TabIndex = 19;
             this.label9.Text = "FOV Presets:";
             // 
-            // btnMetaQuest3
-            // 
-            this.btnMetaQuest3.Location = new System.Drawing.Point(65, 108);
-            this.btnMetaQuest3.Name = "btnMetaQuest3";
-            this.btnMetaQuest3.Size = new System.Drawing.Size(192, 72);
-            this.btnMetaQuest3.TabIndex = 20;
-            this.btnMetaQuest3.Text = "Meta Quest 3 / 3S";
-            this.btnMetaQuest3.UseVisualStyleBackColor = true;
-            this.btnMetaQuest3.Click += new System.EventHandler(this.btnMetaQuest3_Click);
-            // 
-            // btnPico4
-            // 
-            this.btnPico4.Location = new System.Drawing.Point(292, 108);
-            this.btnPico4.Name = "btnPico4";
-            this.btnPico4.Size = new System.Drawing.Size(192, 72);
-            this.btnPico4.TabIndex = 21;
-            this.btnPico4.Text = "Pico 4 Ultra";
-            this.btnPico4.UseVisualStyleBackColor = true;
-            this.btnPico4.Click += new System.EventHandler(this.btnPico4_Click);
-            // 
-            // btnPico4Eco
-            // 
-            this.btnPico4Eco.Location = new System.Drawing.Point(518, 108);
-            this.btnPico4Eco.Name = "btnPico4Eco";
-            this.btnPico4Eco.Size = new System.Drawing.Size(192, 72);
-            this.btnPico4Eco.TabIndex = 22;
-            this.btnPico4Eco.Text = "Pico 4 Ultra (Power Saving Mode)";
-            this.btnPico4Eco.UseVisualStyleBackColor = true;
-            this.btnPico4Eco.Click += new System.EventHandler(this.btnPico4Eco_Click);
-            // 
             // label10
             // 
             this.label10.AutoSize = true;
@@ -325,23 +294,42 @@
             // 
             this.lblSavedFOV.AutoSize = true;
             this.lblSavedFOV.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSavedFOV.Location = new System.Drawing.Point(653, 198);
+            this.lblSavedFOV.Location = new System.Drawing.Point(685, 197);
             this.lblSavedFOV.Name = "lblSavedFOV";
             this.lblSavedFOV.Size = new System.Drawing.Size(57, 17);
             this.lblSavedFOV.TabIndex = 24;
             this.lblSavedFOV.Text = "Saved!";
             this.lblSavedFOV.Visible = false;
             // 
+            // btnApplyPreset
+            // 
+            this.btnApplyPreset.Location = new System.Drawing.Point(502, 130);
+            this.btnApplyPreset.Name = "btnApplyPreset";
+            this.btnApplyPreset.Size = new System.Drawing.Size(240, 58);
+            this.btnApplyPreset.TabIndex = 25;
+            this.btnApplyPreset.Text = "Apply Preset FOV";
+            this.btnApplyPreset.UseVisualStyleBackColor = true;
+            this.btnApplyPreset.Click += new System.EventHandler(this.btnApplyPreset_Click);
+            // 
+            // lstFOVPresets
+            // 
+            this.lstFOVPresets.FormattingEnabled = true;
+            this.lstFOVPresets.Location = new System.Drawing.Point(161, 67);
+            this.lstFOVPresets.Name = "lstFOVPresets";
+            this.lstFOVPresets.ScrollAlwaysVisible = true;
+            this.lstFOVPresets.Size = new System.Drawing.Size(316, 121);
+            this.lstFOVPresets.TabIndex = 26;
+            this.lstFOVPresets.SelectedIndexChanged += new System.EventHandler(this.lstFOVPresets_SelectedIndexChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.lstFOVPresets);
+            this.Controls.Add(this.btnApplyPreset);
             this.Controls.Add(this.lblSavedFOV);
             this.Controls.Add(this.label10);
-            this.Controls.Add(this.btnPico4Eco);
-            this.Controls.Add(this.btnPico4);
-            this.Controls.Add(this.btnMetaQuest3);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.chkDisableThumbMove);
             this.Controls.Add(this.label8);
@@ -397,11 +385,10 @@
         private System.Windows.Forms.CheckBox chkDisableThumbMove;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.Button btnMetaQuest3;
-        private System.Windows.Forms.Button btnPico4;
-        private System.Windows.Forms.Button btnPico4Eco;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label lblSavedFOV;
+        private System.Windows.Forms.Button btnApplyPreset;
+        private System.Windows.Forms.ListBox lstFOVPresets;
     }
 }
 

@@ -3,18 +3,31 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Reflection;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.IO;
 
 namespace HWXR_ConfEdit
 {
     public partial class Form1 : Form
     {
+        //Quick-And-Dirty HWXR Conf Tool with web loaded FOV preset values
+        List<string> fovPresets = new List<string>();
+        List<string> fovVarAs = new List<string>();
+        List<string> fovVarBs = new List<string>();
+        List<string> fovVarCs = new List<string>();
+        List<string> fovVarDs = new List<string>();
+
         string fovFile = "fov.txt";
         string confFile = "config.txt";
+
+        string fovPresetURL = "https://raw.githubusercontent.com/bigelod/HaloCEWXR/refs/heads/master/Tools/ConfTool/HWXR_ConfEdit/fov_presets.txt";
 
         public Form1()
         {
@@ -35,7 +48,61 @@ namespace HWXR_ConfEdit
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            bool backupMethod = false;
 
+            string rawText = "";
+
+            try
+            {
+                using (var webClient = new WebClient())
+                {
+                    rawText = webClient.DownloadString(fovPresetURL).Replace("\n", System.Environment.NewLine);
+                }
+            }
+            catch
+            {
+                backupMethod = true;
+                fovPresets = new List<string>();
+            }
+
+            if (backupMethod)
+            {
+                if (Properties.Resources.fov_presets == null || Properties.Resources.fov_presets == "")
+                {
+                    //Hard code one in case of total failure
+                    rawText = "";
+                    fovPresets.Add("Generic,1.0,0,1.0,0");
+                }
+                else
+                {
+                    rawText = Properties.Resources.fov_presets;
+                }
+            }
+
+            if (rawText != null && rawText != "")
+            {
+                foreach (string line in rawText.Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
+                {
+                    if (line.Contains(","))
+                    {
+                        fovPresets.Add(line);
+                    }
+                }
+            }
+
+            foreach (string str in fovPresets)
+            {
+                string[] parts = str.Split(',');
+
+                if (parts.Length >= 5)
+                {
+                    lstFOVPresets.Items.Add(parts[0]);
+                    fovVarAs.Add(parts[1]);
+                    fovVarBs.Add(parts[2]);
+                    fovVarCs.Add(parts[3]);
+                    fovVarDs.Add(parts[4]);
+                }
+            }
         }
 
         private void EditConfFile(string findLineText, string newValue)
@@ -174,21 +241,6 @@ namespace HWXR_ConfEdit
             }
         }
 
-        private void btnMetaQuest3_Click(object sender, EventArgs e)
-        {
-            WriteFOVValues("1.8", "0", "1.0", "0");
-        }
-
-        private void btnPico4_Click(object sender, EventArgs e)
-        {
-            WriteFOVValues("1.8", "0", "1.0", "0");
-        }
-
-        private void btnPico4Eco_Click(object sender, EventArgs e)
-        {
-            WriteFOVValues("1.2", "30", "0.8", "10");
-        }
-
         private void WriteFOVValues(string valA, string valB, string valC, string valD)
         {
             try
@@ -220,6 +272,24 @@ namespace HWXR_ConfEdit
             catch
             {
 
+            }
+        }
+
+        private void lstFOVPresets_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnApplyPreset_Click(object sender, EventArgs e)
+        {
+            int index = lstFOVPresets.SelectedIndex;
+
+            if (index > -1)
+            {
+                if (fovPresets.Count > index)
+                {
+                    WriteFOVValues(fovVarAs[index], fovVarBs[index], fovVarCs[index], fovVarDs[index]);
+                }
             }
         }
     }

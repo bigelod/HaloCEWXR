@@ -14,7 +14,9 @@ Code added or modified from the parent project in this fork/port to WinlatorXR's
 
 Thanks to LivingFray for the awesome open source Halo CE VR mod
 
-Additional thanks to these contributors to the LivingFray Halo CE VR mod: 97saundersj, slipperfish, codyherzog, HaMM4R, teddybear082, kyanite-rock, s-ilent, TheKrisSodroski
+Additional thanks to these contributors to the LivingFray Halo CE VR mod:
+
+97saundersj, slipperfish, codyherzog, HaMM4R, teddybear082, kyanite-rock, s-ilent, TheKrisSodroski
 
 Thanks to Luboš for his work on [WinlatorXR](https://github.com/lvonasek/WinlatorXR) and everyone else who had contributed to portable PC gaming via Winlator
 

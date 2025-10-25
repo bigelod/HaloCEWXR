@@ -19,6 +19,7 @@ namespace HWXR_ConfEdit
     {
         //Quick-And-Dirty HWXR Conf Tool with web loaded FOV preset values
         List<string> fovPresets = new List<string>();
+        List<string> fovNames = new List<string>();
         List<string> fovVarAs = new List<string>();
         List<string> fovVarBs = new List<string>();
         List<string> fovVarCs = new List<string>();
@@ -97,12 +98,15 @@ namespace HWXR_ConfEdit
                 if (parts.Length >= 5)
                 {
                     lstFOVPresets.Items.Add(parts[0]);
+                    fovNames.Add(parts[0]);
                     fovVarAs.Add(parts[1]);
                     fovVarBs.Add(parts[2]);
                     fovVarCs.Add(parts[3]);
                     fovVarDs.Add(parts[4]);
                 }
             }
+
+            if (lstFOVPresets.Items.Count > 0) lstFOVPresets.SelectedIndex = 0;
         }
 
         private void EditConfFile(string findLineText, string newValue)
@@ -277,7 +281,19 @@ namespace HWXR_ConfEdit
 
         private void lstFOVPresets_SelectedIndexChanged(object sender, EventArgs e)
         {
+            int index = lstFOVPresets.SelectedIndex;
 
+            lblPresetName.Text = "";
+            lblPresetValues.Text = "";
+
+            if (index > -1)
+            {
+                if (fovPresets.Count > index)
+                {
+                    lblPresetName.Text = fovNames[index];
+                    lblPresetValues.Text = "A: " + fovVarAs[index] + " B: " + fovVarBs[index] + " C: " + fovVarCs[index] + " D: " + fovVarDs[index];
+                }
+            }
         }
 
         private void btnApplyPreset_Click(object sender, EventArgs e)
@@ -291,6 +307,31 @@ namespace HWXR_ConfEdit
                     WriteFOVValues(fovVarAs[index], fovVarBs[index], fovVarCs[index], fovVarDs[index]);
                 }
             }
+        }
+
+        private void btnSaveCustomFOV_Click(object sender, EventArgs e)
+        {
+            WriteFOVValues(varA.Value.ToString(), varB.Value.ToString(), varC.Value.ToString(), varD.Value.ToString());
+        }
+
+        private void varA_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void varC_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void varB_ValueChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void varD_ValueChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

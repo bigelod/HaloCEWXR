@@ -61,10 +61,7 @@ namespace HWXR_ConfEdit.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Quest 3 / 3S,1.75,30,1.0,20
-        ///Pico 4 Ultra,1.8,0,1.0,0
-        ///Pico 4 Ultra (Power Saving Mode),1.2,30,0.8,10
-        ///Generic,1.0,0,1.0,0
+        ///   Looks up a localized string similar to Generic,1.0,0,1.0,0
         ///.
         /// </summary>
         internal static string fov_presets {

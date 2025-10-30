@@ -319,7 +319,7 @@
             // 
             // btnApplyPreset
             // 
-            this.btnApplyPreset.Location = new System.Drawing.Point(502, 130);
+            this.btnApplyPreset.Location = new System.Drawing.Point(502, 143);
             this.btnApplyPreset.Name = "btnApplyPreset";
             this.btnApplyPreset.Size = new System.Drawing.Size(240, 58);
             this.btnApplyPreset.TabIndex = 25;
@@ -330,16 +330,16 @@
             // lstFOVPresets
             // 
             this.lstFOVPresets.FormattingEnabled = true;
-            this.lstFOVPresets.Location = new System.Drawing.Point(166, 67);
+            this.lstFOVPresets.Location = new System.Drawing.Point(137, 106);
             this.lstFOVPresets.Name = "lstFOVPresets";
             this.lstFOVPresets.ScrollAlwaysVisible = true;
-            this.lstFOVPresets.Size = new System.Drawing.Size(311, 121);
+            this.lstFOVPresets.Size = new System.Drawing.Size(340, 95);
             this.lstFOVPresets.TabIndex = 26;
             this.lstFOVPresets.SelectedIndexChanged += new System.EventHandler(this.lstFOVPresets_SelectedIndexChanged);
             // 
             // btnSaveCustomFOV
             // 
-            this.btnSaveCustomFOV.Location = new System.Drawing.Point(502, 201);
+            this.btnSaveCustomFOV.Location = new System.Drawing.Point(502, 207);
             this.btnSaveCustomFOV.Name = "btnSaveCustomFOV";
             this.btnSaveCustomFOV.Size = new System.Drawing.Size(240, 58);
             this.btnSaveCustomFOV.TabIndex = 27;
@@ -351,7 +351,7 @@
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(163, 211);
+            this.label11.Location = new System.Drawing.Point(163, 217);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(143, 39);
             this.label11.TabIndex = 28;
@@ -359,29 +359,29 @@
             // 
             // lblPresetValues
             // 
-            this.lblPresetValues.AutoSize = true;
             this.lblPresetValues.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPresetValues.Location = new System.Drawing.Point(499, 93);
+            this.lblPresetValues.Location = new System.Drawing.Point(502, 106);
             this.lblPresetValues.Name = "lblPresetValues";
-            this.lblPresetValues.Size = new System.Drawing.Size(196, 17);
+            this.lblPresetValues.Size = new System.Drawing.Size(240, 34);
             this.lblPresetValues.TabIndex = 29;
             this.lblPresetValues.Text = "A: 1.0 B: 0.0 C: 1.0 D: 0.0";
+            this.lblPresetValues.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // lblPresetName
             // 
-            this.lblPresetName.AutoSize = true;
             this.lblPresetName.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPresetName.Location = new System.Drawing.Point(499, 67);
+            this.lblPresetName.Location = new System.Drawing.Point(166, 67);
             this.lblPresetName.Name = "lblPresetName";
-            this.lblPresetName.Size = new System.Drawing.Size(117, 17);
+            this.lblPresetName.Size = new System.Drawing.Size(576, 26);
             this.lblPresetName.TabIndex = 30;
             this.lblPresetName.Text = "PRESET NAME";
+            this.lblPresetName.TextAlign = System.Drawing.ContentAlignment.BottomRight;
             // 
             // label12
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(315, 208);
+            this.label12.Location = new System.Drawing.Point(315, 214);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(23, 17);
             this.label12.TabIndex = 31;
@@ -391,7 +391,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(399, 208);
+            this.label13.Location = new System.Drawing.Point(399, 214);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(23, 17);
             this.label13.TabIndex = 32;
@@ -400,7 +400,7 @@
             // varA
             // 
             this.varA.DecimalPlaces = 2;
-            this.varA.Location = new System.Drawing.Point(344, 208);
+            this.varA.Location = new System.Drawing.Point(344, 214);
             this.varA.Maximum = new decimal(new int[] {
             3,
             0,
@@ -423,7 +423,7 @@
             // 
             // varB
             // 
-            this.varB.Location = new System.Drawing.Point(428, 208);
+            this.varB.Location = new System.Drawing.Point(428, 214);
             this.varB.Maximum = new decimal(new int[] {
             150,
             0,
@@ -442,7 +442,7 @@
             // varC
             // 
             this.varC.DecimalPlaces = 2;
-            this.varC.Location = new System.Drawing.Point(344, 234);
+            this.varC.Location = new System.Drawing.Point(344, 240);
             this.varC.Maximum = new decimal(new int[] {
             3,
             0,
@@ -467,7 +467,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label14.Location = new System.Drawing.Point(315, 234);
+            this.label14.Location = new System.Drawing.Point(315, 240);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(23, 17);
             this.label14.TabIndex = 35;
@@ -475,7 +475,7 @@
             // 
             // varD
             // 
-            this.varD.Location = new System.Drawing.Point(428, 234);
+            this.varD.Location = new System.Drawing.Point(428, 240);
             this.varD.Maximum = new decimal(new int[] {
             150,
             0,
@@ -495,7 +495,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(399, 234);
+            this.label15.Location = new System.Drawing.Point(399, 240);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(24, 17);
             this.label15.TabIndex = 37;

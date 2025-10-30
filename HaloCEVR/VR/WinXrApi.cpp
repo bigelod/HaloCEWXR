@@ -207,7 +207,7 @@ void WinXrApi::Init()
 		try {
 			std::ofstream verFile(fallbackVersion);
 			if (verFile.is_open()) {
-				verFile << "0.1";
+				verFile << "0.2";
 				verFile.close();
 			}
 			else {
@@ -278,7 +278,7 @@ void WinXrApi::Init()
 	}
 	else if (hmdMake == "META") {
 		//SEACLIFF - Quest Pro - Untested, assuming hands upside down
-		//HOLLYWOOD - Quest 2 - Works! Hands upside down, performance is OK (better with Turnip driver)
+		//HOLLYWOOD - Quest 2 - Works! Hands upside down, performance is OK (much better with Turnip driver)
 		//MONTEREY - Quest 1 - Untested, unsupported
 		hmdModel = "QUEST 2";
 	}
@@ -395,8 +395,14 @@ void WinXrApi::Shutdown()
 void WinXrApi::SendHapticVibration(float lControllerStrength, float rControllerStrength) {
 	bool sendHaptics = Game::instance.c_EnableHaptics->Value();
 
-	if (udpReader && sendHaptics) {
-		udpReader->SendData(std::to_string(lControllerStrength) + " " + std::to_string(rControllerStrength));
+	if (udpReader) {
+		//As of version 0.2 now we send a bit of extra UDP data always (LVibration, RVibration, VR mode, SBS, target FOV W, target FOV H), WinlatorXR does the rest
+		if (sendHaptics) {
+			udpReader->SendData(std::to_string(lControllerStrength) + " " + std::to_string(rControllerStrength) + " 1 0 114.4 114.4");
+		}
+		else {
+			udpReader->SendData("0 0 1 0 114.4 114.4");
+		}
 	}
 }
 
@@ -411,7 +417,7 @@ void WinXrApi::UpdatePoses()
 
 		//Example return data:
 		//[Game] WinXrApi Getting Data...
-		//client0 0.213 0.287 -0.933 0.035 0.0 0.0 -0.008 -0.229 -0.173 0.095 -0.296 0.947 -0.077 0.0 0.0 0.154 -0.240 -0.140 0.146 -0.072 0.048 0.985 0.037 0.006 -0.017 0.0678 99.00 103.40 224 TFFFFFFFFFTTTFFFFFT META
+		//client0 0.213 0.287 -0.933 0.035 0.0 0.0 -0.008 -0.229 -0.173 0.095 -0.296 0.947 -0.077 0.0 0.0 0.154 -0.240 -0.140 0.146 -0.072 0.048 0.985 0.037 0.006 -0.017 0.0678 99.00 103.40 224 TFFFFFFFFFTTTFFFFFT
 
 		std::istringstream iss(txt);
 		std::string client;

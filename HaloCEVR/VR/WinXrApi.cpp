@@ -129,16 +129,31 @@ void WinXrApi::Init()
 				std::string fovLineBStr;
 				std::string fovLineCStr;
 				std::string fovLineDStr;
+				std::string fovLineEStr;
+				std::string fovLineFStr;
+
 				std::getline(fovFilePath, fovLineAStr);
 				std::getline(fovFilePath, fovLineBStr);
 				std::getline(fovFilePath, fovLineCStr);
 				std::getline(fovFilePath, fovLineDStr);
+
+				if (!fovFilePath.eof()) {
+					std::getline(fovFilePath, fovLineEStr);
+					std::getline(fovFilePath, fovLineFStr);
+				}
+				else {
+					fovLineEStr = "104.5";
+					fovLineFStr = "104.5";
+				}
+
 				fovFilePath.close();
 
 				fovVarA = std::stof(fovLineAStr);
 				fovVarB = std::stof(fovLineBStr);
 				fovVarC = std::stof(fovLineCStr);
 				fovVarD = std::stof(fovLineDStr);
+				fovVarE = std::stof(fovLineEStr);
+				fovVarF = std::stof(fovLineFStr);
 			}
 		}
 		catch (const std::filesystem::filesystem_error& e) {
@@ -178,7 +193,7 @@ void WinXrApi::Init()
 		try {
 			std::ofstream verFile(versionPath);
 			if (verFile.is_open()) {
-				verFile << "0.1";
+				verFile << "0.2";
 				verFile.close();
 			}
 			else {
@@ -285,6 +300,11 @@ void WinXrApi::Init()
 
 	Logger::log << "[WinXrApi] starting UDP listener ..." << std::endl;
 	udpReader = new WinXrApiUDP();
+
+	if (udpReader) {
+		//Now we send the VR mode enable and target FOV of WinlatorXR at startup
+		udpReader->SendData("0 0 1 0 " + std::to_string(fovVarE) + " " + std::to_string(fovVarF));
+	}
 }
 
 void WinXrApi::OnGameFinishInit()
@@ -398,10 +418,10 @@ void WinXrApi::SendHapticVibration(float lControllerStrength, float rControllerS
 	if (udpReader) {
 		//As of version 0.2 now we send a bit of extra UDP data always (LVibration, RVibration, VR mode, SBS, target FOV W, target FOV H), WinlatorXR does the rest
 		if (sendHaptics) {
-			udpReader->SendData(std::to_string(lControllerStrength) + " " + std::to_string(rControllerStrength) + " 1 0 114.4 114.4");
+			udpReader->SendData(std::to_string(lControllerStrength) + " " + std::to_string(rControllerStrength) + " 1 0 " + std::to_string(fovVarE) + " " + std::to_string(fovVarF));
 		}
 		else {
-			udpReader->SendData("0 0 1 0 114.4 114.4");
+			udpReader->SendData("0 0 1 0 " + std::to_string(fovVarE) + " " + std::to_string(fovVarF));
 		}
 	}
 }

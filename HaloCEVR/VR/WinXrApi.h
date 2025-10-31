@@ -218,5 +218,7 @@ protected:
 	float fovVarB = 0.0f;
 	float fovVarC = 1.0f;
 	float fovVarD = 0.0f;
+	float fovVarE = 104.5f;
+	float fovVarF = 104.5f;
 };
 

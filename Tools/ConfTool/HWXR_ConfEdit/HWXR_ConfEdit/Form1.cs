@@ -28,6 +28,9 @@ namespace HWXR_ConfEdit
         string fovFile = "fov.txt";
         string confFile = "config.txt";
 
+        string wxrFOVW = "104.5";
+        string wxrFOVH = "104.5";
+
         string fovPresetURL = "https://raw.githubusercontent.com/bigelod/HaloCEWXR/refs/heads/master/Tools/ConfTool/HWXR_ConfEdit/fov_presets.txt";
 
         public Form1()
@@ -260,12 +263,14 @@ namespace HWXR_ConfEdit
                     File.Move(fovPath, fovPath + ".bak");
                 }
 
-                string[] fovLines = new string[4];
+                string[] fovLines = new string[6];
 
                 fovLines[0] = valA;
                 fovLines[1] = valB;
                 fovLines[2] = valC;
                 fovLines[3] = valD;
+                fovLines[4] = wxrFOVW;
+                fovLines[5] = wxrFOVH;
 
                 File.WriteAllLines(fovPath, fovLines);
 

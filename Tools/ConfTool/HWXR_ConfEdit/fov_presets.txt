@@ -1,2 +1,2 @@
-Default Quest 3 / Quest 3S / Pico 4 Ultra,1.2,30,0.8,10
+Default Quest 3 / Quest 3S / Pico 4 Ultra,1.0,85,1.0,0
 Generic,1.0,0,1.0,0
